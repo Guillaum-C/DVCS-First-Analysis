@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.clas12.analysisTools.event.particles.*;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 public class Cuts {
 
 		public Cuts(){
