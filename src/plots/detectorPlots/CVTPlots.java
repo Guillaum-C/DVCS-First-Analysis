@@ -1,21 +1,21 @@
 package plots.detectorPlots;
 
-import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.central.cvt.CVTEvent;
 import org.clas12.analysisTools.event.central.cvt.CVTRecTrack;
-import org.clas12.analysisTools.event.particles.Electron;
-import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.plots.Canvas;
 
-public class CVTPlots implements IDetectorPlots{
+public class CVTPlots{
 
 	private Canvas canvas;
-	private final String detectorName;
-	private final String detectorTab;
-	private final String detectorMoreTab;
-	private final String detectorCorrelationTab;
-	private final int numberOfRows = 3;
-	private final int numberOfColumns = 4;
+	private String detectorName = "CVT";
+	private String detectorTab = "CVT";
+	private String detectorMoreTab = "CVT more";
+//	private String detectorCorrelationTab = "CVT correlations";
+	private String legend = "";
+	private int detectorTabNumberOfRows = 3;
+	private int detectorTabNumberOfColumns = 4;
+	private int detectorMoreTabNumberOfRows = 3;
+	private int detectorMoreTabNumberOfColumns = 4;
 	
 	int thetaBin = 200;
 	double thetaMin = 20;
@@ -28,10 +28,6 @@ public class CVTPlots implements IDetectorPlots{
 	int pBin = 200;
 	double pMin = 0;
 	double pMax = 10.6 / 5;
-
-	int ptBin = 200;
-	double ptMin = 0;
-	double ptMax = 10.6 / 4.;
 	
 	int vzBin = 200;
 	double vzMin = -20;
@@ -51,13 +47,40 @@ public class CVTPlots implements IDetectorPlots{
 	 * @param canvas canvas
 	 * @param name name used for the tab and the plots
 	 */
-	public CVTPlots(Canvas canvas, String name) {
+	public CVTPlots(Canvas canvas, double electronEnergy) {
 		super();
 		this.canvas = canvas;
-		this.detectorName = name;
-		this.detectorTab = name;
-		this.detectorMoreTab = name + " more";
-		this.detectorCorrelationTab = name + " correlation";
+//		this.detectorCorrelationTab = tabName + " correlations";
+		
+		this.pMax = electronEnergy / 5;
+		
+		createTabs();
+		createHistograms();
+	}
+	
+	public CVTPlots(Canvas canvas, String tabName, double electronEnergy) {
+		super();
+		this.canvas = canvas;
+		this.detectorTab = tabName;
+		this.detectorMoreTab = tabName + " more";
+//		this.detectorCorrelationTab = tabName + " correlations";
+		
+		this.pMax = electronEnergy / 5;
+		
+		createTabs();
+		createHistograms();
+	}
+	
+	public CVTPlots(Canvas canvas, String tabName, String legend, double electronEnergy) {
+		super();
+		this.canvas = canvas;
+		this.detectorTab = tabName;
+		this.detectorMoreTab = tabName + " more";
+		this.legend = legend;
+//		this.detectorCorrelationTab = tabName + " correlations";
+		
+		this.pMax = electronEnergy / 5;
+		
 		createTabs();
 		createHistograms();
 	}
@@ -73,9 +96,9 @@ public class CVTPlots implements IDetectorPlots{
 	 * Create a new tab
 	 */
 	public void createTabs() {
-		this.getCanvas().addTab(detectorTab, numberOfRows, numberOfColumns);
-		this.getCanvas().addTab(detectorMoreTab, 3, 4);
-		this.getCanvas().addTab(detectorCorrelationTab, numberOfRows, numberOfColumns);
+		this.getCanvas().addTab(detectorTab, detectorTabNumberOfRows, detectorTabNumberOfColumns);
+		this.getCanvas().addTab(detectorMoreTab, detectorMoreTabNumberOfRows, detectorMoreTabNumberOfColumns);
+//		this.getCanvas().addTab(detectorCorrelationTab, numberOfRows, numberOfColumns);
 
 	}
 
@@ -84,71 +107,69 @@ public class CVTPlots implements IDetectorPlots{
 	 */
 	public void createHistograms() {
 		
-		this.getCanvas().create2DHisto(detectorTab, 1, 1, detectorName + "PosThetaPhi", detectorName + " pos #theta vs #phi", "#phi (°)",
+		this.getCanvas().create2DHisto(detectorTab, 1, 1, detectorName + "PosThetaPhi", detectorName + " pos #theta vs #phi"+legend, "#phi (°)",
 				"#theta (°)", phiBin, phiMin, phiMax, thetaBin, thetaMin, thetaMax);
-		this.getCanvas().create2DHisto(detectorTab, 1, 2, detectorName + "PosThetaMomentum", detectorName + " pos P vs #theta", "#theta (°)",
+		this.getCanvas().create2DHisto(detectorTab, 1, 2, detectorName + "PosThetaMomentum", detectorName + " pos P vs #theta"+legend, "#theta (°)",
 				"Momentum (GeV)", thetaBin, thetaMin, thetaMax, pBin, pMin, pMax);
-		this.getCanvas().create2DHisto(detectorTab, 2, 1, detectorName + "PosPhiMomentum", detectorName + " pos P vs #phi", "#phi (°)",
+		this.getCanvas().create2DHisto(detectorTab, 2, 1, detectorName + "PosPhiMomentum", detectorName + " pos P vs #phi"+legend, "#phi (°)",
 				"Momentum (GeV)", phiBin, phiMin, phiMax, pBin, pMin, pMax);
-		this.getCanvas().create2DHisto(detectorTab, 2, 2, detectorName + "PosThetaVertexZ", detectorName + " pos #theta vs Vz",
+		this.getCanvas().create2DHisto(detectorTab, 2, 2, detectorName + "PosThetaVertexZ", detectorName + " pos #theta vs Vz"+legend,
 				" Z-Vertex (cm)", "#theta (°)", vzBin, vzMin, vzMax, thetaBin, thetaMin, thetaMax);
-		this.getCanvas().create2DHisto(detectorTab, 3, 1, detectorName + "PosPhiVertexZ", detectorName + " pos #phi vs Vz", " Z-Vertex (cm)",
+		this.getCanvas().create2DHisto(detectorTab, 3, 1, detectorName + "PosPhiVertexZ", detectorName + " pos #phi vs Vz"+legend, " Z-Vertex (cm)",
 				"#phi (°)", vzBin, vzMin, vzMax, phiBin, phiMin, phiMax);
-		this.getCanvas().create2DHisto(detectorTab, 3, 2, detectorName + "PosMomentumVertexZ", detectorName + " pos P vs Vz",
+		this.getCanvas().create2DHisto(detectorTab, 3, 2, detectorName + "PosMomentumVertexZ", detectorName + " pos P vs Vz"+legend,
 				" Z-Vertex (cm)", "Momentum (GeV)", vzBin, vzMin, vzMax, pBin, pMin, pMax);
 		
 		
-		this.getCanvas().create2DHisto(detectorTab, 1, 3, detectorName + "NegThetaPhi", detectorName + " neg #theta vs #phi", "#phi (°)",
+		this.getCanvas().create2DHisto(detectorTab, 1, 3, detectorName + "NegThetaPhi", detectorName + " neg #theta vs #phi"+legend, "#phi (°)",
 				"#theta (°)", phiBin, phiMin, phiMax, thetaBin, thetaMin, thetaMax);
-		this.getCanvas().create2DHisto(detectorTab, 1, 4, detectorName + "NegThetaMomentum", detectorName + " neg P vs #theta", "#theta (°)",
+		this.getCanvas().create2DHisto(detectorTab, 1, 4, detectorName + "NegThetaMomentum", detectorName + " neg P vs #theta"+legend, "#theta (°)",
 				"Momentum (GeV)", thetaBin, thetaMin, thetaMax, pBin, pMin, pMax);
-		this.getCanvas().create2DHisto(detectorTab, 2, 3, detectorName + "NegPhiMomentum", detectorName + " neg P vs #phi", "#phi (°)",
+		this.getCanvas().create2DHisto(detectorTab, 2, 3, detectorName + "NegPhiMomentum", detectorName + " neg P vs #phi"+legend, "#phi (°)",
 				"Momentum (GeV)", phiBin, phiMin, phiMax, pBin, pMin, pMax);
-		this.getCanvas().create2DHisto(detectorTab, 2, 4, detectorName + "NegThetaVertexZ", detectorName + " neg #theta vs Vz",
+		this.getCanvas().create2DHisto(detectorTab, 2, 4, detectorName + "NegThetaVertexZ", detectorName + " neg #theta vs Vz"+legend,
 				" Z-Vertex (cm)", "#theta (°)", vzBin, vzMin, vzMax, thetaBin, thetaMin, thetaMax);
-		this.getCanvas().create2DHisto(detectorTab, 3, 3, detectorName + "NegPhiVertexZ", detectorName + " neg #phi vs Vz", " Z-Vertex (cm)",
+		this.getCanvas().create2DHisto(detectorTab, 3, 3, detectorName + "NegPhiVertexZ", detectorName + " neg #phi vs Vz"+legend, " Z-Vertex (cm)",
 				"#phi (°)", vzBin, vzMin, vzMax, phiBin, phiMin, phiMax);
-		this.getCanvas().create2DHisto(detectorTab, 3, 4, detectorName + "NegMomentumVertexZ", detectorName + " neg P vs Vz",
+		this.getCanvas().create2DHisto(detectorTab, 3, 4, detectorName + "NegMomentumVertexZ", detectorName + " neg P vs Vz"+legend,
 				" Z-Vertex (cm)", "Momentum (GeV)", vzBin, vzMin, vzMax, pBin, pMin, pMax);
 		
 		
 		
-		this.getCanvas().create1DHisto(detectorMoreTab, 1, 1, detectorName + "PosTheta", detectorName + " pos #theta", "#theta (°)", thetaBin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 1, 1, detectorName + "PosTheta", detectorName + " pos #theta"+legend, "#theta (°)", thetaBin,
 				thetaMin, thetaMax);
-		this.getCanvas().create1DHisto(detectorMoreTab, 1, 2, detectorName + "PosPhi", detectorName + " pos #phi", "#phi (°)", phiBin, phiMin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 1, 2, detectorName + "PosPhi", detectorName + " pos #phi"+legend, "#phi (°)", phiBin, phiMin,
 				phiMax);
-		this.getCanvas().create1DHisto(detectorMoreTab, 2, 1, detectorName + "PosMomentum", detectorName + " pos P", "Momentum (GeV)", pBin, pMin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 2, 1, detectorName + "PosMomentum", detectorName + " pos P"+legend, "Momentum (GeV)", pBin, pMin,
 				pMax);
-		this.getCanvas().create1DHisto(detectorMoreTab, 2, 2, detectorName + "PosNDF", detectorName + " pos NDF", "Number of degrees of freedom", ndfBin, ndfMin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 2, 2, detectorName + "PosNDF", detectorName + " pos NDF"+legend, "Number of degrees of freedom", ndfBin, ndfMin,
 				ndfMax);
-		this.getCanvas().setLogY(detectorMoreTab, 2, 2, true);
-		this.getCanvas().create1DHisto(detectorMoreTab, 3, 2, detectorName + "PosNbTracks", detectorName + " pos nb tracks", "Number of tracks", 20, 0,
-				20);
-		this.getCanvas().setLogY(detectorMoreTab, 3, 2, false);
+		this.getCanvas().create1DHisto(detectorMoreTab, 3, 2, detectorName + "PosNbTracks", detectorName + " pos nb tracks"+legend, "Number of tracks", 10, 0,
+				10);
+		this.getCanvas().setLogY(detectorMoreTab, 3, 2, true);
 		
-		this.getCanvas().create1DHisto(detectorMoreTab, 1, 3, detectorName + "NegTheta", detectorName + " neg #theta", "#theta (°)", thetaBin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 1, 3, detectorName + "NegTheta", detectorName + " neg #theta"+legend, "#theta (°)", thetaBin,
 				thetaMin, thetaMax);
-		this.getCanvas().create1DHisto(detectorMoreTab, 1, 4, detectorName + "NegPhi", detectorName + " neg #phi", "#phi (°)", phiBin, phiMin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 1, 4, detectorName + "NegPhi", detectorName + " neg #phi"+legend, "#phi (°)", phiBin, phiMin,
 				phiMax);
-		this.getCanvas().create1DHisto(detectorMoreTab, 2, 3, detectorName + "NegMomentum", detectorName + " neg P", "Momentum (GeV)", pBin, pMin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 2, 3, detectorName + "NegMomentum", detectorName + " neg P"+legend, "Momentum (GeV)", pBin, pMin,
 				pMax);
-		this.getCanvas().create1DHisto(detectorMoreTab, 2, 4, detectorName + "NegNDF", detectorName + " neg NDF", "Number of degrees of freedom", ndfBin, ndfMin,
+		this.getCanvas().create1DHisto(detectorMoreTab, 2, 4, detectorName + "NegNDF", detectorName + " neg NDF"+legend, "Number of degrees of freedom", ndfBin, ndfMin,
 				ndfMax);
-		this.getCanvas().setLogY(detectorMoreTab, 2, 4, true);
-		this.getCanvas().create1DHisto(detectorMoreTab, 3, 3, detectorName + "NegNbTracks", detectorName + " neg nb tracks", "Number of tracks", 20, 0,
-				20);
-		this.getCanvas().setLogY(detectorMoreTab, 3, 3, false);
+		this.getCanvas().create1DHisto(detectorMoreTab, 3, 3, detectorName + "NegNbTracks", detectorName + " neg nb tracks"+legend, "Number of tracks", 10, 0,
+				10);
+		this.getCanvas().setLogY(detectorMoreTab, 3, 3, true);
 		
-		this.getCanvas().create1DHisto(detectorMoreTab, 3, 1, detectorName + "NbTracks", detectorName + " total nb tracks", "Number of tracks (Pos+Neg)", 20, 0,
-				20);
-		this.getCanvas().setLogY(detectorMoreTab, 3, 1, false);
-		this.getCanvas().create1DHisto(detectorMoreTab, 3, 4, detectorName + "Chi2", detectorName + " #chi^2", "#chi^2", 200, 0, 200);
-		
-		
-		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 1, detectorName + "ThetaCVTvsForward", detectorName +" vs electron #theta", "Electron #theta (°)", detectorName+" #theta (°)", thetaBin, 0, 30, thetaBin, thetaMin, thetaMax);
-		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 2, detectorName + "PhiCVTvsForward", detectorName +" vs electron #phi", "Electron #phi (°)", detectorName+" #phi (°)", phiBin, phiMin, phiMax, phiBin, phiMin, phiMax);
-		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 3, detectorName + "MomentumCVTvsForward", detectorName +" vs electron P", "Electron momentum (GeV)", detectorName+" momentum (GeV)", pBin, pMin, 10.6, pBin, pMin, pMax);
-		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 4, detectorName + "VertexCVTvsForward", detectorName +" vs electron Vz", "Electron Z-Vertex (cm)", detectorName+" Z-Vertex (cm)", vzBin, vzMin, vzMax, vzBin, vzMin, vzMax);
+		this.getCanvas().create1DHisto(detectorMoreTab, 3, 1, detectorName + "NbTracks", detectorName + " total nb tracks"+legend, "Number of tracks (Pos+Neg)", 10, 0,
+				10);
+		this.getCanvas().setLogY(detectorMoreTab, 3, 1, true);
+		this.getCanvas().create1DHisto(detectorMoreTab, 3, 4, detectorName + "Chi2", detectorName + " #chi^2"+legend, "#chi^2", 200, 0, 200);
+		this.getCanvas().setLogY(detectorMoreTab, 3, 4, true);
+//		
+//		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 1, detectorName + "ThetaCVTvsForward", detectorName +" vs electron #theta", "Electron #theta (°)", detectorName+" #theta (°)", thetaBin, 0, 30, thetaBin, thetaMin, thetaMax);
+//		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 2, detectorName + "PhiCVTvsForward", detectorName +" vs electron #phi", "Electron #phi (°)", detectorName+" #phi (°)", phiBin, phiMin, phiMax, phiBin, phiMin, phiMax);
+//		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 3, detectorName + "MomentumCVTvsForward", detectorName +" vs electron P", "Electron momentum (GeV)", detectorName+" momentum (GeV)", pBin, pMin, 10.6, pBin, pMin, pMax);
+//		this.getCanvas().create2DHisto(detectorCorrelationTab, 1, 4, detectorName + "VertexCVTvsForward", detectorName +" vs electron Vz", "Electron Z-Vertex (cm)", detectorName+" Z-Vertex (cm)", vzBin, vzMin, vzMax, vzBin, vzMin, vzMax);
 	}
 
 	/**
@@ -156,10 +177,11 @@ public class CVTPlots implements IDetectorPlots{
 	 * 
 	 * @param event processed event
 	 */
-	public void fillHistograms(Event event) {
-		CVTEvent cvtEvent = event.getCentralEvent().getCvtEvent();
-		double max = 0;
-		CVTRecTrack highestMomentumTrack = null;	
+	public void fillHistograms(CVTEvent cvtEvent) {
+//	public void fillHistograms(Event event) {
+//		CVTEvent cvtEvent = event.getCentralEvent().getCvtEvent();
+//		double max = 0;
+//		CVTRecTrack highestMomentumTrack = null;	
 		
 		int nbTrackPos=0;
 		int nbTrackNeg=0;
@@ -191,27 +213,27 @@ public class CVTPlots implements IDetectorPlots{
 				nbTrackNeg++;
 			}
 			this.getCanvas().fill1DHisto(detectorName+"Chi2", cvtTrack.getChi2());
-			if (cvtTrack.getMomentum().mag()>max){
-				max = cvtTrack.getMomentum().mag();
-				highestMomentumTrack = cvtTrack;
-			}
+//			if (cvtTrack.getMomentum().mag()>max){
+//				max = cvtTrack.getMomentum().mag();
+//				highestMomentumTrack = cvtTrack;
+//			}
 		}
 		this.getCanvas().fill1DHisto(detectorName+"NbTracks", cvtEvent.getCvtTracks().size());
 		this.getCanvas().fill1DHisto(detectorName+"PosNbTracks", nbTrackPos);
 		this.getCanvas().fill1DHisto(detectorName+"NegNbTracks", nbTrackNeg);
-		if (highestMomentumTrack!=null){
-			ParticleEvent particleEvent = event.getParticleEvent();
-			if(particleEvent.hasNumberOfElectrons()>0){
-				for (Electron electron: particleEvent.getElectrons()){
-					if (electron.getThetaDeg()>5){
-						this.getCanvas().fill2DHisto(detectorName + "ThetaCVTvsForward",electron.getThetaDeg(),Math.toDegrees(highestMomentumTrack.getMomentum().theta()));
-						this.getCanvas().fill2DHisto(detectorName + "PhiCVTvsForward",electron.getPhiDeg(),Math.toDegrees(highestMomentumTrack.getMomentum().phi()));
-						this.getCanvas().fill2DHisto(detectorName + "MomentumCVTvsForward",electron.getP(),highestMomentumTrack.getMomentum().mag());
-						this.getCanvas().fill2DHisto(detectorName + "VertexCVTvsForward",electron.getVz(),highestMomentumTrack.getVertex().z());
-					}
-				}
-			}
-		}
+//		if (highestMomentumTrack!=null){
+//			ParticleEvent particleEvent = event.getParticleEvent();
+//			if(particleEvent.hasNumberOfElectrons()>0){
+//				for (Electron electron: particleEvent.getElectrons()){
+//					if (electron.getThetaDeg()>5){
+//						this.getCanvas().fill2DHisto(detectorName + "ThetaCVTvsForward",electron.getThetaDeg(),Math.toDegrees(highestMomentumTrack.getMomentum().theta()));
+//						this.getCanvas().fill2DHisto(detectorName + "PhiCVTvsForward",electron.getPhiDeg(),Math.toDegrees(highestMomentumTrack.getMomentum().phi()));
+//						this.getCanvas().fill2DHisto(detectorName + "MomentumCVTvsForward",electron.getP(),highestMomentumTrack.getMomentum().mag());
+//						this.getCanvas().fill2DHisto(detectorName + "VertexCVTvsForward",electron.getVz(),highestMomentumTrack.getVertex().z());
+//					}
+//				}
+//			}
+//		}
 	}
 
 }

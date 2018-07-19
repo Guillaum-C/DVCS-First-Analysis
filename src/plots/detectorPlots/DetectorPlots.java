@@ -13,9 +13,9 @@ public class DetectorPlots {
 	HTCCPlots htccPlots;
 	
 	
-	public void createDetectorPlots(Canvas myCanvas) {
+	public void createDetectorsPlots(Canvas myCanvas, double electronEnergy) {
 		
-		cvtPlots = new CVTPlots(myCanvas, "CVT");
+		cvtPlots = new CVTPlots(myCanvas, "CVT", "",electronEnergy);
 		
 		dcPlots = new DCPlots(myCanvas, "DC");
 		caloPlots = new CalorimeterPlots(myCanvas, "Calo");
@@ -24,9 +24,9 @@ public class DetectorPlots {
 		
 	}
 	
-	public void fillDetectorPlots(Event processedEvent){
+	public void fillDetectorsPlots(Event processedEvent){
 		
-		cvtPlots.fillHistograms(processedEvent);
+		cvtPlots.fillHistograms(processedEvent.getCentralEvent().getCvtEvent());
 		
 		dcPlots.fillHistograms(processedEvent);
 		caloPlots.fillHistograms(processedEvent);

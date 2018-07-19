@@ -8,7 +8,7 @@ import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 
-public class FTOFPlots implements IDetectorPlots {
+public class FTOFPlots{
 
 	private Canvas canvas;
 	private final String detectorName;
@@ -35,14 +35,12 @@ public class FTOFPlots implements IDetectorPlots {
 		return canvas;
 	}
 
-	@Override
 	public void createTabs() {
 		this.getCanvas().addTab(detectorTab, numberOfRows, numberOfColumns);
 		this.getCanvas().addTab(detectorCorrelationTab, numberOfRows, numberOfColumns);
 		this.getCanvas().addTab(detectorBySectorTab, numberOfRows, numberOfColumns);
 	}
 
-	@Override
 	public void createHistograms() {
 		this.getCanvas().create2DHisto(detectorTab, 1, 1, detectorName+"BetavsP", detectorName+"Beta vs P", "Tphot", "Telec", 100, 0, 10, 100, 0, 1);
 		this.getCanvas().create2DHisto(detectorTab, 2, 1, detectorName+"BetavsP-elec", detectorName+"Beta vs P Elec", "Tphot", "Telec", 100, 0, 10, 100, 0, 1);
@@ -55,7 +53,6 @@ public class FTOFPlots implements IDetectorPlots {
 		this.getCanvas().setLogZ(detectorCorrelationTab, 1, 1, true);
 	}
 	
-	@Override
 	public void fillHistograms(Event event) {
 		FTOFEvent ftofEvent = event.getForwardEvent().getFtofEvent();
 		ParticleEvent particleEvent = event.getParticleEvent();

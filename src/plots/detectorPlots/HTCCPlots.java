@@ -8,7 +8,7 @@ import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 
-public class HTCCPlots implements IDetectorPlots {
+public class HTCCPlots{
 
 	private Canvas canvas;
 	
@@ -36,14 +36,12 @@ public class HTCCPlots implements IDetectorPlots {
 		return canvas;
 	}
 
-	@Override
 	public void createTabs() {
 		this.getCanvas().addTab(detectorTab, numberOfRows, numberOfColumns);
 		this.getCanvas().addTab(detectorCorrelationTab, numberOfRows, numberOfColumns);
 //		this.getCanvas().addTab(detectorBySectorTab, numberOfRows, numberOfColumns);
 	}
 
-	@Override
 	public void createHistograms() {
 		this.getCanvas().create1DHisto(detectorTab, 1, 1, detectorName+"Nphe", detectorName+"Nphe", "Nphe", 100, 0, 100);
 		this.getCanvas().create1DHisto(detectorTab, 1, 2, detectorName+"Nphe-elec", detectorName+"Nphe Elec", "Nphe", 100, 0, 100);
@@ -58,7 +56,6 @@ public class HTCCPlots implements IDetectorPlots {
 		
 	}
 	
-	@Override
 	public void fillHistograms(Event event) {
 		HTCCEvent htccEvent = event.getForwardEvent().getHtccEvent();
 		ParticleEvent particleEvent = event.getParticleEvent();
