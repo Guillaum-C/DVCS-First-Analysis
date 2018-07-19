@@ -189,6 +189,10 @@ public class ParticlePlots {
 	 * @param particle
 	 */
 	public void fillParticlePlots(Canvas myCanvas, Particle particle) {
+		
+//		if (particle.hasCentralTrack()==1){
+//			if(particle.getCvtRecTrack().getChi2()/particle.getCvtRecTrack().getNdf()<5){
+		
 		myCanvas.fill2DHisto(plotName + "ThetaPhi", particle.getPhiDeg(), particle.getThetaDeg());
 		myCanvas.fill2DHisto(plotName + "ThetaMomentum", particle.getThetaDeg(), particle.getP());
 		myCanvas.fill2DHisto(plotName + "PhiMomentum", particle.getPhiDeg(), particle.getP());
@@ -243,6 +247,8 @@ public class ParticlePlots {
 			myCanvas.fill2DHisto(plotName + "TCALOvsTHTCC", particle.getHTCCClusters().get(0).getTime(),
 					particle.getCalorimeterRecClusters().get(0).getTime());
 		}
+//			}
+//		}
 
 	}
 

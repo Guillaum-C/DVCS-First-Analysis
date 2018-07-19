@@ -11,19 +11,16 @@ import org.clas12.analysisTools.event.central.cvt.CVTRecTrack;
 import org.clas12.analysisTools.event.particles.Electron;
 import org.clas12.analysisTools.event.particles.LorentzVector;
 import org.clas12.analysisTools.event.particles.Particle;
-import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Photon;
 import org.clas12.analysisTools.event.particles.PionPlus;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.files.HipoReader;
 import org.clas12.analysisTools.plots.Canvas;
-import org.clas12.analysisTools.plots.detectorPlots.FTOFPlots;
-import org.clas12.analysisTools.plots.detectorPlots.HTCCPlots;
 import org.jlab.clas.physics.Vector3;
-import org.jlab.groot.data.H1F;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
+import plots.detectorPlots.DetectorPlots;
 import plots.particlePlots.ParticlePlots;
 
 public class Analyser {
@@ -38,11 +35,10 @@ public class Analyser {
 	static ParticlePlots electronPlots;
 	static ParticlePlots photonPlots;
 	static ParticlePlots protonPlots;
+	static DetectorPlots rawDetectorPlots;
 
-	public Analyser() {
-	}
-
-	public static HipoReader getParameters(String[] args){
+	
+	public static HipoReader getRunningArguments(String[] args){
 
 //		/* ===== SETTINGS ===== */
 //		String path = "";
@@ -67,15 +63,21 @@ public class Analyser {
 
 		/* 10.6 GeV */
 		electronEnergy = 10.6;
-		path = "/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January/Run3432_10GeV_50nA_T-1_S-1_NegInbending_5b3.3/";
+//		path = "/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January/Run3432_10GeV_50nA_T-1_S-1_NegInbending_5b3.3/";
 		// path =
 		// "/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January/Run3432_5bp2p1_NewMap_NewCVT/";//"volatile/clas12/data/rg-a/tag5bp2p1_newCVT_newfieldmap/cooked/";//"Data/run3532/";//"/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January";
 		// path =
 		// "/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January";
 		// runNumber = "003532";//"003712";
-		runNumber = "003432";
+//		runNumber = "003432";
 		// runNumber = "003222";
+		
+		ArrayList<String> fileListOutbending = new ArrayList<>();
+		fileListOutbending.add("/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January/Run3932_10GeV_45nA_S-1T1Out_11Avr/out_clas_003932.evio.10_19.hipo");
+		ArrayList<String> fileListInbending = new ArrayList<>();
+		fileListInbending.add("/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January/Run4013_10GeV_50nA_S-1T-1In_18Avr/out_clas_004013.evio.10_19.hipo");
 
+		
 		HipoReader hipoReader = null;
 
 		/* Ask user */
@@ -117,14 +119,16 @@ public class Analyser {
 			}
 
 		} else {
-			hipoReader = new HipoReader(path, runNumber);
+//			hipoReader = new HipoReader(path, runNumber);
+			hipoReader = new HipoReader(fileListInbending);
 		}
 		return hipoReader;
 	}
 
 	public static void createPlots(Canvas myCanvas, boolean displayHistos){
 		
-		Analyser.createParticlesPlots(myCanvas);
+		Analyser.createRawParticlesPlots(myCanvas);
+		Analyser.createRawDetectorsPlots(myCanvas);
 		
 //		Analyser.createParticlePlots(myCanvas, "electron");
 //		Analyser.createParticlePlots(myCanvas, "electronNoFT");
@@ -327,7 +331,7 @@ public class Analyser {
 		
 	}
 
-	public static void createParticlesPlots(Canvas myCanvas){
+	public static void createRawParticlesPlots(Canvas myCanvas){
 		
 		int thetaBinElectron = 200;
 		double thetaMinElectron = 0;
@@ -431,86 +435,66 @@ public class Analyser {
 
 	}
 	
-	
-	
-	
-	
-	
-	public static void createParticlePlots(Canvas myCanvas, String particleName) {
-		String tabParticle = particleName;
+	public static void fillRawParticlesPlots(Canvas myCanvas, Event processedEvent){
+		/* ===== ELECTRON ===== */
+		if (processedEvent.getParticleEvent().hasNumberOfElectrons() > 0) {
+			ArrayList<Electron> electrons = processedEvent.getParticleEvent().getElectrons();
+			for (Particle electron : electrons) {
+				electronPlots.fillParticlePlots(myCanvas, electron);
+			}
+		}
+
+		/* ===== PROTON ===== */
+		if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
+			ArrayList<Proton> protons = processedEvent.getParticleEvent().getProtons();
+			for (Particle proton : protons) {
+				protonPlots.fillParticlePlots(myCanvas, proton);
+			}
+		}
+
+		/* ===== PHOTON ===== */
+		if (processedEvent.getParticleEvent().hasNumberOfPhotons() > 0) {
+			ArrayList<Photon> photons = processedEvent.getParticleEvent().getPhotons();
+			for (Particle photon : photons) {
+				photonPlots.fillParticlePlots(myCanvas, photon);
+			}
+		}
 		
-		myCanvas.addTab(tabParticle, 6, 3);
-		myCanvas.create2DHisto(tabParticle, 1, 3, particleName + "ThetaPhi", "Theta vs Phi", "Phi", "Theta", 360, -180,
-				180, 90, 0, 90);
-		myCanvas.create1DHisto(tabParticle, 1, 1, particleName + "Theta", "Theta", "Theta", 90, 0, 90);
-		myCanvas.create1DHisto(tabParticle, 1, 2, particleName + "Phi", "Phi", "Phi", 360, -180, 180);
-
-		myCanvas.create1DHisto(tabParticle, 2, 1, particleName + "TransverseMomentum", "Transverse Momentum",
-				"Transverse Momentum", 100, 0, 2);
-		myCanvas.create1DHisto(tabParticle, 2, 2, particleName + "ZMomentum", "z-Momentum", "z-Momentum", 100, 0, 10);
-		myCanvas.create1DHisto(tabParticle, 2, 3, particleName + "Momentum", "Momentum", "Momentum", 100, 0, 10);
-
-		myCanvas.create2DHisto(tabParticle, 3, 1, particleName + "ThetaTransverseMomentum",
-				"Theta vs Transverse Momentum", "Theta", "Transverse Momentum", 90, 0, 90, 100, 0, 2);
-		myCanvas.create2DHisto(tabParticle, 3, 2, particleName + "ThetaZMomentum", "Theta vs z-Momentum", "Theta",
-				"z-Momentum", 90, 0, 90, 100, 0, 10);
-		myCanvas.create2DHisto(tabParticle, 3, 3, particleName + "ThetaMomentum", "Theta vs Momentum", "Theta",
-				"Momentum", 90, 0, 90, 100, 0, 10);
-
-		myCanvas.create2DHisto(tabParticle, 4, 1, particleName + "PhiTransverseMomentum", "Phi vs Transverse Momentum",
-				"Phi", "Tranverse Momentum", 360, -180, 180, 100, 0, 2);
-		myCanvas.create2DHisto(tabParticle, 4, 2, particleName + "PhiZMomentum", "Phi vs z-Momentum", "Phi",
-				"z-Momentum", 360, -180, 180, 100, 0, 10);
-		myCanvas.create2DHisto(tabParticle, 4, 3, particleName + "PhiMomentum", "Phi vs Momentum", "Phi", "Momentum",
-				360, -180, 180, 100, 0, 10);
-
-		myCanvas.create1DHisto(tabParticle, 5, 1, particleName + "VertexX", "X-vertex", "X-Vertex", 50, -10, 10);
-		myCanvas.create1DHisto(tabParticle, 5, 2, particleName + "VertexY", "Y-vertex", "Y-Vertex", 50, -10, 10);
-		myCanvas.create1DHisto(tabParticle, 5, 3, particleName + "VertexZ", "Z-vertex", "Z-Vertex", 100, -50, 50);
-
-		myCanvas.create2DHisto(tabParticle, 6, 1, particleName + "THTCCvsTFTOF", "THTCC VS TFTOF", "TFTOF", "THTCC",
-				100, 100, 400, 100, 100, 400);
-		myCanvas.create2DHisto(tabParticle, 6, 2, particleName + "TFTOFFvsTCALO", "TFTOF VS TCALO", "TCALO", "TFTOF",
-				100, 100, 400, 100, 100, 400);
-		myCanvas.create2DHisto(tabParticle, 6, 3, particleName + "TCALOvsTHTCC", "TCALO VS THTCC", "THTCC", "TCALO",
-				100, 100, 400, 100, 100, 400);
-
+		/* ===== NUMBER OF PARTICLES ===== */
+		myCanvas.fill1DHisto("numberOfElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons());
+		myCanvas.fill1DHisto("numberOfPhotons", processedEvent.getParticleEvent().hasNumberOfPhotons());
+		myCanvas.fill1DHisto("numberOfProtons", processedEvent.getParticleEvent().hasNumberOfProtons());
+		myCanvas.fill2DHisto("numberOfPhotonsVSElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+		myCanvas.fill2DHisto("numberOfProtonsVSElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
+		myCanvas.fill2DHisto("numberOfPhotonsVSProtons", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+		if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
+			myCanvas.fill1DHisto("numberOfPhotonsWithElec", processedEvent.getParticleEvent().hasNumberOfPhotons());
+			myCanvas.fill1DHisto("numberOfProtonsWithElec", processedEvent.getParticleEvent().hasNumberOfProtons());
+			myCanvas.fill2DHisto("numberOfPhotonsVSProtonsWithElec", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+		}
+		
+		if (processedEvent.getTrigger_bit(31)){
+			myCanvas.fill1DHisto("numberOfElectronsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfElectrons());
+			myCanvas.fill1DHisto("numberOfPhotonsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfPhotons());
+			myCanvas.fill1DHisto("numberOfProtonsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons());
+			myCanvas.fill2DHisto("numberOfPhotonsVSElectronsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+			myCanvas.fill2DHisto("numberOfProtonsVSElectronsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
+			myCanvas.fill2DHisto("numberOfPhotonsVSProtonsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+			if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
+				myCanvas.fill1DHisto("numberOfPhotonsWithElecRandomTrigger", processedEvent.getParticleEvent().hasNumberOfPhotons());
+				myCanvas.fill1DHisto("numberOfProtonsWithElecRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons());
+				myCanvas.fill2DHisto("numberOfPhotonsVSProtonsWithElecRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+			}
+		}
 	}
-
-	public static void fillParticlePlots(Canvas myCanvas, String particleName, Particle particle) {
-		myCanvas.fill1DHisto(particleName + "Theta", particle.getThetaDeg());
-		myCanvas.fill1DHisto(particleName + "Phi", particle.getPhiDeg());
-		myCanvas.fill2DHisto(particleName + "ThetaPhi", particle.getPhiDeg(), particle.getThetaDeg());
-
-		myCanvas.fill1DHisto(particleName + "TransverseMomentum", particle.getPt());
-		myCanvas.fill1DHisto(particleName + "ZMomentum", particle.getPz());
-		myCanvas.fill1DHisto(particleName + "Momentum", particle.getP());
-
-		myCanvas.fill2DHisto(particleName + "ThetaTransverseMomentum", particle.getThetaDeg(), particle.getPt());
-		myCanvas.fill2DHisto(particleName + "ThetaZMomentum", particle.getThetaDeg(), particle.getPz());
-		myCanvas.fill2DHisto(particleName + "ThetaMomentum", particle.getThetaDeg(), particle.getP());
-
-		myCanvas.fill2DHisto(particleName + "PhiTransverseMomentum", particle.getPhiDeg(), particle.getPt());
-		myCanvas.fill2DHisto(particleName + "PhiZMomentum", particle.getPhiDeg(), particle.getPz());
-		myCanvas.fill2DHisto(particleName + "PhiMomentum", particle.getPhiDeg(), particle.getP());
-
-		myCanvas.fill1DHisto(particleName + "VertexX", particle.getVx());
-		myCanvas.fill1DHisto(particleName + "VertexY", particle.getVy());
-		myCanvas.fill1DHisto(particleName + "VertexZ", particle.getVz());
-
-		if (particle.hasFTOFClusters() > 0 && particle.hasHTCCClusters() > 0) {
-			myCanvas.fill2DHisto(particleName + "THTCCvsTFTOF", particle.getFTOFClusters().get(0).getTime(),
-					particle.getHTCCClusters().get(0).getTime());
-		}
-		if (particle.hasCalorimeterClusters() > 0 && particle.hasFTOFClusters() > 0) {
-			myCanvas.fill2DHisto(particleName + "TFTOFFvsTCALO", particle.getCalorimeterRecClusters().get(0).getTime(),
-					particle.getFTOFClusters().get(0).getTime());
-		}
-		if (particle.hasHTCCClusters() > 0 && particle.hasCalorimeterClusters() > 0) {
-			myCanvas.fill2DHisto(particleName + "TCALOvsTHTCC", particle.getHTCCClusters().get(0).getTime(),
-					particle.getCalorimeterRecClusters().get(0).getTime());
-		}
-
+	
+	public static void createRawDetectorsPlots(Canvas myCanvas){
+		rawDetectorPlots = new DetectorPlots();
+		rawDetectorPlots.createDetectorPlots(myCanvas);
+	}
+	
+	public static void fillRawDetectorPlots(Event processedEvent){
+		rawDetectorPlots.fillDetectorPlots(processedEvent);
 	}
 	
 	public static void createParticlePlotsBySector(Canvas myCanvas, String particleName) {
@@ -575,7 +559,7 @@ public class Analyser {
 
 	public static void main(String[] args) {
 
-		HipoReader hipoReader = getParameters(args);
+		HipoReader hipoReader = getRunningArguments(args);
 
 		/* ===== INITIAL STATE ===== */
 		LorentzVector protonI = new LorentzVector();
@@ -600,17 +584,6 @@ public class Analyser {
 //		}
 		
 		createPlots(myCanvas, true);
-		
-		
-		
-		CalorimeterPlots caloPlots = new CalorimeterPlots(myCanvas, "Calorimeter");
-		FTOFPlots ftofPlots = new FTOFPlots(myCanvas, "FTOF");
-		HTCCPlots htccPlots = new HTCCPlots(myCanvas, "HTCC");
-		
-		
-		System.out.println("getHisto3");
-		myCanvas.get1DHisto("cvtThetaP");
-		System.out.println("getHisto4");
 
 		/* ===== ITERATE ===== */
 		int eventsWithHelPlus = 0;
@@ -638,45 +611,6 @@ public class Analyser {
 			Event processedEvent = new Event();
 			processedEvent.readBanks(dataEvent);
 			
-			if (dataEvent.hasBank("RUN::config")) {
-				DataBank bank = dataEvent.getBank("RUN::config");
-				long TriggerWord = bank.getLong("trigger", 0);
-				boolean[] trig = new boolean[DaqConstants.NUMBER_OF_TRIGGER_BITS];
-				for (int i = DaqConstants.NUMBER_OF_TRIGGER_BITS - 1; i >= 0; i--) {
-					trig[i] = (TriggerWord & (1 << i)) != 0;
-				}
-				if (trig[31]){
-					
-					myCanvas.fill1DHisto("numberOfElectronsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfElectrons());
-					myCanvas.fill1DHisto("numberOfPhotonsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfPhotons());
-					myCanvas.fill1DHisto("numberOfProtonsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons());
-					myCanvas.fill2DHisto("numberOfPhotonsVSElectronsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-					myCanvas.fill2DHisto("numberOfProtonsVSElectronsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
-					myCanvas.fill2DHisto("numberOfPhotonsVSProtonsRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-					
-					if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
-						myCanvas.fill1DHisto("numberOfPhotonsWithElecRandomTrigger", processedEvent.getParticleEvent().hasNumberOfPhotons());
-						myCanvas.fill1DHisto("numberOfProtonsWithElecRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons());
-						myCanvas.fill2DHisto("numberOfPhotonsVSProtonsWithElecRandomTrigger", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-					}
-				}
-//				eventCount++;
-//				System.out.println("Event: " + eventIterator);
-			}
-			
-			myCanvas.fill1DHisto("numberOfElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons());
-			myCanvas.fill1DHisto("numberOfPhotons", processedEvent.getParticleEvent().hasNumberOfPhotons());
-			myCanvas.fill1DHisto("numberOfProtons", processedEvent.getParticleEvent().hasNumberOfProtons());
-			myCanvas.fill2DHisto("numberOfPhotonsVSElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-			myCanvas.fill2DHisto("numberOfProtonsVSElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
-			myCanvas.fill2DHisto("numberOfPhotonsVSProtons", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-			
-			if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
-				myCanvas.fill1DHisto("numberOfPhotonsWithElec", processedEvent.getParticleEvent().hasNumberOfPhotons());
-				myCanvas.fill1DHisto("numberOfProtonsWithElec", processedEvent.getParticleEvent().hasNumberOfProtons());
-				myCanvas.fill2DHisto("numberOfPhotonsVSProtonsWithElec", processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-			}
-			
 			
 			// KinematicalCorrections.correct2GeV100OutbendingTorus(dataEvent);
 
@@ -692,64 +626,10 @@ public class Analyser {
 				// bankEvent.show();
 			}
 			
+			fillRawParticlesPlots(myCanvas, processedEvent);
+
+			fillRawDetectorPlots(processedEvent);
 			
-//			
-//			myCanvas.create1DHisto(tabNbParticles, 1, 2, "numberOfElectronsRandomTrigger", "Number of electrons (random trigger)","Number of electrons",  nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create1DHisto(tabNbParticles, 1, 4, "numberOfPhotonsRandomTrigger", "Number of photons (random trigger)", "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create1DHisto(tabNbParticles, 2, 2, "numberOfProtonsRandomTrigger", "Number of protons (random trigger)", "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create2DHisto(tabNbParticles, 3, 1, "numberOfPhotonsVSElectrons", "Nb photons vs Nb electrons", "Number of electrons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create2DHisto(tabNbParticles, 3, 2, "numberOfProtonsVSElectrons", "Nb protons vs Nb electrons","Number of electrons","Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create2DHisto(tabNbParticles, 4, 1, "numberOfPhotonsVSProtons", "Nb photons vs Nb protons","Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create2DHisto(tabNbParticles, 3, 3, "numberOfPhotonsVSElectronsRandomTrigger", "Nb photons vs Nb electrons", "Number of electrons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create2DHisto(tabNbParticles, 3, 4, "numberOfProtonsVSElectronsRandomTrigger", "Nb protons vs Nb electrons","Number of electrons","Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-//			myCanvas.create2DHisto(tabNbParticles, 4, 3, "numberOfPhotonsVSProtonsRandomTrigger", "Nb photons vs Nb protons (random trigger)","Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-			
-			/* ===== ELECTRON ===== */
-			if (processedEvent.getParticleEvent().hasNumberOfElectrons() > 0) {
-				ArrayList<Electron> electrons = processedEvent.getParticleEvent().getElectrons();
-				for (Particle electron : electrons) {
-//					Analyser.fillParticlePlots(myCanvas, "electron", electron);
-					electronPlots.fillParticlePlots(myCanvas, electron);
-//					if (electron.getThetaDeg() > 5) {
-//						Analyser.fillParticlePlots(myCanvas, "electronNoFT", electron);
-//						Analyser.fillParticlePlotsBySector(myCanvas, "electron", electron);
-//					}
-				}
-			}
-
-			/* ===== PROTON ===== */
-			if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
-				ArrayList<Proton> protons = processedEvent.getParticleEvent().getProtons();
-				for (Particle proton : protons) {
-//					Analyser.fillParticlePlots(myCanvas, "proton", proton);
-					protonPlots.fillParticlePlots(myCanvas, proton);
-				}
-			}
-
-			/* ===== PHOTON ===== */
-			if (processedEvent.getParticleEvent().hasNumberOfPhotons() > 0) {
-				ArrayList<Photon> photons = processedEvent.getParticleEvent().getPhotons();
-				for (Particle photon : photons) {
-//					Analyser.fillParticlePlots(myCanvas, "photon", photon);
-					photonPlots.fillParticlePlots(myCanvas, photon);
-//					if (photon.getThetaDeg() > 5) {
-//						Analyser.fillParticlePlots(myCanvas, "photonNoFT", photon);
-//					}
-				}
-			}
-
-			/* ===== PI+ ===== */
-			if (processedEvent.getParticleEvent().hasNumberOfPiPlus() > 0) {
-				ArrayList<PionPlus> pipluss = processedEvent.getParticleEvent().getPiPlus();
-				for (Particle piplus : pipluss) {
-//					Analyser.fillParticlePlots(myCanvas, "piplus", piplus);
-				}
-			}
-
-			caloPlots.fillHistograms(processedEvent);
-			ftofPlots.fillHistograms(processedEvent);
-			htccPlots.fillHistograms(processedEvent);
-
 			/* ===== CVT ===== */
 			// for (Particle particle :
 			// processedEvent.getParticleEvent().getParticles()){

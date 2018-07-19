@@ -8,7 +8,7 @@ import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 
-public class HTCCPlots implements DetectorPlots {
+public class HTCCPlots implements IDetectorPlots {
 
 	private Canvas canvas;
 	

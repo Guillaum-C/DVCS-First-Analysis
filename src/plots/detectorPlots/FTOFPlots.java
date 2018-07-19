@@ -8,7 +8,7 @@ import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 
-public class FTOFPlots implements DetectorPlots {
+public class FTOFPlots implements IDetectorPlots {
 
 	private Canvas canvas;
 	private final String detectorName;
