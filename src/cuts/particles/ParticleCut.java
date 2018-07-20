@@ -6,51 +6,49 @@ import org.clas12.analysisTools.event.particles.ParticleEvent;
 
 public class ParticleCut {
 
-	double energyMinCut = Double.POSITIVE_INFINITY;
-	double energyMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double momentumXMinCut = Double.POSITIVE_INFINITY;
-	double momentumXMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double momentumYMinCut = Double.POSITIVE_INFINITY;
-	double momentumYMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double momentumZMinCut = Double.POSITIVE_INFINITY;
-	double momentumZMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double vertexXMinCut = Double.POSITIVE_INFINITY;
-	double vertexXMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double vertexYMinCut = Double.POSITIVE_INFINITY;
-	double vertexYMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double vertexZMinCut = Double.POSITIVE_INFINITY;
-	double vertexZMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double thetaMinCut = Double.POSITIVE_INFINITY;
-	double thetaMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double phiMinCut = Double.POSITIVE_INFINITY;
-	double phiMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double chargeMinCut = Double.POSITIVE_INFINITY;
-	double chargeMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double betaMinCut = Double.POSITIVE_INFINITY;
-	double betaMaxCut = Double.NEGATIVE_INFINITY;
-	
-	double chi2pidMinCut = Double.POSITIVE_INFINITY;
-	double chi2pidMaxCut = Double.NEGATIVE_INFINITY;
-	
-	
-	
+	double energyMinCut = Double.NEGATIVE_INFINITY;
+	double energyMaxCut = Double.POSITIVE_INFINITY;
+
+	double momentumXMinCut = Double.NEGATIVE_INFINITY;
+	double momentumXMaxCut = Double.POSITIVE_INFINITY;
+
+	double momentumYMinCut = Double.NEGATIVE_INFINITY;
+	double momentumYMaxCut = Double.POSITIVE_INFINITY;
+
+	double momentumZMinCut = Double.NEGATIVE_INFINITY;
+	double momentumZMaxCut = Double.POSITIVE_INFINITY;
+
+	double vertexXMinCut = Double.NEGATIVE_INFINITY;
+	double vertexXMaxCut = Double.POSITIVE_INFINITY;
+
+	double vertexYMinCut = Double.NEGATIVE_INFINITY;
+	double vertexYMaxCut = Double.POSITIVE_INFINITY;
+
+	double vertexZMinCut = Double.NEGATIVE_INFINITY;
+	double vertexZMaxCut = Double.POSITIVE_INFINITY;
+
+	double thetaMinCut = Double.NEGATIVE_INFINITY;
+	double thetaMaxCut = Double.POSITIVE_INFINITY;
+
+	double phiMinCut = Double.NEGATIVE_INFINITY;
+	double phiMaxCut = Double.POSITIVE_INFINITY;
+
+	double chargeMinCut = Double.NEGATIVE_INFINITY;
+	double chargeMaxCut = Double.POSITIVE_INFINITY;
+
+	double betaMinCut = Double.NEGATIVE_INFINITY;
+	double betaMaxCut = Double.POSITIVE_INFINITY;
+
+	double chi2pidMinCut = Double.NEGATIVE_INFINITY;
+	double chi2pidMaxCut = Double.POSITIVE_INFINITY;
+
 	/**
 	 * Creates a new particle cut
 	 */
 	public ParticleCut() {
 		super();
 	}
-	
+
 	/**
 	 * @return the energyMinCut
 	 */
@@ -59,7 +57,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param energyMinCut the energyMinCut to set
+	 * @param energyMinCut
+	 *            the energyMinCut to set
 	 */
 	public void setEnergyMinCut(double energyMinCut) {
 		this.energyMinCut = energyMinCut;
@@ -73,7 +72,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param energyMaxCut the energyMaxCut to set
+	 * @param energyMaxCut
+	 *            the energyMaxCut to set
 	 */
 	public void setEnergyMaxCut(double energyMaxCut) {
 		this.energyMaxCut = energyMaxCut;
@@ -87,7 +87,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param momentumXMinCut the momentumXMinCut to set
+	 * @param momentumXMinCut
+	 *            the momentumXMinCut to set
 	 */
 	public void setMomentumXMinCut(double momentumXMinCut) {
 		this.momentumXMinCut = momentumXMinCut;
@@ -101,7 +102,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param momentumXMaxCut the momentumXMaxCut to set
+	 * @param momentumXMaxCut
+	 *            the momentumXMaxCut to set
 	 */
 	public void setMomentumXMaxCut(double momentumXMaxCut) {
 		this.momentumXMaxCut = momentumXMaxCut;
@@ -115,7 +117,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param momentumYMinCut the momentumYMinCut to set
+	 * @param momentumYMinCut
+	 *            the momentumYMinCut to set
 	 */
 	public void setMomentumYMinCut(double momentumYMinCut) {
 		this.momentumYMinCut = momentumYMinCut;
@@ -129,7 +132,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param momentumYMaxCut the momentumYMaxCut to set
+	 * @param momentumYMaxCut
+	 *            the momentumYMaxCut to set
 	 */
 	public void setMomentumYMaxCut(double momentumYMaxCut) {
 		this.momentumYMaxCut = momentumYMaxCut;
@@ -143,7 +147,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param momentumZMinCut the momentumZMinCut to set
+	 * @param momentumZMinCut
+	 *            the momentumZMinCut to set
 	 */
 	public void setMomentumZMinCut(double momentumZMinCut) {
 		this.momentumZMinCut = momentumZMinCut;
@@ -157,7 +162,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param momentumZMaxCut the momentumZMaxCut to set
+	 * @param momentumZMaxCut
+	 *            the momentumZMaxCut to set
 	 */
 	public void setMomentumZMaxCut(double momentumZMaxCut) {
 		this.momentumZMaxCut = momentumZMaxCut;
@@ -171,7 +177,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param vertexXMinCut the vertexXMinCut to set
+	 * @param vertexXMinCut
+	 *            the vertexXMinCut to set
 	 */
 	public void setVertexXMinCut(double vertexXMinCut) {
 		this.vertexXMinCut = vertexXMinCut;
@@ -185,7 +192,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param vertexXMaxCut the vertexXMaxCut to set
+	 * @param vertexXMaxCut
+	 *            the vertexXMaxCut to set
 	 */
 	public void setVertexXMaxCut(double vertexXMaxCut) {
 		this.vertexXMaxCut = vertexXMaxCut;
@@ -199,7 +207,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param vertexYMinCut the vertexYMinCut to set
+	 * @param vertexYMinCut
+	 *            the vertexYMinCut to set
 	 */
 	public void setVertexYMinCut(double vertexYMinCut) {
 		this.vertexYMinCut = vertexYMinCut;
@@ -213,7 +222,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param vertexYMaxCut the vertexYMaxCut to set
+	 * @param vertexYMaxCut
+	 *            the vertexYMaxCut to set
 	 */
 	public void setVertexYMaxCut(double vertexYMaxCut) {
 		this.vertexYMaxCut = vertexYMaxCut;
@@ -227,7 +237,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param vertexZMinCut the vertexZMinCut to set
+	 * @param vertexZMinCut
+	 *            the vertexZMinCut to set
 	 */
 	public void setVertexZMinCut(double vertexZMinCut) {
 		this.vertexZMinCut = vertexZMinCut;
@@ -241,7 +252,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param vertexZMaxCut the vertexZMaxCut to set
+	 * @param vertexZMaxCut
+	 *            the vertexZMaxCut to set
 	 */
 	public void setVertexZMaxCut(double vertexZMaxCut) {
 		this.vertexZMaxCut = vertexZMaxCut;
@@ -255,7 +267,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param thetaMinCut the thetaMinCut to set
+	 * @param thetaMinCut
+	 *            the thetaMinCut to set
 	 */
 	public void setThetaMinCut(double thetaMinCut) {
 		this.thetaMinCut = thetaMinCut;
@@ -269,7 +282,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param thetaMaxCut the thetaMaxCut to set
+	 * @param thetaMaxCut
+	 *            the thetaMaxCut to set
 	 */
 	public void setThetaMaxCut(double thetaMaxCut) {
 		this.thetaMaxCut = thetaMaxCut;
@@ -283,7 +297,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param phiMinCut the phiMinCut to set
+	 * @param phiMinCut
+	 *            the phiMinCut to set
 	 */
 	public void setPhiMinCut(double phiMinCut) {
 		this.phiMinCut = phiMinCut;
@@ -297,7 +312,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param phiMaxCut the phiMaxCut to set
+	 * @param phiMaxCut
+	 *            the phiMaxCut to set
 	 */
 	public void setPhiMaxCut(double phiMaxCut) {
 		this.phiMaxCut = phiMaxCut;
@@ -311,7 +327,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param chargeMinCut the chargeMinCut to set
+	 * @param chargeMinCut
+	 *            the chargeMinCut to set
 	 */
 	public void setChargeMinCut(double chargeMinCut) {
 		this.chargeMinCut = chargeMinCut;
@@ -325,7 +342,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param chargeMaxCut the chargeMaxCut to set
+	 * @param chargeMaxCut
+	 *            the chargeMaxCut to set
 	 */
 	public void setChargeMaxCut(double chargeMaxCut) {
 		this.chargeMaxCut = chargeMaxCut;
@@ -339,7 +357,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param betaMinCut the betaMinCut to set
+	 * @param betaMinCut
+	 *            the betaMinCut to set
 	 */
 	public void setBetaMinCut(double betaMinCut) {
 		this.betaMinCut = betaMinCut;
@@ -353,7 +372,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param betaMaxCut the betaMaxCut to set
+	 * @param betaMaxCut
+	 *            the betaMaxCut to set
 	 */
 	public void setBetaMaxCut(double betaMaxCut) {
 		this.betaMaxCut = betaMaxCut;
@@ -367,7 +387,8 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param chi2pidMinCut the chi2pidMinCut to set
+	 * @param chi2pidMinCut
+	 *            the chi2pidMinCut to set
 	 */
 	public void setChi2pidMinCut(double chi2pidMinCut) {
 		this.chi2pidMinCut = chi2pidMinCut;
@@ -381,46 +402,86 @@ public class ParticleCut {
 	}
 
 	/**
-	 * @param chi2pidMaxCut the chi2pidMaxCut to set
+	 * @param chi2pidMaxCut
+	 *            the chi2pidMaxCut to set
 	 */
 	public void setChi2pidMaxCut(double chi2pidMaxCut) {
 		this.chi2pidMaxCut = chi2pidMaxCut;
 	}
 
 	/**
-	 * Cut using parameters
-	 * @param oldParticleEvent event on which we apply cuts
-	 * @return event after cuts
+	 * Analyze if a particle is in the cut requirements
+	 * @param particleToTest particle to analyze
+	 * @return false if particle is supposed to be cut, true if particle is in the requirements
 	 */
-	public ParticleEvent Cut(ParticleEvent oldParticleEvent) {
-		ParticleEvent newParticleEvent = null;
-
-		if (oldParticleEvent.hasNumberOfParticles() > 0) {
-			newParticleEvent = new ParticleEvent();
-			for (Particle particleIterator : oldParticleEvent.getParticles()) {
-				if (particleIterator.getEnergy() > energyMinCut && particleIterator.getEnergy() < energyMaxCut &&
-						particleIterator.getMomentum().x() > momentumXMinCut && particleIterator.getMomentum().x() < momentumXMaxCut &&
-						particleIterator.getMomentum().y() > momentumYMinCut && particleIterator.getMomentum().y() < momentumYMaxCut &&
-						particleIterator.getMomentum().z() > momentumZMinCut && particleIterator.getMomentum().z() < momentumZMaxCut &&
-						particleIterator.getVertex().x() > vertexXMinCut && particleIterator.getVertex().x() < vertexXMaxCut &&
-						particleIterator.getVertex().y() > vertexYMinCut && particleIterator.getVertex().y() < vertexYMaxCut &&
-						particleIterator.getVertex().z() > vertexZMinCut && particleIterator.getVertex().z() < vertexZMaxCut &&
-						particleIterator.getTheta() > thetaMinCut && particleIterator.getTheta() < thetaMaxCut &&
-						particleIterator.getPhi() > phiMinCut && particleIterator.getPhi() < phiMaxCut &&
-						particleIterator.getCharge() > chargeMinCut && particleIterator.getCharge() < chargeMaxCut &&
-						particleIterator.getBeta() > betaMinCut && particleIterator.getBeta() < chargeMaxCut &&
-						particleIterator.getChi2pid() > chi2pidMinCut && particleIterator.getChi2pid() < chi2pidMaxCut){
-					newParticleEvent.addParticle(particleIterator);
-				}
-			}
+	public boolean isInCuts(Particle particleToTest) {
+		if (particleToTest.getEnergy() > energyMinCut && particleToTest.getEnergy() < energyMaxCut
+				&& particleToTest.getMomentum().x() > momentumXMinCut
+				&& particleToTest.getMomentum().x() < momentumXMaxCut
+				&& particleToTest.getMomentum().y() > momentumYMinCut
+				&& particleToTest.getMomentum().y() < momentumYMaxCut
+				&& particleToTest.getMomentum().z() > momentumZMinCut
+				&& particleToTest.getMomentum().z() < momentumZMaxCut
+				&& particleToTest.getVertex().x() > vertexXMinCut && particleToTest.getVertex().x() < vertexXMaxCut
+				&& particleToTest.getVertex().y() > vertexYMinCut && particleToTest.getVertex().y() < vertexYMaxCut
+				&& particleToTest.getVertex().z() > vertexZMinCut && particleToTest.getVertex().z() < vertexZMaxCut
+				&& particleToTest.getTheta() > thetaMinCut && particleToTest.getTheta() < thetaMaxCut
+				&& particleToTest.getPhi() > phiMinCut && particleToTest.getPhi() < phiMaxCut
+				&& particleToTest.getCharge() > chargeMinCut && particleToTest.getCharge() < chargeMaxCut
+				&& particleToTest.getBeta() > betaMinCut && particleToTest.getBeta() < chargeMaxCut
+				&& particleToTest.getChi2pid() > chi2pidMinCut && particleToTest.getChi2pid() < chi2pidMaxCut) {
+			return true;
+		}else{
+			return false;
 		}
-
-		return newParticleEvent;
 	}
 	
-	
-	
-	
-	
-	
+	public boolean  isInCutsDebug(Particle particleToTest) {
+		System.out.println("Particle to test energy: "+particleToTest.getEnergy());
+		if (particleToTest.getEnergy() > energyMinCut && particleToTest.getEnergy() < energyMaxCut){
+			System.out.println("OK energy");
+		}
+		if(particleToTest.getMomentum().x() > momentumXMinCut
+				&& particleToTest.getMomentum().x() < momentumXMaxCut
+				&& particleToTest.getMomentum().y() > momentumYMinCut
+				&& particleToTest.getMomentum().y() < momentumYMaxCut
+				&& particleToTest.getMomentum().z() > momentumZMinCut
+				&& particleToTest.getMomentum().z() < momentumZMaxCut){
+			System.out.println("OK momentum");
+		}
+		if (particleToTest.getVertex().x() > vertexXMinCut && particleToTest.getVertex().x() < vertexXMaxCut
+				&& particleToTest.getVertex().y() > vertexYMinCut && particleToTest.getVertex().y() < vertexYMaxCut
+				&& particleToTest.getVertex().z() > vertexZMinCut && particleToTest.getVertex().z() < vertexZMaxCut){
+			System.out.println("OK vertex");
+		}
+		if (particleToTest.getTheta() > thetaMinCut && particleToTest.getTheta() < thetaMaxCut
+				&& particleToTest.getPhi() > phiMinCut && particleToTest.getPhi() < phiMaxCut){
+			System.out.println("OK thetaPhi");
+		}
+		if(particleToTest.getCharge() > chargeMinCut && particleToTest.getCharge() < chargeMaxCut
+				&& particleToTest.getBeta() > betaMinCut && particleToTest.getBeta() < chargeMaxCut
+				&& particleToTest.getChi2pid() > chi2pidMinCut && particleToTest.getChi2pid() < chi2pidMaxCut) {
+			System.out.println("OK charge beta pid");
+		}
+		if (particleToTest.getEnergy() > energyMinCut && particleToTest.getEnergy() < energyMaxCut
+				&& particleToTest.getMomentum().x() > momentumXMinCut
+				&& particleToTest.getMomentum().x() < momentumXMaxCut
+				&& particleToTest.getMomentum().y() > momentumYMinCut
+				&& particleToTest.getMomentum().y() < momentumYMaxCut
+				&& particleToTest.getMomentum().z() > momentumZMinCut
+				&& particleToTest.getMomentum().z() < momentumZMaxCut
+				&& particleToTest.getVertex().x() > vertexXMinCut && particleToTest.getVertex().x() < vertexXMaxCut
+				&& particleToTest.getVertex().y() > vertexYMinCut && particleToTest.getVertex().y() < vertexYMaxCut
+				&& particleToTest.getVertex().z() > vertexZMinCut && particleToTest.getVertex().z() < vertexZMaxCut
+				&& particleToTest.getTheta() > thetaMinCut && particleToTest.getTheta() < thetaMaxCut
+				&& particleToTest.getPhi() > phiMinCut && particleToTest.getPhi() < phiMaxCut
+				&& particleToTest.getCharge() > chargeMinCut && particleToTest.getCharge() < chargeMaxCut
+				&& particleToTest.getBeta() > betaMinCut && particleToTest.getBeta() < chargeMaxCut
+				&& particleToTest.getChi2pid() > chi2pidMinCut && particleToTest.getChi2pid() < chi2pidMaxCut) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 }

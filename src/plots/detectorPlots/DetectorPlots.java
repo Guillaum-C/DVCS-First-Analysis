@@ -5,34 +5,45 @@ import org.clas12.analysisTools.plots.Canvas;
 
 public class DetectorPlots {
 	
-	CVTPlots cvtPlots;
+	Canvas myCanvas;
+	double electronEnergy;
 	
+	CVTPlots cvtPlots;
 	DCPlots dcPlots;
 	CalorimeterPlots caloPlots;
 	FTOFPlots ftofPlots;
 	HTCCPlots htccPlots;
 	
-	
-	public void createDetectorsPlots(Canvas myCanvas, double electronEnergy) {
-		
-		cvtPlots = new CVTPlots(myCanvas, "CVT", "",electronEnergy);
-		
-		dcPlots = new DCPlots(myCanvas, "DC");
-		caloPlots = new CalorimeterPlots(myCanvas, "Calo");
-		ftofPlots = new FTOFPlots(myCanvas, "FTOF");
-		htccPlots = new HTCCPlots(myCanvas, "HTCC");
-		
+	public DetectorPlots(Canvas canvas, double electronEnergy){
+		this.myCanvas=canvas;
+		this.electronEnergy=electronEnergy;
+		this.cvtPlots = new CVTPlots(myCanvas);
+		this.dcPlots = new DCPlots(myCanvas, "DC");
+		this.caloPlots = new CalorimeterPlots(myCanvas, "Calo");
+		this.ftofPlots = new FTOFPlots(myCanvas, "FTOF");
+		this.htccPlots = new HTCCPlots(myCanvas, "HTCC");
 	}
 	
-	public void fillDetectorsPlots(Event processedEvent){
+	public void createDetectorsPlotsRaw() {
+		this.cvtPlots.createDefaultHistograms(electronEnergy);
+	}
+	
+	public void fillDetectorsPlotsRaw(Event processedEvent){
 		
-		cvtPlots.fillHistograms(processedEvent.getCentralEvent().getCvtEvent());
+		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent());
 		
-		dcPlots.fillHistograms(processedEvent);
-		caloPlots.fillHistograms(processedEvent);
-		ftofPlots.fillHistograms(processedEvent);
-		htccPlots.fillHistograms(processedEvent);
+		this.dcPlots.fillHistograms(processedEvent);
+		this.caloPlots.fillHistograms(processedEvent);
+		this.ftofPlots.fillHistograms(processedEvent);
+		this.htccPlots.fillHistograms(processedEvent);
 
 	}
 	
+	public void createDetectorsPlotsAfterCuts(){
+		this.cvtPlots.createDefaultHistograms(electronEnergy, "CVT cut", "after cut");
+	}
+	
+	public void fillDetectorsPlotsAfterCuts(Event processedEvent){
+		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent(), "CVT cut", "after cut");
+	}
 }

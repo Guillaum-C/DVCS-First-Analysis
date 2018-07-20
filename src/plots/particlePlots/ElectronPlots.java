@@ -34,7 +34,7 @@ public class ElectronPlots {
 
 	/**
 	 * Create an electron plots class
-	 * @param canvas
+	 * @param canvas canvas to use
 	 */
 	public ElectronPlots(Canvas canvas) {
 		super();

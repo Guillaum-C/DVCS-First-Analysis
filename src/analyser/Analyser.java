@@ -6,6 +6,7 @@ import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.particles.Electron;
 import org.clas12.analysisTools.event.particles.LorentzVector;
 import org.clas12.analysisTools.event.particles.Particle;
+import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Photon;
 import org.clas12.analysisTools.event.particles.PionPlus;
 import org.clas12.analysisTools.event.particles.Proton;
@@ -15,6 +16,10 @@ import org.jlab.clas.physics.Vector3;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
+import cuts.central.CVTCut;
+import cuts.particles.ElectronCut;
+import cuts.particles.PhotonCut;
+import cuts.particles.ProtonCut;
 import plots.detectorPlots.*;
 import plots.particlePlots.*;
 
@@ -315,21 +320,30 @@ public class Analyser {
 		particlePlots.createParticlesPlotsAfterCuts();
 	}
 	
-	public static void fillRawParticlesPlots(Event processedEvent){
+	public static void createRawDetectorsPlots(Canvas myCanvas){
+		detectorPlots = new DetectorPlots(myCanvas, electronEnergy);
+		detectorPlots.createDetectorsPlotsRaw();
+		detectorPlots.createDetectorsPlotsAfterCuts();
+	}
+	
+	public static void fillNumberParticlesPlots(Event processedEvent){
+		particlePlots.fillNumberOfParticlesPlots(processedEvent);
+	}
+	
+	public static void fillRawParticlesPlots(ParticleEvent processedEvent){
 		particlePlots.fillParticlesPlotsRaw(processedEvent);
 	}
 	
-	public static void fillParticlesPlotsCut(Event processedEvent){
+	public static void fillParticlesPlotsCut(ParticleEvent processedEvent){
 		particlePlots.fillParticlesPlotsAfterCuts(processedEvent);
 	}
 	
-	public static void createRawDetectorsPlots(Canvas myCanvas){
-		detectorPlots = new DetectorPlots();
-		detectorPlots.createDetectorsPlots(myCanvas, electronEnergy);
+	public static void fillRawDetectorPlots(Event processedEvent){
+		detectorPlots.fillDetectorsPlotsRaw(processedEvent);
 	}
 	
-	public static void fillRawDetectorPlots(Event processedEvent){
-		detectorPlots.fillDetectorsPlots(processedEvent);
+	public static void fillDetectorsPlotsCut(Event processedEvent){
+		detectorPlots.fillDetectorsPlotsAfterCuts(processedEvent);
 	}
 	
 	public static void main(String[] args) {
@@ -370,39 +384,38 @@ public class Analyser {
 			eventIterator++;
 			if (eventIterator % 10000 == 0)
 				System.out.println("Event: " + eventIterator);
+			
 			DataEvent dataEvent = hipoReader.getNextEvent();
-			
-			if (dataEvent.hasBank("REC::Event") == true) {
-				DataBank bankEvent = dataEvent.getBank("REC::Event");
-//				bankEvent.show();
-				for (int bankEventIterator = 0; bankEventIterator < bankEvent
-						.rows(); bankEventIterator++) { /* For all hits */
-					bankEvent.getByte("Helic", bankEventIterator);
-				}
-				// bankEvent.show();
-			}
-			
 			Event processedEvent = new Event();
 			processedEvent.readBanks(dataEvent);
 			
-			// KinematicalCorrections.correct2GeV100OutbendingTorus(dataEvent);
+//			fillRawParticlesPlots(processedEvent.getParticleEvent());
+//			fillNumberParticlesPlots(processedEvent);
+//			fillRawDetectorPlots(processedEvent);
+//			
+			/* ===== KINEMATICAL CORRECTION ===== */
 
-			// Cuts cut = new Cuts();
-
-			int helicity = 0;
-			if (dataEvent.hasBank("REC::Event") == true) {
-				DataBank bankEvent = dataEvent.getBank("REC::Event");
-				for (int bankEventIterator = 0; bankEventIterator < bankEvent
-						.rows(); bankEventIterator++) { /* For all hits */
-					helicity = bankEvent.getByte("Helic", bankEventIterator);
-				}
-				// bankEvent.show();
-			}
+			/* ===== CUTS ===== */
+			ElectronCut electronCutDVCS = new ElectronCut();
+			Event afterElectronCuts = electronCutDVCS.CutDVCS(processedEvent);
 			
-			fillRawParticlesPlots(processedEvent);
-
+			PhotonCut photonCutDVCS = new PhotonCut();
+			Event afterPhotonCuts = photonCutDVCS.CutDVCS(afterElectronCuts);
+			
+			ProtonCut protonCutDVCS = new ProtonCut();
+			Event afterProtonCuts = protonCutDVCS.CutDVCS(afterPhotonCuts);
+			
+			CVTCut cvtCutDVCS = new CVTCut();
+			Event afterCVTCuts = cvtCutDVCS.CutDefaultAnalysis(afterProtonCuts);
+			
+			fillRawParticlesPlots(processedEvent.getParticleEvent());
+			fillNumberParticlesPlots(processedEvent);
 			fillRawDetectorPlots(processedEvent);
 			
+			fillParticlesPlotsCut(afterCVTCuts.getParticleEvent());
+			fillDetectorsPlotsCut(afterCVTCuts);
+			
+			/* ===== ANALYSIS ===== */
 			
 			/* ===== ELASTIC ===== */
 			if (processedEvent.getParticleEvent().hasNumberOfElectrons() > 0) {
@@ -747,7 +760,7 @@ public class Analyser {
 						double missingMass2_EP = difference_EP.m2();
 
 						if (Math.abs(missingMass2_EPG) < 0.1) {
-							if (helicity == 1) {
+							if (processedEvent.getHelicity() == 1) {
 								eventsWithHelPlus++;
 
 							} else {
@@ -763,7 +776,7 @@ public class Analyser {
 							// System.out.println("Phi: "+phi+" PhiDeg:
 							// "+phiDeg);
 							if (phiDeg > 0 && phiDeg < 180) {
-								if (helicity == 1) {
+								if (processedEvent.getHelicity() == 1) {
 									myCanvas.fill1DHisto("AsymMissingMass", missingMass2_EPG, 1);
 									// eventsWithHelPlus++;
 								} else {
@@ -773,7 +786,7 @@ public class Analyser {
 
 							}
 							if (phiDeg > 180 && phiDeg < 360) {
-								if (helicity == 1) {
+								if (processedEvent.getHelicity() == 1) {
 									myCanvas.fill1DHisto("AsymMissingMass", missingMass2_EPG, -1);
 									// eventsWithHelPlus++;
 								} else {
@@ -782,7 +795,7 @@ public class Analyser {
 								}
 							}
 
-							if (helicity == 1) {
+							if (processedEvent.getHelicity() == 1) {
 								myCanvas.fill1DHisto("NombreDePointsSecEffPVSPhi", phiDeg, 1);
 							} else {
 								myCanvas.fill1DHisto("NombreDePointsSecEffNVSPhi", phiDeg, 1);
@@ -808,7 +821,7 @@ public class Analyser {
 						}
 
 						if (Math.abs(missingMass2_EPG) < 0.05) {
-							if (helicity == 1) {
+							if (processedEvent.getHelicity() == 1) {
 								eventsWithHelPlusStrict++;
 							} else {
 								eventsWithHelMinusStrict++;

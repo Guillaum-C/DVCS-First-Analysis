@@ -10,7 +10,7 @@ public class ProtonPlots {
 	
 	int thetaBin = 200;
 	double thetaMin = 0;
-	double thetaMax = 180;
+	double thetaMax = 120;
 
 	int phiBin = 200;
 	double phiMin = -180;
@@ -42,7 +42,7 @@ public class ProtonPlots {
 
 	/**
 	 * Create a proton plots class
-	 * @param canvas
+	 * @param canvas canvas
 	 */
 	public ProtonPlots(Canvas canvas) {
 		super();

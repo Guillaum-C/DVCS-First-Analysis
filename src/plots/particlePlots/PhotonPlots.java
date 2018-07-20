@@ -34,7 +34,7 @@ public class PhotonPlots {
 
 	/**
 	 * Create a photon plots class
-	 * @param canvas
+	 * @param canvas canvas
 	 */
 	public PhotonPlots(Canvas canvas) {
 		super();

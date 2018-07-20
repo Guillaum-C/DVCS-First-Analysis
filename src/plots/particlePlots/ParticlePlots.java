@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.particles.Electron;
 import org.clas12.analysisTools.event.particles.Particle;
+import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Photon;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
@@ -20,6 +21,8 @@ public class ParticlePlots {
 	
 	/**
 	 * Create a particle plots class
+	 * @param canvas canvas
+	 * @param electronEnergy beam energy
 	 */
 	public ParticlePlots(Canvas canvas, double electronEnergy){
 		this.myCanvas = canvas;
@@ -31,8 +34,6 @@ public class ParticlePlots {
 	
 	/**
 	 * Create raw particles plots
-	 * @param myCanvas canvas to draw plots on
-	 * @param electronEnergy beam energy (for plot scale)
 	 */
 	public void createParticlesPlotsRaw() {
 		this.electronPlots.createDefaultHistograms(electronEnergy);
@@ -81,32 +82,33 @@ public class ParticlePlots {
 	 * Fill raw particles plots
 	 * @param processedEvent event to extract particles from
 	 */
-	public void fillParticlesPlotsRaw(Event processedEvent) {
+	public void fillParticlesPlotsRaw(ParticleEvent processedEvent) {
 		
-		if (processedEvent.getParticleEvent().hasNumberOfElectrons() > 0) {
-			ArrayList<Electron> electrons = processedEvent.getParticleEvent().getElectrons();
+		if (processedEvent.hasNumberOfElectrons() > 0) {
+			ArrayList<Electron> electrons = processedEvent.getElectrons();
 			for (Particle electron : electrons) {
 				this.electronPlots.fillDefaultHistograms(electron);
 			}
 		}
 
 		/* ===== PROTON ===== */
-		if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
-			ArrayList<Proton> protons = processedEvent.getParticleEvent().getProtons();
+		if (processedEvent.hasNumberOfProtons() > 0) {
+			ArrayList<Proton> protons = processedEvent.getProtons();
 			for (Particle proton : protons) {
 				this.protonPlots.fillDefaultHistograms(proton);
 			}
 		}
 //
 		/* ===== PHOTON ===== */
-		if (processedEvent.getParticleEvent().hasNumberOfPhotons() > 0) {
-			ArrayList<Photon> photons = processedEvent.getParticleEvent().getPhotons();
+		if (processedEvent.hasNumberOfPhotons() > 0) {
+			ArrayList<Photon> photons = processedEvent.getPhotons();
 			for (Particle photon : photons) {
 				this.photonPlots.fillDefaultHistograms(photon);
 			}
 		}
-		
-
+	}
+	
+	public void fillNumberOfParticlesPlots(Event processedEvent){
 		/* ===== NUMBER OF PARTICLES ===== */
 		this.myCanvas.fill1DHisto("numberOfElectrons", processedEvent.getParticleEvent().hasNumberOfElectrons());
 		this.myCanvas.fill1DHisto("numberOfPhotons", processedEvent.getParticleEvent().hasNumberOfPhotons());
@@ -140,37 +142,38 @@ public class ParticlePlots {
 	 */
 	public void createParticlesPlotsAfterCuts(){
 		this.electronPlots.createDefaultHistograms(electronEnergy, "Electron cut", "after cut");
-		
-		this.protonPlots.createDefaultHistograms(electronEnergy, "Proton cut", "after cut");
-		
+
 		this.photonPlots.createDefaultHistograms(electronEnergy, "Photon cut", "after cut");
+		
+		this.protonPlots.createDefaultHistograms(electronEnergy, "Proton cut", "after cut");	
 	}
 	
 	/**
 	 * Fill particles after cuts
+	 * @param particleEvent event to plot
 	 */
-	public void fillParticlesPlotsAfterCuts(Event cutEvent){
+	public void fillParticlesPlotsAfterCuts(ParticleEvent particleEvent){
 
-		if (cutEvent.getParticleEvent().hasNumberOfElectrons() > 0) {
-			ArrayList<Electron> electrons = cutEvent.getParticleEvent().getElectrons();
+		if (particleEvent.hasNumberOfElectrons() > 0) {
+			ArrayList<Electron> electrons = particleEvent.getElectrons();
 			for (Particle electron : electrons) {
-				this.electronPlots.fillDefaultHistograms(electron);
+				this.electronPlots.fillDefaultHistograms(electron, "Electron cut", "after cut");
 			}
 		}
 
 		/* ===== PROTON ===== */
-		if (cutEvent.getParticleEvent().hasNumberOfProtons() > 0) {
-			ArrayList<Proton> protons = cutEvent.getParticleEvent().getProtons();
+		if (particleEvent.hasNumberOfProtons() > 0) {
+			ArrayList<Proton> protons = particleEvent.getProtons();
 			for (Particle proton : protons) {
-				this.protonPlots.fillDefaultHistograms(proton);
+				this.protonPlots.fillDefaultHistograms(proton, "Proton cut", "after cut");
 			}
 		}
 //
 		/* ===== PHOTON ===== */
-		if (cutEvent.getParticleEvent().hasNumberOfPhotons() > 0) {
-			ArrayList<Photon> photons = cutEvent.getParticleEvent().getPhotons();
+		if (particleEvent.hasNumberOfPhotons() > 0) {
+			ArrayList<Photon> photons = particleEvent.getPhotons();
 			for (Particle photon : photons) {
-				this.photonPlots.fillDefaultHistograms(photon);
+				this.photonPlots.fillDefaultHistograms(photon, "Photon cut", "after cut");
 			}
 		}
 	}
