@@ -37,14 +37,25 @@ public class DetectorPlots {
 		this.caloPlots.fillHistograms(processedEvent);
 		this.ftofPlots.fillHistograms(processedEvent);
 		this.htccPlots.fillHistograms(processedEvent);
-
 	}
 	
 	public void createDetectorsPlotsAfterCuts(){
 		this.cvtPlots.createDefaultHistograms(electronEnergy, "CVT cut", "after cut");
+		this.dcPlots.createDefaultHistograms(electronEnergy, "DC cut", "after cut");
 	}
 	
 	public void fillDetectorsPlotsAfterCuts(Event processedEvent){
 		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent(), "CVT cut", "after cut");
+		this.dcPlots.fillDefaultHistograms(processedEvent.getForwardEvent().getForwardTrackerEvent(), "DC cut", "after cut");
+	}
+
+	public void createDetectorsPlotsRandomTrigger(){
+		this.cvtPlots.createDefaultHistograms(electronEnergy, "CVT random", "rand trig");
+		this.dcPlots.createDefaultHistograms(electronEnergy, "DC random", "rand trig");
+	}
+	
+	public void fillDetectorsPlotsRandomTrigger(Event processedEvent){
+		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent(), "CVT random", "rand trig");
+		this.dcPlots.fillDefaultHistograms(processedEvent.getForwardEvent().getForwardTrackerEvent(), "DC random", "rand trig");
 	}
 }
