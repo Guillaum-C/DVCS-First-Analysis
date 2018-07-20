@@ -18,7 +18,7 @@ public class DetectorPlots {
 		this.myCanvas=canvas;
 		this.electronEnergy=electronEnergy;
 		this.cvtPlots = new CVTPlots(myCanvas);
-		this.dcPlots = new DCPlots(myCanvas, "DC");
+		this.dcPlots = new DCPlots(myCanvas);
 		this.caloPlots = new CalorimeterPlots(myCanvas, "Calo");
 		this.ftofPlots = new FTOFPlots(myCanvas, "FTOF");
 		this.htccPlots = new HTCCPlots(myCanvas, "HTCC");
@@ -26,13 +26,14 @@ public class DetectorPlots {
 	
 	public void createDetectorsPlotsRaw() {
 		this.cvtPlots.createDefaultHistograms(electronEnergy);
+		this.dcPlots.createDefaultHistograms(electronEnergy);
 	}
 	
 	public void fillDetectorsPlotsRaw(Event processedEvent){
 		
 		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent());
 		
-		this.dcPlots.fillHistograms(processedEvent);
+		this.dcPlots.fillDefaultHistograms(processedEvent.getForwardEvent().getForwardTrackerEvent());
 		this.caloPlots.fillHistograms(processedEvent);
 		this.ftofPlots.fillHistograms(processedEvent);
 		this.htccPlots.fillHistograms(processedEvent);

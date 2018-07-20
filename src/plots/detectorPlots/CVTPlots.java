@@ -31,7 +31,7 @@ public class CVTPlots {
 
 	int chi2Bin = 200;
 	double chi2Min = 0;
-	double chi2Max = 100;
+	double chi2Max = 200;
 	
 	int ndfBin = 10;
 	double ndfMin = 0;
@@ -193,7 +193,6 @@ public class CVTPlots {
 		// Z-Vertex (cm)", detectorName+" Z-Vertex (cm)", vzBin, vzMin, vzMax,
 		// vzBin, vzMin, vzMax);
 	}
-
 	
 	/**
 	 * Create default plots. This tab is titled by the name of the particle so only one tab can be created using this method.
@@ -202,11 +201,10 @@ public class CVTPlots {
 	public void createDefaultHistograms(double electronEnergy) {
 		this.createDefaultHistograms(electronEnergy, detectorName, "");
 	}
-	
-	
+		
 	/**
 	 * Fill default plots
-	 * @param cvtEvent cvtEvent to use to fill the plots
+	 * @param cvtEvent event to use to fill the plots
 	 * @param tabName name of the tab to fill
 	 * @param legend to fill plots created with a legend
 	 */
@@ -304,7 +302,7 @@ public class CVTPlots {
 	
 	/**
 	 * Fill default plots
-	 * @param cvtEvent cvtEvent to use to fill the plots
+	 * @param cvtEvent event to use to fill the plots
 	 */
 	public void fillDefaultHistograms(CVTEvent cvtEvent) {
 		this.fillDefaultHistograms(cvtEvent, detectorName, "");
