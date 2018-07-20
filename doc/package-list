@@ -1,1 +1,6 @@
 analyser
+cuts.central
+cuts.particles
+cuts.physics
+plots.detectorPlots
+plots.particlePlots
