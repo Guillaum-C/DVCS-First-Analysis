@@ -20,7 +20,7 @@ public class ParticlePlots {
 	PhotonPlots photonPlots;
 	
 	/**
-	 * Create a particle plots class
+	 * Create plots class
 	 * @param canvas canvas
 	 * @param electronEnergy beam energy
 	 */
@@ -33,7 +33,7 @@ public class ParticlePlots {
 	}
 	
 	/**
-	 * Create raw particles plots
+	 * Create raw plots
 	 */
 	public void createParticlesPlotsRaw() {
 		this.electronPlots.createDefaultHistograms(electronEnergy);
@@ -79,7 +79,7 @@ public class ParticlePlots {
 	}
 	
 	/**
-	 * Fill raw particles plots
+	 * Fill raw plots
 	 * @param processedEvent event to extract particles from
 	 */
 	public void fillParticlesPlotsRaw(ParticleEvent processedEvent) {
@@ -138,7 +138,7 @@ public class ParticlePlots {
 	}
 	
 	/**
-	 * Create particles plots after cuts
+	 * Create plots after cuts
 	 */
 	public void createParticlesPlotsAfterCuts(){
 		this.electronPlots.createDefaultHistograms(electronEnergy, "Electron cut", "after cut");
@@ -149,7 +149,7 @@ public class ParticlePlots {
 	}
 	
 	/**
-	 * Fill particles after cuts
+	 * Fill after cuts
 	 * @param particleEvent event to plot
 	 */
 	public void fillParticlesPlotsAfterCuts(ParticleEvent particleEvent){

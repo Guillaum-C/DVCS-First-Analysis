@@ -324,6 +324,7 @@ public class Analyser {
 		detectorPlots = new DetectorPlots(myCanvas, electronEnergy);
 		detectorPlots.createDetectorsPlotsRaw();
 		detectorPlots.createDetectorsPlotsAfterCuts();
+		detectorPlots.createDetectorsPlotsRandomTrigger();
 	}
 	
 	public static void fillNumberParticlesPlots(Event processedEvent){
@@ -344,6 +345,10 @@ public class Analyser {
 	
 	public static void fillDetectorsPlotsCut(Event processedEvent){
 		detectorPlots.fillDetectorsPlotsAfterCuts(processedEvent);
+	}
+	
+	public static void fillDetectorsPlotsRandom(Event processedEvent){
+		detectorPlots.fillDetectorsPlotsRandomTrigger(processedEvent);
 	}
 	
 	public static void main(String[] args) {
@@ -386,16 +391,28 @@ public class Analyser {
 				System.out.println("Event: " + eventIterator);
 			
 			DataEvent dataEvent = hipoReader.getNextEvent();
+			
 			Event processedEvent = new Event();
 			processedEvent.readBanks(dataEvent);
 			
-//			fillRawParticlesPlots(processedEvent.getParticleEvent());
-//			fillNumberParticlesPlots(processedEvent);
-//			fillRawDetectorPlots(processedEvent);
-//			
+//			dataEvent.show();
+//			if (dataEvent.hasBank("CVTRec::Tracks") == true) {
+//				DataBank bankEvent = dataEvent.getBank("CVTRec::Tracks");
+//				bankEvent.show();
+//			}
+//			if (dataEvent.hasBank("REC::Track") == true) {
+//				DataBank bankEvent = dataEvent.getBank("REC::Track");
+//				bankEvent.show();
+//			}
+			
 			/* ===== KINEMATICAL CORRECTION ===== */
 
 			/* ===== CUTS ===== */
+			
+			if (processedEvent.getTrigger_bit(31)){
+				fillDetectorsPlotsRandom(processedEvent);
+			}
+			
 			ElectronCut electronCutDVCS = new ElectronCut();
 			Event afterElectronCuts = electronCutDVCS.CutDVCS(processedEvent);
 			
