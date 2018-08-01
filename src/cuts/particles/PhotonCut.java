@@ -26,7 +26,17 @@ public class PhotonCut extends ParticleCut{
 	}
 	
 	public Event CutDVCS(Event oldEvent) {
-		this.setEnergyMinCut(3);
+		this.setEnergyMinCut(2);
+		return this.Cut(oldEvent);
+	}
+	
+	public Event CutBackground(Event oldEvent) {
+		this.setEnergyMinCut(1);
+		return this.Cut(oldEvent);
+	}
+	
+	public Event CutDVCSRemovePi0(Event oldEvent) {
+		this.setEnergyMinCut(0.5);
 		return this.Cut(oldEvent);
 	}
 }

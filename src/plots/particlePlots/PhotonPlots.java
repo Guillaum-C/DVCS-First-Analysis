@@ -10,7 +10,7 @@ public class PhotonPlots {
 	
 	int thetaBin = 200;
 	double thetaMin = 0;
-	double thetaMax = 60;
+	double thetaMax = 40;
 
 	int phiBin = 200;
 	double phiMin = -180;
