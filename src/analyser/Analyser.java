@@ -122,6 +122,7 @@ public class Analyser {
 			Event processedEvent = new Event();
 			processedEvent.readBanks(dataEvent);
 
+			
 			if (processedEvent.getTrigger_bit(31)) {
 				fillDetectorsPlotsRandom(processedEvent);
 
@@ -1165,7 +1166,7 @@ public class Analyser {
 
 		} else {
 //			hipoReader = new HipoReader(path, runNumber);
-			hipoReader = new HipoReader(fileOld);
+			hipoReader = new HipoReader(fileListOutbending);
 		}
 		return hipoReader;
 	}
