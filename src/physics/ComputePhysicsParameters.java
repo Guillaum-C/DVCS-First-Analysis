@@ -40,6 +40,17 @@ public class ComputePhysicsParameters {
 		return computeW2(electronInitial, electron.getFourMomentum());
 	}
 
+	public static double computeT(LorentzVector protonFinal){
+		LorentzVector protonI = new LorentzVector();
+		protonI.setPxPyPzM(0, 0, 0, Proton.mass);
+		return protonI.substract(protonFinal).mass2();
+	}
+	
+	public static double computeT(Proton proton){
+		return computeT(proton.getFourMomentum());
+	}
+
+
 	public static double computePhiDeg(LorentzVector electronInitial, LorentzVector electronFinal, LorentzVector photonFinal){
 		LorentzVector virtualPhoton = electronInitial.substract(electronFinal);
 		double phi = 0;
@@ -67,15 +78,44 @@ public class ComputePhysicsParameters {
 		return computePhiDeg(electronInitial, electron.getFourMomentum(), photon.getFourMomentum());
 	}
 	
-	public static double computeT(LorentzVector protonFinal){
-		LorentzVector protonI = new LorentzVector();
-		protonI.setPxPyPzM(0, 0, 0, Proton.mass);
-		return protonI.substract(protonFinal).mass2();
+	public static double computePhiDegWithProton(LorentzVector electronInitial, LorentzVector electronFinal, LorentzVector protonFinal) {
+		LorentzVector virtualPhoton = electronInitial.substract(electronFinal);
+		double phi = 0;
+		Vector3 v1 = virtualPhoton.vect().cross(electronFinal.vect());
+		Vector3 v2 = virtualPhoton.vect().cross(protonFinal.vect());
+		double ptot2 = v1.mag2() * v2.mag2();
+		if (ptot2 < 0) {
+			phi = 0;
+		} else {
+			double arg = v1.dot(v2) / Math.sqrt(ptot2);
+			if (arg > 1)
+				arg = 1;
+			if (arg < -1)
+				arg = -1;
+			phi = Math.acos(arg);
+		}
+		if (virtualPhoton.vect().dot(v1.cross(v2)) < 0) {
+			phi = 2 * Math.PI - phi;
+		}
+		double phiDeg = 180 / Math.PI * phi;
+		if (phiDeg>180) {phiDeg=phiDeg-180;}else{phiDeg=phiDeg+180;}
+		return phiDeg;
+	}
+
+	public static double computePhiDegWithProton(LorentzVector electronInitial, Electron electron, Proton proton){
+		return computePhiDegWithProton(electronInitial, electron.getFourMomentum(), proton.getFourMomentum());
 	}
 	
-	public static double computeT(Proton proton){
-		return computeT(proton.getFourMomentum());
+	public static double computePi0InvariantMass(LorentzVector photon1, LorentzVector photon2){
+		LorentzVector sum = photon1.sum(photon2);
+		double invMass = sum.m();
+		return invMass;
 	}
+	
+	public static double computePi0InvariantMass(Photon photon1, Photon photon2){
+		return computePi0InvariantMass(photon1.getFourMomentum(), photon2.getFourMomentum());
+	}
+	
 }
 
 

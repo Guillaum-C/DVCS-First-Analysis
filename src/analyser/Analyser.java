@@ -20,6 +20,8 @@ import org.jlab.clas.physics.Vector3;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import cuts.central.CVTCut;
 import cuts.particles.ElectronCut;
 import cuts.particles.PhotonCut;
@@ -55,39 +57,58 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(runNumber, true, true);
+		Canvas myCanvas = new Canvas(runNumber, true, false);
 		createPlots(myCanvas, true);
 		physicsPlots = new PhysicsPlots(myCanvas, beamEnergy);
+		kinematicalPlots = new KinematicalPlots(myCanvas);
 
 		createNumberParticlesPlots(myCanvas, "Nb particles", "Nb particles");
 		
 		PositiveNegativeChargesPlots positNegCharges = new PositiveNegativeChargesPlots(myCanvas);
 		positNegCharges.createDefaultHistograms(beamEnergy);
 
-		createParticlesPlotsCuts(myCanvas, "cut selection", "after selection cuts");
-		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS after selection", "");
-		
 		createParticlesPlotsCuts(myCanvas, "cut kinematic", "after kinematic cuts");
+		
+		createParticlesPlotsCuts(myCanvas, "cut selection", "after selection cuts");
+		createNumberParticlesPlots(myCanvas, "Nb particles after selection/kinematic", "");
+		kinematicalPlots.createDefaultHistograms(beamEnergy, "Kinematic after selection/kinematic", "");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS after selection/kinematic", "");
+		physicsPlots.createAsymetryHisto("Asym after selection/kinematic", "");
 		
 		createParticlesPlotsCuts(myCanvas, "cut DVCS ex1", "after DVCS epg cuts");
 		createNumberParticlesPlots(myCanvas, "Nb particles ex1", "after DVCS epg cuts");
+		kinematicalPlots.createDefaultHistograms(beamEnergy, "Kinematic ex1", "after DVCS epg cuts");
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex1", "after DVCS epg cuts");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex1", "after DVCS epg cuts");
 		
-		createParticlesPlotsCuts(myCanvas, "cut DVCS ex2", "after DVCS cone cuts");
-		createNumberParticlesPlots(myCanvas, "Nb particles ex2", "after DVCS cone cuts");
-		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after DVCS cone cuts");
+		createParticlesPlotsCuts(myCanvas, "cut DVCS ex2", "after photon cone cuts");
+		createNumberParticlesPlots(myCanvas, "Nb particles ex2", "after photon cone cuts");
+		kinematicalPlots.createDefaultHistograms(beamEnergy, "Kinematic ex2", "after photon cone cuts");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after photon cone cuts");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2", "after photon cone cuts");
 		
-		createParticlesPlotsCuts(myCanvas, "cut DVCS ex3", "after DVCS perpMM cuts");
-		createNumberParticlesPlots(myCanvas, "Nb particles ex3", "after DVCS perpMM cuts");
-		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex3", "after DVCS perpMM cuts");
+		physicsPlots.createDefaultPi0Histo(beamEnergy, "Pi0", "");
+//		createParticlesPlotsCuts(myCanvas, "cut DVCS ex3", "after DVCS perpMM cuts");
+//		createNumberParticlesPlots(myCanvas, "Nb particles ex3", "after DVCS perpMM cuts");
+//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex3", "after DVCS perpMM cuts");
 		
-		createParticlesPlotsCuts(myCanvas, "cut DVCS ex4", "after DVCS eg cuts");
-		createNumberParticlesPlots(myCanvas, "Nb particles ex4", "after DVCS eg cuts");
-		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex4", "after DVCS eg cuts");
+//		createParticlesPlotsCuts(myCanvas, "cut DVCS ex4", "after DVCS eg cuts");
+//		createNumberParticlesPlots(myCanvas, "Nb particles ex4", "after DVCS eg cuts");
+//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex4", "after DVCS eg cuts");
 		
-		createParticlesPlotsCuts(myCanvas, "cut DVCS ex5", "after DVCS 1phot cuts");
-		createNumberParticlesPlots(myCanvas, "Nb particles ex5", "after DVCS 1phot cuts");
-		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex5", "after DVCS 1phot cuts");
+//		createParticlesPlotsCuts(myCanvas, "cut DVCS ex5", "after DVCS 1phot cuts");
+//		createNumberParticlesPlots(myCanvas, "Nb particles ex5", "after DVCS 1phot cuts");
+//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex5", "after DVCS 1phot cuts");
+		
+//		createParticlesPlotsCuts(myCanvas, "cut DVCS ex1", "after proton cone cuts");
+//		createNumberParticlesPlots(myCanvas, "Nb particles ex1", "after proton cone cuts");
+//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex1", "after proton cone cuts");
+//		kinematicalPlots.createDefaultHistograms(beamEnergy, "Kinematic ex1", "after proton cone cuts");
+//		
+//		createParticlesPlotsCuts(myCanvas, "cut DVCS ex2", "after MissingMEG cuts");
+//		createNumberParticlesPlots(myCanvas, "Nb particles ex2", "after MissingMEG cuts");
+//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after MissingMEG cuts");
+//		kinematicalPlots.createDefaultHistograms(beamEnergy, "Kinematic ex2", "after MissingMEG cuts");
 		
 		// kinematicalPlots = new KinematicalPlots(myCanvas);
 		// kinematicalPlots.createDefaultHistograms(beamEnergy, "DVCS after
@@ -122,12 +143,32 @@ public class Analyser {
 			Event processedEvent = new Event();
 			processedEvent.readBanks(dataEvent);
 
+
+			/* ======= FIX PROTON SELECTION FROM CENTRAL  ====== */
+			//TODO To be removed later
+			ArrayList<Particle> particlesToBeRemoved = new ArrayList<>();
+			ArrayList<Particle> particlesToBeAdded = new ArrayList<>();
+			for (Particle particle: processedEvent.getParticleEvent().getParticles()){
+				if ( !(particle instanceof Proton) && (particle.getCharge()==1) && (particle.hasCentralTrack()>0) ){
+					Particle newProton = new Proton(particle);				
+					particlesToBeRemoved.add(particle);
+					particlesToBeAdded.add(newProton);
+				}
+			}
+			for (Particle particle: particlesToBeRemoved){
+				processedEvent.getParticleEvent().removeParticle(particle);
+			}
+			for (Particle newProton: particlesToBeAdded){
+				processedEvent.getParticleEvent().addParticle(newProton);
+			}
+			//END of new proton pid
+			
 			
 			if (processedEvent.getTrigger_bit(31)) {
 				fillDetectorsPlotsRandom(processedEvent);
 
-				PhotonCut photonCutDVCS = new PhotonCut();
-				Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
+//				PhotonCut photonCutDVCS = new PhotonCut();
+//				Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
 
 				// fillOutputFile(outPutFile, afterPhotonCuts);
 			}
@@ -140,7 +181,7 @@ public class Analyser {
 //			for (Particle particle:processedEvent.getParticleEvent().getElectrons()){
 				positNegCharges.fillDefaultHistograms(particle);
 			}
-
+			
 			ElectronCut electronCutDVCS = new ElectronCut();
 			Event afterElectronCuts = electronCutDVCS.CutDVCS(processedEvent);
 
@@ -169,9 +210,6 @@ public class Analyser {
 				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
 					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
 
-						physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy,
-								"DVCS after selection", "");
-
 						LorentzVector finalStateEPG = new LorentzVector();
 						finalStateEPG.add(electronF.getFourMomentum(), protonF.getFourMomentum(),
 								photonF.getFourMomentum());
@@ -187,14 +225,25 @@ public class Analyser {
 
 						double t = ComputePhysicsParameters.computeT(protonF);
 						double phiDeg = ComputePhysicsParameters.computePhiDeg(electronI, electronF, photonF);
+						
+						kinematicalPlots.fillDefaultHistograms(electronF, protonF, photonF, beamEnergy,
+								"Kinematic after selection/kinematic", "");
+						physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy,
+								"DVCS after selection/kinematic", "");
+						physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym after selection/kinematic", "");
+						
 
 						if (Math.abs(missingMass2EPG) < 0.1) {
 							if (photonF.getEnergy()>2){
 								fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex1",
 									"after DVCS epg cuts");
+								fillNumberParticlesPlots(afterDVCSCuts, "after DVCS epg cuts");
+								kinematicalPlots.fillDefaultHistograms(electronF, protonF, photonF, beamEnergy,
+								"Kinematic ex1", "after DVCS epg cuts");
 								physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex1",
 									"after DVCS epg cuts");
-								fillNumberParticlesPlots(afterDVCSCuts, "after DVCS epg cuts");
+								physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex1", "after DVCS epg cuts");
+								
 							}
 							
 						} else {
@@ -204,194 +253,61 @@ public class Analyser {
 						LorentzVector photonExpected = stateI.substract(finalStateEPwhenG);
 						double angle2Photon = 180/Math.PI*Math.acos(photonExpected.vect().dot(photonF.getFourMomentum().vect())
 								/ (photonExpected.vect().mag() * photonF.getFourMomentum().vect().mag()));
+//						LorentzVector protonExpected = stateI.substract(finalStateEGwhenP);
+//						double angle2Proton = 180/Math.PI*Math.acos(protonExpected.vect().dot(protonF.getFourMomentum().vect())
+//								/ (protonExpected.vect().mag() * protonF.getFourMomentum().vect().mag()));
 						
-						
-						if (angle2Photon < 10){
-							if (photonF.getEnergy()>2){
+						if (angle2Photon < 3){
+//							if (photonF.getEnergy()>2){
 								fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
-									"after DVCS cone cuts");
+									"after photon cone cuts");
+								fillNumberParticlesPlots(afterDVCSCuts, "after photon cone cuts");
 								physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2",
-									"after DVCS cone cuts");
-								fillNumberParticlesPlots(afterDVCSCuts, "after DVCS cone cuts");
-							}
+									"after photon cone cuts");
+								kinematicalPlots.fillDefaultHistograms(electronF, protonF, photonF, beamEnergy, "DVCS ex2",
+										"after photon cone cuts");
+								physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2", "after photon cone cuts");
+//							}
 						}else{
 							continue;
 						}
 						
-						
-						double transverseMissingMass = Math.sqrt( Math.pow(finalStateEGwhenP.px(),2) + Math.pow(finalStateEGwhenP.py(),2) );				
-						if (Math.abs(transverseMissingMass) < 0.8){
-							if (photonF.getEnergy()>2){	
-								fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex3",
-									"after DVCS perpMM cuts");
-								physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex3",
-									"after DVCS perpMM cuts");
-								fillNumberParticlesPlots(afterDVCSCuts, "after DVCS perpMM cuts");
-							}
-						}else{
-							continue;
-						}
-						
-						
-						if (missingMass2EGwhenP < 2.5 && missingMass2EGwhenP > 0){
-							if (photonF.getEnergy()>2){
-								fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex4",
-									"after DVCS eg cuts");
-								physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex4",
-									"after DVCS eg cuts");
-								fillNumberParticlesPlots(afterDVCSCuts, "after DVCS eg cuts");
-							}
-						}else{
-							continue;
-						}
-						
-						if (photonF.getEnergy()>2 && afterDVCSCuts.getParticleEvent().hasNumberOfPhotons()==1){
-							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex5",
-									"after DVCS 1phot cuts");
-							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex5",
-									"after DVCS 1phot cuts");
-							fillNumberParticlesPlots(afterDVCSCuts, "after DVCS 1phot cuts");
-						}
+//						double transverseMissingMass = Math.sqrt( Math.pow(finalStateEGwhenP.px(),2) + Math.pow(finalStateEGwhenP.py(),2) );				
+//						if (Math.abs(transverseMissingMass) < 0.8){
+//							if (photonF.getEnergy()>2){	
+//								fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex3",
+//									"after DVCS perpMM cuts");
+//								physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex3",
+//									"after DVCS perpMM cuts");
+//								fillNumberParticlesPlots(afterDVCSCuts, "after DVCS perpMM cuts");
+//							}
+//						}else{
+//							continue;
+//						}
 						
 						
-
-						if (phiDeg > 0 && phiDeg < 180) {
-							if (processedEvent.getHelicity() == 1) {
-								myCanvas.fill1DHisto("AsymMissingMass", missingMass2EPG, 1);
-								// eventsWithHelPlus++;
-							} else {
-								myCanvas.fill1DHisto("AsymMissingMass", missingMass2EPG, -1);
-								// eventsWithHelMinus++;
-							}
-
-						}
-						if (phiDeg > 180 && phiDeg < 360) {
-							if (processedEvent.getHelicity() == 1) {
-								myCanvas.fill1DHisto("AsymMissingMass", missingMass2EPG, -1);
-								// eventsWithHelPlus++;
-							} else {
-								myCanvas.fill1DHisto("AsymMissingMass", missingMass2EPG, 1);
-								// eventsWithHelMinus++;
-							}
-						}
-
-						if (processedEvent.getHelicity() == 1) {
-							myCanvas.fill1DHisto("NombreDePointsSecEffPVSPhi", phiDeg, 1);
-						} else {
-							myCanvas.fill1DHisto("NombreDePointsSecEffNVSPhi", phiDeg, 1);
-						}
-						int phiBin = myCanvas.get1DHisto("Asymetry").getxAxis().getBin(phiDeg);
-						double nPlus = myCanvas.get1DHisto("NombreDePointsSecEffPVSPhi").getBinContent(phiBin);
-						double nMinus = myCanvas.get1DHisto("NombreDePointsSecEffNVSPhi").getBinContent(phiBin);
-						myCanvas.get1DHisto("Asymetry").setBinContent(phiBin, (nPlus - nMinus) / (nPlus + nMinus));
-
-						// TO REMOVE LATER
-						// CUTS
-
-						// COMPUTE QUANTITIES
-
-						// LorentzVector proton = protonF.getFourMomentum();
-						// protonF.setPxPyPzM(chargePos.getPx(),
-						// chargePos.getPy(), chargePos.getPz(), Proton.mass);
-
-						LorentzVector stateF_EPG = electronF.getFourMomentum().sum(protonF.getFourMomentum(),
-								photonF.getFourMomentum());
-						LorentzVector difference_EPG = stateI.substract(stateF_EPG);
-						double missingMass2_EPG = difference_EPG.m2();
-
-						LorentzVector stateF_EP = electronF.getFourMomentum().sum(protonF.getFourMomentum());
-						LorentzVector difference_EP = stateI.substract(stateF_EP);
-						double missingMass2_EP = difference_EP.m2();
-
-						LorentzVector stateF_EG = electronF.getFourMomentum().sum(photonF.getFourMomentum());
-						LorentzVector difference_EG = stateI.substract(stateF_EG);
-						double missingMass2_EG = difference_EG.m2();
-
-						if (Math.abs(missingMass2_EPG) < 0.1) {
-
-							myCanvas.fill1DHisto("q2_epg", ComputePhysicsParameters.computeQ2(electronI, electronF));
-							myCanvas.fill1DHisto("xB_epg", ComputePhysicsParameters.computeXB(electronI, electronF));
-							myCanvas.fill1DHisto("t_epg", t);
-							myCanvas.fill1DHisto("t_epg_2", t);
-							myCanvas.fill1DHisto("t_epg_3", t);
-							myCanvas.fill1DHisto("phi_epg", phiDeg);
-
-						}
-						// myCanvas.create1DHisto("DVCS_asymetry",1,1,
-						// "AsymMissingMass","AsymMissingMass","missingMass",10,-0.5,0.5);
-						// myCanvas.create1DHisto("DVCS_asymetry",1,2,
-						// "NombreDePointsSecEffVSPhi","NombreDePointsSecEffVSPhi","phi",10,0,360);
-						// myCanvas.create1DHisto("DVCS_asymetry",2,1,
-						// "Asymetry","Asymetry","phi",10,0,360);
-
-						myCanvas.fill1DHisto("mm(ep->epg)2", missingMass2_EPG);
-
-						myCanvas.fill1DHisto("mm(ep->ep)2whenPhot", missingMass2_EP);
-
-						myCanvas.fill1DHisto("mm(ep->eg)2whenProt", missingMass2_EG);
-
-						myCanvas.fill1DHisto("x-expectedProton", difference_EG.px());
-						myCanvas.fill1DHisto("y-expectedProton", difference_EG.py());
-						myCanvas.fill1DHisto("z-expectedProton", difference_EG.pz());
-						myCanvas.fill1DHisto("e-expectedProton", difference_EG.e());
-
-						myCanvas.fill1DHisto("x-foundProton", protonF.getPx());
-						myCanvas.fill1DHisto("y-foundProton", protonF.getPy());
-						myCanvas.fill1DHisto("z-foundProton", protonF.getPz());
-						myCanvas.fill1DHisto("e-foundProton", protonF.getEnergy());
-
-						myCanvas.fill1DHisto("x-expected-foundProton", difference_EG.px() - protonF.getPx());
-						myCanvas.fill1DHisto("y-expected-foundProton", difference_EG.py() - protonF.getPy());
-						myCanvas.fill1DHisto("z-expected-foundProton", difference_EG.pz() - protonF.getPz());
-						myCanvas.fill1DHisto("e-expected-foundProton", difference_EG.e() - protonF.getEnergy());
-
-						// Analyser.fillParticlePlots(myCanvas, "DVCSelectron",
-						// electron);
-						// Analyser.fillParticlePlots(myCanvas, "DVCSproton",
-						// proton);
-						// Analyser.fillParticlePlots(myCanvas, "DVCSphoton",
-						// photon);
-
-						myCanvas.fill1DHisto("dvcsThetaP", protonF.getThetaDeg(), 1);
-						myCanvas.fill1DHisto("dvcsPhiP", protonF.getPhiDeg(), 1);
-						myCanvas.fill2DHisto("dvcsThetaPhiP", protonF.getPhiDeg(), protonF.getThetaDeg(), 1);
-						myCanvas.fill1DHisto("dvcsMomentumP", protonF.getMomentum().mag(), 1);
-						myCanvas.fill2DHisto("dvcsThetaMomentumP", protonF.getMomentum().mag(), protonF.getThetaDeg(),
-								1);
-						myCanvas.fill2DHisto("dvcsPhiMomentumP", protonF.getMomentum().mag(), protonF.getPhiDeg(), 1);
-
-						myCanvas.fill1DHisto("dvcsVertexEP", electronF.getVz() - protonF.getVz());
-						myCanvas.fill1DHisto("dvcsVertexEG", electronF.getVz() - photonF.getVz());
-						myCanvas.fill1DHisto("dvcsVertexPG", protonF.getVz() - photonF.getVz());
-
-						myCanvas.fill1DHisto("x-mm(ep->epg)", difference_EPG.px());
-						myCanvas.fill1DHisto("y-mm(ep->epg)", difference_EPG.py());
-						myCanvas.fill1DHisto("z-mm(ep->epg)", difference_EPG.pz());
-						myCanvas.fill1DHisto("e-mm(ep->epg)", difference_EPG.e());
-
-						double expectedPhotonPhi = Math.toDegrees(difference_EP.phi());
-						myCanvas.fill1DHisto("x-expectedPhoton", difference_EP.px());
-						myCanvas.fill1DHisto("y-expectedPhoton", difference_EP.py());
-						myCanvas.fill1DHisto("z-expectedPhoton", difference_EP.pz());
-						myCanvas.fill1DHisto("e-expectedPhoton", difference_EP.e());
-
-						myCanvas.fill1DHisto("x-foundPhoton", photonF.getPx());
-						myCanvas.fill1DHisto("y-foundPhoton", photonF.getPy());
-						myCanvas.fill1DHisto("z-foundPhoton", photonF.getPz());
-						myCanvas.fill1DHisto("e-foundPhoton", photonF.getEnergy());
-
-						myCanvas.fill1DHisto("x-expected-foundPhoton", difference_EP.px() - photonF.getPx());
-						myCanvas.fill1DHisto("y-expected-foundPhoton", difference_EP.py() - photonF.getPy());
-						myCanvas.fill1DHisto("z-expected-foundPhoton", difference_EP.pz() - photonF.getPz());
-						myCanvas.fill1DHisto("e-expected-foundPhoton", difference_EP.e() - photonF.getEnergy());
-
-						myCanvas.fill1DHisto("theta-expectedPhoton", expectedPhotonPhi);
-						myCanvas.fill1DHisto("theta-foundPhoton", photonF.getPhiDeg());
-						myCanvas.fill1DHisto("theta-expected-foundPhoton", expectedPhotonPhi - photonF.getPhiDeg());
-
-						double missingZ = electronI.pz() + protonI.pz() - electronF.getPz() - protonF.getPz()
-								- photonF.getPz();
-						myCanvas.fill1DHisto("missingPz(ep->epg)", missingZ);
+//						if (missingMass2EGwhenP < 1 && missingMass2EGwhenP > 0.7){
+////							if (photonF.getEnergy()>2){
+//								fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
+//									"after MissingMEG cuts");
+//								physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2",
+//									"after MissingMEG cuts");
+//								kinematicalPlots.fillDefaultHistograms(electronF, protonF, photonF, beamEnergy, "DVCS ex2",
+//										"after MissingMEG cuts");
+//								fillNumberParticlesPlots(afterDVCSCuts, "after MissingMEG cuts");
+////							}
+//						}else{
+//							continue;
+//						}
+						
+//						if (photonF.getEnergy()>2 && afterDVCSCuts.getParticleEvent().hasNumberOfPhotons()==1){
+//							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex5",
+//									"after DVCS 1phot cuts");
+//							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex5",
+//									"after DVCS 1phot cuts");
+//							fillNumberParticlesPlots(afterDVCSCuts, "after DVCS 1phot cuts");
+//						}
+						
 					}
 				}
 			}
@@ -403,6 +319,22 @@ public class Analyser {
 					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("Asymetry").getBinContent(i));
 				}
 			}
+			
+			
+			/* ===== PI0 ===== */
+			Event afterPhotonPi0Cuts = photonCutDVCS.CutPi0(processedEvent);
+			if ((afterDVCSCuts.getParticleEvent().hasNumberOfPhotons()<2)){
+				continue;
+			}
+			ArrayList<Photon> photons= afterDVCSCuts.getParticleEvent().getPhotons();
+			for (int photon1Iterator = 0; photon1Iterator < photons.size(); photon1Iterator++) {
+			   Photon photon1 = photons.get(photon1Iterator);
+			   for (int photon2Iterator = photon1Iterator+1; photon2Iterator < photons.size(); photon2Iterator++) {
+				   Photon photon2 = photons.get(photon2Iterator);
+				   physicsPlots.fillDefaultPi0Histo(photon1, photon2, "Pi0", "");
+				   
+				}
+			}	
 		}
 	}
 
@@ -1166,7 +1098,7 @@ public class Analyser {
 
 		} else {
 //			hipoReader = new HipoReader(path, runNumber);
-			hipoReader = new HipoReader(fileListOutbending);
+			hipoReader = new HipoReader(fileListInbending);
 		}
 		return hipoReader;
 	}
@@ -1176,191 +1108,191 @@ public class Analyser {
 		Analyser.createParticlesPlots(myCanvas);
 		Analyser.createRawDetectorsPlots(myCanvas);
 
-		// Analyser.createParticlePlots(myCanvas, "electron");
-		// Analyser.createParticlePlots(myCanvas, "electronNoFT");
-		// Analyser.createParticlePlots(myCanvas, "proton");
-		// Analyser.createParticlePlots(myCanvas, "photon");
-		// Analyser.createParticlePlots(myCanvas, "photonNoFT");
-		// Analyser.createParticlePlots(myCanvas, "piplus");
-		// Analyser.createParticlePlotsBySector(myCanvas, "electron");
-
-		String tabElastic = "elastic";
-		myCanvas.addTab(tabElastic, 3, 3);
-		myCanvas.create2DHisto(tabElastic, 1, 1, "thetaPVSthetaE", "thetaPVSthetaE", "thetaE", "thetaP", 45, 0, 90, 45,
-				0, 180);
-		myCanvas.create2DHisto(tabElastic, 1, 2, "thetaEVSmm", "thetaEVSmm", "mm", "thetaE", 50, -5, 15, 45, 0, 90);
-		myCanvas.create1DHisto(tabElastic, 2, 1, "mm", "mm", "mm", 500, -4, 4);
-		myCanvas.create1DHisto(tabElastic, 2, 2, "w", "w", "w", 500, -5, 10);
-		myCanvas.create1DHisto(tabElastic, 3, 2, "wall", "wall", "wall", 500, -5, 10);
-
-		// Analyser.createParticlePlots(myCanvas, "DVCSelectron");
-		// Analyser.createParticlePlots(myCanvas, "DVCSproton");
-		// Analyser.createParticlePlots(myCanvas, "DVCSphoton");
-		String tabDVCSAcceptance = "DVCSacceptance";
-		myCanvas.addTab(tabDVCSAcceptance, 3, 3);
-		myCanvas.create1DHisto(tabDVCSAcceptance, 1, 1, "dvcsThetaP", "Theta distribution for charges+", "Theta", 45, 0,
-				90);
-		myCanvas.create1DHisto(tabDVCSAcceptance, 1, 2, "dvcsPhiP", "Phi distribution for charges+", "Phi", 180, -180,
-				180);
-		myCanvas.create2DHisto(tabDVCSAcceptance, 1, 3, "dvcsThetaPhiP", "Theta vs Phi distribution for charges+",
-				"Phi", "Theta", 180, -180, 180, 45, 0, 90);
-		myCanvas.create1DHisto(tabDVCSAcceptance, 2, 1, "dvcsMomentumP", "Momentum distribution for charges+",
-				"Momentum", 50, 0, 3);
-		myCanvas.create2DHisto(tabDVCSAcceptance, 2, 2, "dvcsThetaMomentumP",
-				"Theta vs Momentum distribution for charges+", "Momentum", "Theta", 50, 0, 3, 45, 0, 90);
-		myCanvas.create2DHisto(tabDVCSAcceptance, 2, 3, "dvcsPhiMomentumP", "Phi vs Momentum distribution for charges+",
-				"Momentum", "Phi", 50, 0, 3, 180, -180, 180);
-		myCanvas.create1DHisto(tabDVCSAcceptance, 3, 1, "dvcsVertexEP", "Vertex eletron-charge+", "Vz", 50, -50, 50);
-		myCanvas.create1DHisto(tabDVCSAcceptance, 3, 2, "dvcsVertexEG", "Vertex eletron-gamma+", "Vz", 50, -50, 50);
-		myCanvas.create1DHisto(tabDVCSAcceptance, 3, 3, "dvcsVertexPG", "Vertex proton-gamma", "Vz", 50, -50, 50);
-
-		String tabDVCSmmepg = "DVCSmm_epg";
-		myCanvas.addTab(tabDVCSmmepg, 4, 2);
-		myCanvas.create1DHisto(tabDVCSmmepg, 1, 1, "mm(ep->epg)2", "mm(ep->epg)2", "mm(ep->epg)2", 100, -0.5, 0.5);
-		myCanvas.create2DHisto(tabDVCSmmepg, 1, 2, "q2VSxB(ep->epg)", "q2VSxB(ep->epg)", "xB", "q2", 50, 0, 1, 50, 0,
-				10);
-		myCanvas.create1DHisto(tabDVCSmmepg, 2, 1, "q2_epg", "q2_epg", "q2", 50, 0, 10);
-		myCanvas.create1DHisto(tabDVCSmmepg, 2, 2, "xB_epg", "xB_epg", "xB", 50, 0, 1);
-		myCanvas.create1DHisto(tabDVCSmmepg, 3, 1, "t_epg", "t_epg", "t", 50, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmepg, 4, 1, "t_epg_2", "t_epg", "t", 300, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmepg, 4, 2, "t_epg_3", "t_epg", "t", 50, -0.2, 0.2);
-
-		myCanvas.create1DHisto(tabDVCSmmepg, 3, 2, "phi_epg", "phi_epg", "phi", 50, 0, 360);
-
-		String tabDVCSmmep = "DVCSmm_ep";
-		myCanvas.addTab(tabDVCSmmep, 6, 4);
-		myCanvas.create1DHisto(tabDVCSmmep, 1, 1, "mm(ep->ep)2", "mm(ep->ep)2", "mm(ep->ep)2", 1000, -2.5, 2.5);
-		myCanvas.create2DHisto(tabDVCSmmep, 1, 2, "q2VSxB(ep->ep)", "q2VSxB(ep->ep)", "xB", "q2", 50, 0, 1, 50, 0, 10);
-		myCanvas.create1DHisto(tabDVCSmmep, 1, 3, "mm(ep->ep)2whenPhot", "mm(ep->ep)2whenPhot", "mm(ep->ep)2", 200,
-				-2.5, 2.5);
-		myCanvas.create2DHisto(tabDVCSmmep, 1, 4, "q2VSxB(ep->ep)whenPhot", "q2VSxB(ep->ep)whenPhot", "xB", "q2", 50, 0,
-				1, 50, 0, 10);
-
-		myCanvas.create1DHisto(tabDVCSmmep, 2, 1, "x-mm(ep->epg)", "x-mm(ep->epg)", "x-mm(ep->epg)", 100, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmep, 2, 2, "y-mm(ep->epg)", "y-mm(ep->epg)", "y-mm(ep->epg)", 100, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmep, 2, 3, "z-mm(ep->epg)", "z-mm(ep->epg)", "z-mm(ep->epg)", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmep, 2, 4, "e-mm(ep->epg)", "e-mm(ep->epg)", "e-mm(ep->epg)", 100, -5, 15);
-
-		myCanvas.create1DHisto(tabDVCSmmep, 3, 1, "x-expectedPhoton", "x-expectedPhoton", "x-expectedPhoton", 100, -5,
-				5);
-		myCanvas.create1DHisto(tabDVCSmmep, 3, 2, "y-expectedPhoton", "y-expectedPhoton", "y-expectedPhoton", 100, -5,
-				5);
-		myCanvas.create1DHisto(tabDVCSmmep, 3, 3, "z-expectedPhoton", "z-expectedPhoton", "z-expectedPhoton", 100, -5,
-				15);
-		myCanvas.create1DHisto(tabDVCSmmep, 3, 4, "e-expectedPhoton", "e-expectedPhoton", "e-expectedPhoton", 100, -5,
-				15);
-
-		myCanvas.create1DHisto(tabDVCSmmep, 4, 1, "x-foundPhoton", "x-foundPhoton", "x-foundPhoton", 100, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmep, 4, 2, "y-foundPhoton", "y-foundPhoton", "y-foundPhoton", 100, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmep, 4, 3, "z-foundPhoton", "z-foundPhoton", "z-foundPhoton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmep, 4, 4, "e-foundPhoton", "e-foundPhoton", "e-foundPhoton", 100, -5, 15);
-
-		myCanvas.create1DHisto(tabDVCSmmep, 5, 1, "x-expected-foundPhoton", "x-expected-foundPhoton",
-				"x-expected-foundPhoton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmep, 5, 2, "y-expected-foundPhoton", "y-expected-foundPhoton",
-				"y-expected-foundPhoton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmep, 5, 3, "z-expected-foundPhoton", "z-expected-foundPhoton",
-				"z-expected-foundPhoton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmep, 5, 4, "e-expected-foundPhoton", "e-expected-foundPhoton",
-				"e-expected-foundPhoton", 100, -5, 15);
-
-		myCanvas.create1DHisto(tabDVCSmmep, 6, 1, "theta-expectedPhoton", "theta-expectedPhoton", "theta", 100, 0, 90);
-		myCanvas.create1DHisto(tabDVCSmmep, 6, 2, "theta-foundPhoton", "theta-foundPhoton", "theta", 100, 0, 90);
-		myCanvas.create1DHisto(tabDVCSmmep, 6, 3, "theta-expected-foundPhoton", "theta-expected-foundPhoton",
-				"theta-expected-foundPhoton", 100, -45, 45);
-		myCanvas.create1DHisto(tabDVCSmmep, 6, 4, "missingPz(ep->epg)", "missingPz(ep->epg)", "missingPz(ep->epg)", 100,
-				-10, 10);
-
-		String tabDVCSmmeg = "DVCSmm_eg";
-		myCanvas.addTab(tabDVCSmmeg, 6, 4);
-		myCanvas.create1DHisto(tabDVCSmmeg, 1, 1, "mm(ep->eg)2", "mm(ep->eg)2", "mm(ep->eg)2", 200, 0, 3);
-		myCanvas.create2DHisto(tabDVCSmmeg, 1, 2, "q2VSxB(ep->eg)", "q2VSxB(ep->eg)", "xB", "q2", 50, 0, 1, 50, 0, 10);
-
-		myCanvas.create1DHisto(tabDVCSmmeg, 2, 1, "mm(ep->eg)2whenProt", "mm(ep->eg)2whenProt", "mm(ep->eg)2", 200, 0,
-				3);
-		myCanvas.create2DHisto(tabDVCSmmeg, 2, 2, "q2VSxB(ep->eg)whenProt", "q2VSxB(ep->eg)whenProt", "xB", "q2", 50, 0,
-				1, 50, 0, 10);
-
-		myCanvas.create1DHisto(tabDVCSmmeg, 3, 1, "x-expectedProton", "x-expectedProton", "x-expectedProton", 100, -5,
-				5);
-		myCanvas.create1DHisto(tabDVCSmmeg, 3, 2, "y-expectedProton", "y-expectedProton", "y-expectedProton", 100, -5,
-				5);
-		myCanvas.create1DHisto(tabDVCSmmeg, 3, 3, "z-expectedProton", "z-expectedProton", "z-expectedProton", 100, -5,
-				15);
-		myCanvas.create1DHisto(tabDVCSmmeg, 3, 4, "e-expectedProton", "e-expectedProton", "e-expectedProton", 100, -5,
-				15);
-
-		myCanvas.create1DHisto(tabDVCSmmeg, 4, 1, "x-foundProton", "x-foundProton", "x-foundProton", 100, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmeg, 4, 2, "y-foundProton", "y-foundProton", "y-foundProton", 100, -5, 5);
-		myCanvas.create1DHisto(tabDVCSmmeg, 4, 3, "z-foundProton", "z-foundProton", "z-foundProton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmeg, 4, 4, "e-foundProton", "e-foundProton", "e-foundProton", 100, -5, 15);
-
-		myCanvas.create1DHisto(tabDVCSmmeg, 5, 1, "x-expected-foundProton", "x-expected-foundProton",
-				"x-expected-foundProton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmeg, 5, 2, "y-expected-foundProton", "y-expected-foundProton",
-				"y-expected-foundProton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmeg, 5, 3, "z-expected-foundProton", "z-expected-foundProton",
-				"z-expected-foundProton", 100, -5, 15);
-		myCanvas.create1DHisto(tabDVCSmmeg, 5, 4, "e-expected-foundProton", "e-expected-foundProton",
-				"e-expected-foundProton", 100, -5, 15);
-
-		myCanvas.create1DHisto(tabDVCSmmeg, 6, 1, "theta-expectedProton", "theta-expectedProton", "theta", 100, 0, 90);
-		myCanvas.create1DHisto(tabDVCSmmeg, 6, 2, "theta-foundProton", "theta-foundProton", "theta", 100, 0, 90);
-		myCanvas.create1DHisto(tabDVCSmmeg, 6, 3, "theta-expected-foundProton", "theta-expected-foundProton",
-				"theta-expected-foundProton", 100, -45, 45);
-		myCanvas.create2DHisto(tabDVCSmmeg, 6, 4, "thetaExpected-Proton-2D", "theta proton VS theta expected",
-				"theta expected", "theta proton", 180, -180, 180, 180, -180, 180);
-
-		String tabSummary = "summary";
-		myCanvas.addTab(tabSummary, 1, 2);
-		myCanvas.create1DHisto(tabSummary, 1, 1, "cleaning(ep->ep)", "cleaning(ep->ep)", "cuts", 17, -1, 16);
-		myCanvas.create1DHisto(tabSummary, 1, 2, "cleaning(ep->epg)", "cleaning(ep->epg)", "cuts", 17, -1, 16);
-
-		String tabPi0 = "Pi0";
-		myCanvas.addTab(tabPi0, 4, 4);
-		myCanvas.create1DHisto(tabPi0, 1, 1, "MissingMassEG1G2", "MissingMassEG1G2", "MissingMassEG1G2", 100, -2, 7);
-
-		myCanvas.create1DHisto(tabPi0, 1, 2, "Pi0InvariantMass", "Pi0InvariantMass", "Pi0InvariantMass", 100, 0, 0.5);
-
-		myCanvas.create1DHisto(tabPi0, 1, 3, "MissingMassEG1G2Cleaned", "MissingMassEG1G2Cleaned", "MissingMassEG1G2",
-				100, -2, 7);
-		myCanvas.create1DHisto(tabPi0, 1, 4, "Pi0InvariantMassCleaned", "Pi0InvariantMassCleaned", "Pi0InvariantMass",
-				100, 0, 0.5);
-
-		myCanvas.create1DHisto(tabPi0, 2, 3, "MissingMassEG1G2WithProton", "MissingMassEG1G2WithProton",
-				"MissingMassEG1G2", 100, -2, 7);
-		myCanvas.create1DHisto(tabPi0, 2, 4, "Pi0InvariantMassWithProton", "Pi0InvariantMassWithProton",
-				"Pi0InvariantMass", 100, 0, 0.5);
-
-		myCanvas.create2DHisto(tabPi0, 3, 1, "Pi0phiExpected-Proton-2D", "phi proton VS phi expected", "phi expected",
-				"phi proton", 90, -180, 180, 90, -180, 180);
-		myCanvas.create1DHisto(tabPi0, 3, 2, "MissingMassEG1G2WithProtonMatched", "MissingMassEG1G2WithProtonMatched",
-				"MissingMassEG1G2", 100, -2, 7);
-		myCanvas.create1DHisto(tabPi0, 3, 3, "Pi0InvariantMassWithProtonMatched", "Pi0InvariantMassWithProtonMatched",
-				"Pi0InvariantMass", 100, 0, 0.5);
-
-		myCanvas.create2DHisto(tabPi0, 3, 4, "Pi0phiExpected-Proton-2DCleaned", "phi proton VS phi expectedCleaned",
-				"phi expected", "phi proton", 90, -180, 180, 90, -180, 180);
-
-		myCanvas.create1DHisto(tabPi0, 4, 1, "MissingMassEG1G2P", "MissingMassEG1G2P", "MissingMassEG1G2P", 100, -3, 8);
-
-		myCanvas.addTab("DVCS_asymetry", 3, 2);
-		myCanvas.create1DHisto("DVCS_asymetry", 1, 1, "AsymMissingMass", "AsymMissingMass", "missingMass", 10, -0.5,
-				0.5);
-		myCanvas.create1DHisto("DVCS_asymetry", 2, 1, "NombreDePointsSecEffPVSPhi", "NombreDePointsSecEffPVSPhi", "phi",
-				10, 0, 360);
-		myCanvas.create1DHisto("DVCS_asymetry", 2, 2, "NombreDePointsSecEffNVSPhi", "NombreDePointsSecEffNVSPhi", "phi",
-				10, 0, 360);
-		myCanvas.create1DHisto("DVCS_asymetry", 1, 2, "Asymetry", "Asymetry", "phi", 10, 0, 360);
-		myCanvas.create1DHisto("DVCS_asymetry", 3, 1, "Phi", "Phi", "phi", 10, 0, 360);
-
-		String tabPi02 = "Pi02";
-		myCanvas.addTab(tabPi02, 2, 2);
-		myCanvas.create2DHisto(tabPi02, 1, 1, "Pi0PhotonAngVSMom", "Pi0PhotonAngVSMom", "PhotonMomentum", "PhotonAngle",
-				10, 0, 15, 50, 0, 180);
-		myCanvas.create2DHisto(tabPi02, 1, 2, "Pi0PhotonDistVSMom", "Pi0PhotonDistVSMom", "PhotonMomentum",
-				"PhotonDistanceOnCalo", 10, 0, 15, 50, 0, 100);
-		myCanvas.create1DHisto(tabPi02, 2, 1, "Pi0PhotonDist", "Pi0PhotonDist", "PhotonMomentum", 50, 0, 180);
+//		 Analyser.createParticlePlots(myCanvas, "electron");
+//		 Analyser.createParticlePlots(myCanvas, "electronNoFT");
+//		 Analyser.createParticlePlots(myCanvas, "proton");
+//		 Analyser.createParticlePlots(myCanvas, "photon");
+//		 Analyser.createParticlePlots(myCanvas, "photonNoFT");
+//		 Analyser.createParticlePlots(myCanvas, "piplus");
+//		 Analyser.createParticlePlotsBySector(myCanvas, "electron");
+//
+//		String tabElastic = "elastic";
+//		myCanvas.addTab(tabElastic, 3, 3);
+//		myCanvas.create2DHisto(tabElastic, 1, 1, "thetaPVSthetaE", "thetaPVSthetaE", "thetaE", "thetaP", 45, 0, 90, 45,
+//				0, 180);
+//		myCanvas.create2DHisto(tabElastic, 1, 2, "thetaEVSmm", "thetaEVSmm", "mm", "thetaE", 50, -5, 15, 45, 0, 90);
+//		myCanvas.create1DHisto(tabElastic, 2, 1, "mm", "mm", "mm", 500, -4, 4);
+//		myCanvas.create1DHisto(tabElastic, 2, 2, "w", "w", "w", 500, -5, 10);
+//		myCanvas.create1DHisto(tabElastic, 3, 2, "wall", "wall", "wall", 500, -5, 10);
+//
+//		// Analyser.createParticlePlots(myCanvas, "DVCSelectron");
+//		// Analyser.createParticlePlots(myCanvas, "DVCSproton");
+//		// Analyser.createParticlePlots(myCanvas, "DVCSphoton");
+//		String tabDVCSAcceptance = "DVCSacceptance";
+//		myCanvas.addTab(tabDVCSAcceptance, 3, 3);
+//		myCanvas.create1DHisto(tabDVCSAcceptance, 1, 1, "dvcsThetaP", "Theta distribution for charges+", "Theta", 45, 0,
+//				90);
+//		myCanvas.create1DHisto(tabDVCSAcceptance, 1, 2, "dvcsPhiP", "Phi distribution for charges+", "Phi", 180, -180,
+//				180);
+//		myCanvas.create2DHisto(tabDVCSAcceptance, 1, 3, "dvcsThetaPhiP", "Theta vs Phi distribution for charges+",
+//				"Phi", "Theta", 180, -180, 180, 45, 0, 90);
+//		myCanvas.create1DHisto(tabDVCSAcceptance, 2, 1, "dvcsMomentumP", "Momentum distribution for charges+",
+//				"Momentum", 50, 0, 3);
+//		myCanvas.create2DHisto(tabDVCSAcceptance, 2, 2, "dvcsThetaMomentumP",
+//				"Theta vs Momentum distribution for charges+", "Momentum", "Theta", 50, 0, 3, 45, 0, 90);
+//		myCanvas.create2DHisto(tabDVCSAcceptance, 2, 3, "dvcsPhiMomentumP", "Phi vs Momentum distribution for charges+",
+//				"Momentum", "Phi", 50, 0, 3, 180, -180, 180);
+//		myCanvas.create1DHisto(tabDVCSAcceptance, 3, 1, "dvcsVertexEP", "Vertex eletron-charge+", "Vz", 50, -50, 50);
+//		myCanvas.create1DHisto(tabDVCSAcceptance, 3, 2, "dvcsVertexEG", "Vertex eletron-gamma+", "Vz", 50, -50, 50);
+//		myCanvas.create1DHisto(tabDVCSAcceptance, 3, 3, "dvcsVertexPG", "Vertex proton-gamma", "Vz", 50, -50, 50);
+//
+//		String tabDVCSmmepg = "DVCSmm_epg";
+//		myCanvas.addTab(tabDVCSmmepg, 4, 2);
+//		myCanvas.create1DHisto(tabDVCSmmepg, 1, 1, "mm(ep->epg)2", "mm(ep->epg)2", "mm(ep->epg)2", 100, -0.5, 0.5);
+//		myCanvas.create2DHisto(tabDVCSmmepg, 1, 2, "q2VSxB(ep->epg)", "q2VSxB(ep->epg)", "xB", "q2", 50, 0, 1, 50, 0,
+//				10);
+//		myCanvas.create1DHisto(tabDVCSmmepg, 2, 1, "q2_epg", "q2_epg", "q2", 50, 0, 10);
+//		myCanvas.create1DHisto(tabDVCSmmepg, 2, 2, "xB_epg", "xB_epg", "xB", 50, 0, 1);
+//		myCanvas.create1DHisto(tabDVCSmmepg, 3, 1, "t_epg", "t_epg", "t", 50, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmepg, 4, 1, "t_epg_2", "t_epg", "t", 300, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmepg, 4, 2, "t_epg_3", "t_epg", "t", 50, -0.2, 0.2);
+//
+//		myCanvas.create1DHisto(tabDVCSmmepg, 3, 2, "phi_epg", "phi_epg", "phi", 50, 0, 360);
+//
+//		String tabDVCSmmep = "DVCSmm_ep";
+//		myCanvas.addTab(tabDVCSmmep, 6, 4);
+//		myCanvas.create1DHisto(tabDVCSmmep, 1, 1, "mm(ep->ep)2", "mm(ep->ep)2", "mm(ep->ep)2", 1000, -2.5, 2.5);
+//		myCanvas.create2DHisto(tabDVCSmmep, 1, 2, "q2VSxB(ep->ep)", "q2VSxB(ep->ep)", "xB", "q2", 50, 0, 1, 50, 0, 10);
+//		myCanvas.create1DHisto(tabDVCSmmep, 1, 3, "mm(ep->ep)2whenPhot", "mm(ep->ep)2whenPhot", "mm(ep->ep)2", 200,
+//				-2.5, 2.5);
+//		myCanvas.create2DHisto(tabDVCSmmep, 1, 4, "q2VSxB(ep->ep)whenPhot", "q2VSxB(ep->ep)whenPhot", "xB", "q2", 50, 0,
+//				1, 50, 0, 10);
+//
+//		myCanvas.create1DHisto(tabDVCSmmep, 2, 1, "x-mm(ep->epg)", "x-mm(ep->epg)", "x-mm(ep->epg)", 100, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmep, 2, 2, "y-mm(ep->epg)", "y-mm(ep->epg)", "y-mm(ep->epg)", 100, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmep, 2, 3, "z-mm(ep->epg)", "z-mm(ep->epg)", "z-mm(ep->epg)", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmep, 2, 4, "e-mm(ep->epg)", "e-mm(ep->epg)", "e-mm(ep->epg)", 100, -5, 15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmep, 3, 1, "x-expectedPhoton", "x-expectedPhoton", "x-expectedPhoton", 100, -5,
+//				5);
+//		myCanvas.create1DHisto(tabDVCSmmep, 3, 2, "y-expectedPhoton", "y-expectedPhoton", "y-expectedPhoton", 100, -5,
+//				5);
+//		myCanvas.create1DHisto(tabDVCSmmep, 3, 3, "z-expectedPhoton", "z-expectedPhoton", "z-expectedPhoton", 100, -5,
+//				15);
+//		myCanvas.create1DHisto(tabDVCSmmep, 3, 4, "e-expectedPhoton", "e-expectedPhoton", "e-expectedPhoton", 100, -5,
+//				15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmep, 4, 1, "x-foundPhoton", "x-foundPhoton", "x-foundPhoton", 100, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmep, 4, 2, "y-foundPhoton", "y-foundPhoton", "y-foundPhoton", 100, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmep, 4, 3, "z-foundPhoton", "z-foundPhoton", "z-foundPhoton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmep, 4, 4, "e-foundPhoton", "e-foundPhoton", "e-foundPhoton", 100, -5, 15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmep, 5, 1, "x-expected-foundPhoton", "x-expected-foundPhoton",
+//				"x-expected-foundPhoton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmep, 5, 2, "y-expected-foundPhoton", "y-expected-foundPhoton",
+//				"y-expected-foundPhoton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmep, 5, 3, "z-expected-foundPhoton", "z-expected-foundPhoton",
+//				"z-expected-foundPhoton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmep, 5, 4, "e-expected-foundPhoton", "e-expected-foundPhoton",
+//				"e-expected-foundPhoton", 100, -5, 15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmep, 6, 1, "theta-expectedPhoton", "theta-expectedPhoton", "theta", 100, 0, 90);
+//		myCanvas.create1DHisto(tabDVCSmmep, 6, 2, "theta-foundPhoton", "theta-foundPhoton", "theta", 100, 0, 90);
+//		myCanvas.create1DHisto(tabDVCSmmep, 6, 3, "theta-expected-foundPhoton", "theta-expected-foundPhoton",
+//				"theta-expected-foundPhoton", 100, -45, 45);
+//		myCanvas.create1DHisto(tabDVCSmmep, 6, 4, "missingPz(ep->epg)", "missingPz(ep->epg)", "missingPz(ep->epg)", 100,
+//				-10, 10);
+//
+//		String tabDVCSmmeg = "DVCSmm_eg";
+//		myCanvas.addTab(tabDVCSmmeg, 6, 4);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 1, 1, "mm(ep->eg)2", "mm(ep->eg)2", "mm(ep->eg)2", 200, 0, 3);
+//		myCanvas.create2DHisto(tabDVCSmmeg, 1, 2, "q2VSxB(ep->eg)", "q2VSxB(ep->eg)", "xB", "q2", 50, 0, 1, 50, 0, 10);
+//
+//		myCanvas.create1DHisto(tabDVCSmmeg, 2, 1, "mm(ep->eg)2whenProt", "mm(ep->eg)2whenProt", "mm(ep->eg)2", 200, 0,
+//				3);
+//		myCanvas.create2DHisto(tabDVCSmmeg, 2, 2, "q2VSxB(ep->eg)whenProt", "q2VSxB(ep->eg)whenProt", "xB", "q2", 50, 0,
+//				1, 50, 0, 10);
+//
+//		myCanvas.create1DHisto(tabDVCSmmeg, 3, 1, "x-expectedProton", "x-expectedProton", "x-expectedProton", 100, -5,
+//				5);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 3, 2, "y-expectedProton", "y-expectedProton", "y-expectedProton", 100, -5,
+//				5);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 3, 3, "z-expectedProton", "z-expectedProton", "z-expectedProton", 100, -5,
+//				15);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 3, 4, "e-expectedProton", "e-expectedProton", "e-expectedProton", 100, -5,
+//				15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmeg, 4, 1, "x-foundProton", "x-foundProton", "x-foundProton", 100, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 4, 2, "y-foundProton", "y-foundProton", "y-foundProton", 100, -5, 5);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 4, 3, "z-foundProton", "z-foundProton", "z-foundProton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 4, 4, "e-foundProton", "e-foundProton", "e-foundProton", 100, -5, 15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmeg, 5, 1, "x-expected-foundProton", "x-expected-foundProton",
+//				"x-expected-foundProton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 5, 2, "y-expected-foundProton", "y-expected-foundProton",
+//				"y-expected-foundProton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 5, 3, "z-expected-foundProton", "z-expected-foundProton",
+//				"z-expected-foundProton", 100, -5, 15);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 5, 4, "e-expected-foundProton", "e-expected-foundProton",
+//				"e-expected-foundProton", 100, -5, 15);
+//
+//		myCanvas.create1DHisto(tabDVCSmmeg, 6, 1, "theta-expectedProton", "theta-expectedProton", "theta", 100, 0, 90);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 6, 2, "theta-foundProton", "theta-foundProton", "theta", 100, 0, 90);
+//		myCanvas.create1DHisto(tabDVCSmmeg, 6, 3, "theta-expected-foundProton", "theta-expected-foundProton",
+//				"theta-expected-foundProton", 100, -45, 45);
+//		myCanvas.create2DHisto(tabDVCSmmeg, 6, 4, "thetaExpected-Proton-2D", "theta proton VS theta expected",
+//				"theta expected", "theta proton", 180, -180, 180, 180, -180, 180);
+//
+//		String tabSummary = "summary";
+//		myCanvas.addTab(tabSummary, 1, 2);
+//		myCanvas.create1DHisto(tabSummary, 1, 1, "cleaning(ep->ep)", "cleaning(ep->ep)", "cuts", 17, -1, 16);
+//		myCanvas.create1DHisto(tabSummary, 1, 2, "cleaning(ep->epg)", "cleaning(ep->epg)", "cuts", 17, -1, 16);
+//
+//		String tabPi0 = "Pi0";
+//		myCanvas.addTab(tabPi0, 4, 4);
+//		myCanvas.create1DHisto(tabPi0, 1, 1, "MissingMassEG1G2", "MissingMassEG1G2", "MissingMassEG1G2", 100, -2, 7);
+//
+//		myCanvas.create1DHisto(tabPi0, 1, 2, "Pi0InvariantMass", "Pi0InvariantMass", "Pi0InvariantMass", 100, 0, 0.5);
+//
+//		myCanvas.create1DHisto(tabPi0, 1, 3, "MissingMassEG1G2Cleaned", "MissingMassEG1G2Cleaned", "MissingMassEG1G2",
+//				100, -2, 7);
+//		myCanvas.create1DHisto(tabPi0, 1, 4, "Pi0InvariantMassCleaned", "Pi0InvariantMassCleaned", "Pi0InvariantMass",
+//				100, 0, 0.5);
+//
+//		myCanvas.create1DHisto(tabPi0, 2, 3, "MissingMassEG1G2WithProton", "MissingMassEG1G2WithProton",
+//				"MissingMassEG1G2", 100, -2, 7);
+//		myCanvas.create1DHisto(tabPi0, 2, 4, "Pi0InvariantMassWithProton", "Pi0InvariantMassWithProton",
+//				"Pi0InvariantMass", 100, 0, 0.5);
+//
+//		myCanvas.create2DHisto(tabPi0, 3, 1, "Pi0phiExpected-Proton-2D", "phi proton VS phi expected", "phi expected",
+//				"phi proton", 90, -180, 180, 90, -180, 180);
+//		myCanvas.create1DHisto(tabPi0, 3, 2, "MissingMassEG1G2WithProtonMatched", "MissingMassEG1G2WithProtonMatched",
+//				"MissingMassEG1G2", 100, -2, 7);
+//		myCanvas.create1DHisto(tabPi0, 3, 3, "Pi0InvariantMassWithProtonMatched", "Pi0InvariantMassWithProtonMatched",
+//				"Pi0InvariantMass", 100, 0, 0.5);
+//
+//		myCanvas.create2DHisto(tabPi0, 3, 4, "Pi0phiExpected-Proton-2DCleaned", "phi proton VS phi expectedCleaned",
+//				"phi expected", "phi proton", 90, -180, 180, 90, -180, 180);
+//
+//		myCanvas.create1DHisto(tabPi0, 4, 1, "MissingMassEG1G2P", "MissingMassEG1G2P", "MissingMassEG1G2P", 100, -3, 8);
+//
+//		myCanvas.addTab("DVCS_asymetry", 3, 2);
+//		myCanvas.create1DHisto("DVCS_asymetry", 1, 1, "AsymMissingMass", "AsymMissingMass", "missingMass", 10, -0.5,
+//				0.5);
+//		myCanvas.create1DHisto("DVCS_asymetry", 2, 1, "NombreDePointsSecEffPVSPhi", "NombreDePointsSecEffPVSPhi", "phi",
+//				10, 0, 360);
+//		myCanvas.create1DHisto("DVCS_asymetry", 2, 2, "NombreDePointsSecEffNVSPhi", "NombreDePointsSecEffNVSPhi", "phi",
+//				10, 0, 360);
+//		myCanvas.create1DHisto("DVCS_asymetry", 1, 2, "Asymetry2", "Asymetry", "phi", 10, 0, 360);
+//		myCanvas.create1DHisto("DVCS_asymetry", 3, 1, "Phi2", "Phi", "phi", 10, 0, 360);
+//
+//		String tabPi02 = "Pi02";
+//		myCanvas.addTab(tabPi02, 2, 2);
+//		myCanvas.create2DHisto(tabPi02, 1, 1, "Pi0PhotonAngVSMom", "Pi0PhotonAngVSMom", "PhotonMomentum", "PhotonAngle",
+//				10, 0, 15, 50, 0, 180);
+//		myCanvas.create2DHisto(tabPi02, 1, 2, "Pi0PhotonDistVSMom", "Pi0PhotonDistVSMom", "PhotonMomentum",
+//				"PhotonDistanceOnCalo", 10, 0, 15, 50, 0, 100);
+//		myCanvas.create1DHisto(tabPi02, 2, 1, "Pi0PhotonDist", "Pi0PhotonDist", "PhotonMomentum", 50, 0, 180);
 
 	}
 

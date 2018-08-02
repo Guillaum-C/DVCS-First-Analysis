@@ -8,9 +8,13 @@ import org.clas12.analysisTools.event.particles.Photon;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 
+import physics.ComputePhysicsParameters;
+
 public class PhysicsPlots {
 	
 	Canvas myCanvas;
+	
+	boolean debug =false;
 	
 	int mmEPGBin = 100;
 	double mmEPGMin = -0.5;
@@ -90,6 +94,18 @@ public class PhysicsPlots {
 	int deltaConeProtonBin = 100;
 	double deltaConeProtonMin = 0;
 	double deltaConeProtonMax = 60;
+	
+	int phiBin = 10;
+	double phiMin = 0;
+	double phiMax = 360;
+	
+	int helicityBin = 3;
+	double helicityMin = -1;
+	double helicityMax = 2;
+	
+	int mGGBin = 100;
+	double mGGMin = 0;
+	double mGGMax = 1;
 	
 	/**
 	 * Create plots class
@@ -303,38 +319,138 @@ public class PhysicsPlots {
 
 	}
 
-	
-	/**
-	 * Create raw plots
-	 */
-	public void createPhysicsPlots() {
+	public void createAsymetryHisto(String tabName, String legend){
+		String tab = tabName;
+//		String tabMore = tabName+" more";
 		
-	}
-	
-	/**
-	 * Fill raw plots
-	 * @param processedEvent event to extract particles from
-	 */
-	public void fillParticlesPlotsRaw(ParticleEvent processedEvent) {
+		String processName = "Asymetry";
 		
-	}
-	
-	public void fillNumberOfParticlesPlots(Event processedEvent){
-		
-	}
-	
-	/**
-	 * Create plots after cuts
-	 */
-	public void createParticlesPlotsAfterCuts(){
-	}
-	
-	/**
-	 * Fill after cuts
-	 * @param particleEvent event to plot
-	 */
-	public void fillParticlesPlotsAfterCuts(ParticleEvent particleEvent){
+		int tabNumberOfRows = 2;
+		int tabNumberOfColumns = 2;
+//		int tabNumberOfRowsMore = 4;
+//		int tabNumberOfColumnsMore =3;
 
+		this.myCanvas.addTab(tab, tabNumberOfRows, tabNumberOfColumns);
+//		this.myCanvas.addTab(tabMore, tabNumberOfRowsMore, tabNumberOfColumnsMore);
+
+		String prefix = processName + " ";
+		String prefixTitle = "";
+		String suffix = "";
+		if (!legend.equals("")) {
+			suffix = " (" + legend + ")";
+		}	
+		
+//		int xBBin = 200;
+//		double xBMin = 0;
+//		double xBMax = 1;
+//
+//		int q2Bin = 200;
+//		double q2Min = 0;
+//		double q2Max = 10.6;
+//		this.myCanvas.create2DHisto(tab, 1, 1, prefix + "Q^2 vs xB" + suffix,
+//				prefix + "Q^2 vs xB" + suffix, "xB", "Q^2 (GeV^2)", xBBin, xBMin, xBMax, q2Bin,
+//				q2Min, q2Max);
+		
+		
+		myCanvas.create1DHisto(tab, 1, 1, prefixTitle+"Asymetry"+suffix, prefix+"Asymetry"+suffix, "#phi_trento (°)", phiBin, phiMin, phiMax);
+		myCanvas.create1DHisto(tab, 1, 2, prefixTitle+"Helicity"+suffix, prefix+"Helicity"+suffix, "Helicity", helicityBin, helicityMin, helicityMax);
+		myCanvas.create1DHisto(tab, 2, 1, prefixTitle+"#phi_trento for events with helicity +"+suffix, prefix+"#phi_trento for events with helicity +"+suffix, "#phi_trento (°)", phiBin, phiMin, phiMax);
+		myCanvas.create1DHisto(tab, 2, 2, prefixTitle+"#phi_trento for events with helicity -"+suffix, prefix+"#phi_trento for events with helicity -"+suffix, "#phi_trento (°)", phiBin, phiMin, phiMax);
 	}
 	
+	public void fillAsymetryHisto(double phiDeg, int helicity, String tabName, String legend){
+		String tab = tabName;
+//		String tabMore = tabName+" more";
+		
+		String processName = "Asymetry";
+		
+		String prefix = processName + " ";
+		String prefixTitle = "";
+		String suffix = "";
+		if (!legend.equals("")) {
+			suffix = " (" + legend + ")";
+		}
+		
+		this.myCanvas.fill1DHisto(prefixTitle+"Helicity"+suffix, helicity);
+		if (helicity == 1) {
+			this.myCanvas.fill1DHisto(prefixTitle+"#phi_trento for events with helicity +"+suffix, phiDeg, 1);
+		} else if (helicity == -1){
+			this.myCanvas.fill1DHisto(prefixTitle+"#phi_trento for events with helicity -"+suffix, phiDeg, 1);
+		} else {
+			throw new IllegalArgumentException("Helicity has to be +1 or -1");
+		}
+		int phiBin = this.myCanvas.get1DHisto(prefixTitle+"Asymetry"+suffix).getxAxis().getBin(phiDeg);
+		double nPlus = this.myCanvas.get1DHisto(prefixTitle+"#phi_trento for events with helicity +"+suffix).getBinContent(phiBin);
+		double nMinus = this.myCanvas.get1DHisto(prefixTitle+"#phi_trento for events with helicity -"+suffix).getBinContent(phiBin);
+		this.myCanvas.get1DHisto(prefixTitle+"Asymetry"+suffix).setBinContent(phiBin, (nPlus - nMinus) / (nPlus + nMinus));
+	}
+
+	public void createDefaultPi0Histo(double electronEnergy, String tabName, String legend) {
+		String processTab = tabName;
+//		String processTabMore = tabName+" more";
+		
+		String processName = "Pi0";
+		
+		int tabNumberOfRows = 3;
+		int tabNumberOfColumns = 2;
+//		int tabNumberOfRowsMore = 4;
+//		int tabNumberOfColumnsMore =3;
+
+		this.myCanvas.addTab(processTab, tabNumberOfRows, tabNumberOfColumns);
+//		this.myCanvas.addTab(processTabMore, tabNumberOfRowsMore, tabNumberOfColumnsMore);
+
+		String prefixTitle = "";
+		String prefix = processName + " ";
+		String suffix = "";
+		if (!legend.equals("")) {
+			suffix = " (" + legend + ")";
+		}
+		this.myCanvas.create1DHisto(processTab, 1, 1, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " (in Fwd and FT " + legend + ")";
+		this.myCanvas.create1DHisto(processTab, 1, 2, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " (in Fwd " + legend + ")";
+		this.myCanvas.create1DHisto(processTab, 2, 1, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " (in FT " + legend + ")";
+		this.myCanvas.create1DHisto(processTab, 2, 2, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = "";
+		this.myCanvas.create1DHisto(processTab, 3, 2, prefix + "M(#gamma#gamma) theta" + suffix,
+				prefix + "M(#gamma#gamma) theta" + suffix, "M(#gamma#gamma)", 100, 0, 50);
+		
+	}
+	
+	public void fillDefaultPi0Histo(Photon photon1, Photon photon2, String tabName, String legend){
+		String processTab = tabName;
+//		String processTabMore = tabName+" more";
+		
+		String processName = "Pi0";
+		
+		String prefixTitle = "";
+		String prefix = processName + " ";
+		String suffix = "";
+		if (!legend.equals("")) {
+			suffix = " (" + legend + ")";
+		}
+		this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,ComputePhysicsParameters.computePi0InvariantMass(photon1, photon2));
+		if ((photon1.getThetaDeg()>5 && photon2.getThetaDeg()<5) || (photon1.getThetaDeg()<5 && photon2.getThetaDeg()>5)){
+			suffix = " (in Fwd and FT " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,ComputePhysicsParameters.computePi0InvariantMass(photon1, photon2));
+		}
+		if (photon1.getThetaDeg()>5 && photon2.getThetaDeg()>5){
+			suffix = " (in Fwd " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,ComputePhysicsParameters.computePi0InvariantMass(photon1, photon2));
+		}
+		if (photon1.getThetaDeg()<5 && photon2.getThetaDeg()<5){
+			suffix = " (in FT " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,ComputePhysicsParameters.computePi0InvariantMass(photon1, photon2));
+		}
+		suffix = "";
+		this.myCanvas.fill1DHisto(prefix + "M(#gamma#gamma) theta" + suffix,photon1.getThetaDeg());
+		this.myCanvas.fill1DHisto(prefix + "M(#gamma#gamma) theta" + suffix,photon2.getThetaDeg());
+		
+	}
+
 }
