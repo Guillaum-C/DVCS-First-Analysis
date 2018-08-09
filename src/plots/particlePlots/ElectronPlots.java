@@ -63,7 +63,7 @@ public class ElectronPlots {
 		this.myCanvas.addTab(particleTab, particleTabNumberOfRows, particleTabNumberOfColumns);
 		this.myCanvas.addTab(particleMoreTab, particleMoreTabNumberOfRows, particleMoreTabNumberOfColumns);
 
-		String prefix = particleName + " ";
+		String prefix = particleName + ": ";
 		String suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -86,7 +86,6 @@ public class ElectronPlots {
 				" Z-Vertex (cm)", "Momentum (GeV)", vzBin, vzMin, vzMax, pBin, pMin, pMax);
 
 		// Without Forward Tagger
-		prefix = particleName + " ";
 		suffix = " (no FT)";
 		if (!legend.equals("")) {
 			suffix = " (no FT, " + legend + ")";
@@ -109,7 +108,6 @@ public class ElectronPlots {
 				" Z-Vertex (cm)", "Momentum (GeV)", vzBin, vzMin, vzMax, pBin, pMin, pMax);
 
 		// With Forward Tagger
-		prefix = particleName + " ";
 		suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -135,7 +133,6 @@ public class ElectronPlots {
 		
 
 		// Without Forward Tagger
-		prefix = particleName + " ";
 		suffix = " (no FT)";
 		if (!legend.equals("")) {
 			suffix = " (no FT, " + legend + ")";
@@ -184,7 +181,7 @@ public class ElectronPlots {
 	 */
 	public void fillDefaultHistograms(Particle particle,String tabName, String legend) {
 
-		String prefix = particleName + " ";
+		String prefix = particleName + ": ";
 		String suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -209,7 +206,6 @@ public class ElectronPlots {
 				Math.sqrt(Math.pow(particle.getVx(), 2) + Math.pow(particle.getVy(), 2)));
 
 		if (particle.getThetaDeg() > 5) {
-			prefix = particleName + " ";
 			suffix = " (no FT)";
 			if (!legend.equals("")) {
 				suffix = " (no FT, " + legend + ")";

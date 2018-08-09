@@ -18,9 +18,6 @@ public class PositiveNegativeChargesPlots {
 		int betaBin = 200;
 		double betaMin = -0.1;
 		double betaMax = 1.1;
-		
-		H2F test;
-		H2F test2;
 
 		/**
 		 * Create an electron plots class

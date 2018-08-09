@@ -10,6 +10,8 @@ import org.clas12.analysisTools.event.particles.Photon;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 
+import plots.PlotTools;
+
 public class ParticlePlots {
 	
 	Canvas myCanvas;
@@ -35,42 +37,95 @@ public class ParticlePlots {
 	/**
 	 * Create number of particles plots
 	 */
-	public void createNumberParticlesPlots(String tabName, String legend){
+	public void createNumberParticlesPlots(String tabLegend, String plotExtraLegend){
 		int nbParticlesBin = 10;
 		double nbParticlesMin = 0;
 		double nbParticlesMax = 10;
-//		String tabNbParticles = "NbParticles";
-		String tabNbParticles = tabName;
-		myCanvas.addTab(tabNbParticles, 4, 6);
-		String suffix=legend;
-		myCanvas.create1DHisto(tabNbParticles, 1, 1, "numberOfElectrons"+suffix, "Nb electrons"+suffix, "Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 1, 2, "numberOfPhotons"+suffix, "Nb photons"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 1, 3, "numberOfProtons"+suffix, "Nb protons"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 1, 4, "numberOfElectronsRandomTrigger"+suffix, "Nb electrons (random trigger)"+suffix,"Number of electrons",  nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 1, 5, "numberOfPhotonsRandomTrigger"+suffix, "Nb photons (random trigger)"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 1, 6, "numberOfProtonsRandomTrigger"+suffix, "Nb protons (random trigger)"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
 		
-		myCanvas.create1DHisto(tabNbParticles, 2, 2, "numberOfPhotonsWithElec"+suffix, "Nb photons (with an elec)"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 2, 3, "numberOfProtonsWithElec"+suffix, "Nb protons (with an elec)"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 2, 5, "numberOfPhotonsWithElecRandomTrigger"+suffix, "Nb photons (with an elec, random trigger)"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create1DHisto(tabNbParticles, 2, 6, "numberOfProtonsWithElecRandomTrigger"+suffix, "Nb protons (with an elec, random trigger)"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		String plotFamilyName = "Nb";
 		
-		myCanvas.create2DHisto(tabNbParticles, 3, 1, "numberOfPhotonsVSElectrons"+suffix, "Nb photons vs electrons"+suffix, "Number of electrons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create2DHisto(tabNbParticles, 3, 2, "numberOfProtonsVSElectrons"+suffix, "Nb protons vs electrons"+suffix,"Number of electrons","Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create2DHisto(tabNbParticles, 3, 3, "numberOfPhotonsVSProtons"+suffix, "Nb photons vs protons"+suffix,"Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create2DHisto(tabNbParticles, 3, 4, "numberOfPhotonsVSElectronsRandomTrigger"+suffix, "Nb photons vs electrons (random trigger)"+suffix, "Number of electrons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create2DHisto(tabNbParticles, 3, 5, "numberOfProtonsVSElectronsRandomTrigger"+suffix, "Nb protons vs electrons (random trigger)"+suffix,"Number of electrons","Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create2DHisto(tabNbParticles, 3, 6, "numberOfPhotonsVSProtonsRandomTrigger"+suffix, "Nb photons vs protons (random trigger)"+suffix,"Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		String tabTitle = PlotTools.createTabName (plotFamilyName+" particles ",tabLegend);
 		
-		myCanvas.create2DHisto(tabNbParticles, 4, 3, "numberOfPhotonsVSProtonsWithElec"+suffix, "Nb photons vs protons (with an elec)"+suffix,"Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
-		myCanvas.create2DHisto(tabNbParticles, 4, 6, "numberOfPhotonsVSProtonsWithElecRandomTrigger"+suffix, "Nb photons Nb protons (with an elec, random trigger)"+suffix,"Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		int particleTabNumberOfRows = 4;
+		int particleTabNumberOfColumns = 5;
+		this.myCanvas.addTab(tabTitle, particleTabNumberOfRows, particleTabNumberOfColumns);
 
-		for (int i=1; i<=6; i++){
-			for (int j=1; j<=2; j++){
-				myCanvas.setLogY(tabNbParticles, j, i, true);
+		String prefix = plotFamilyName + ": ";
+		String suffix = PlotTools.createSuffix(plotExtraLegend);
+		
+		myCanvas.create1DHisto(tabTitle, 1, 1, prefix+"electrons"+suffix, prefix+"electrons"+suffix, "Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create1DHisto(tabTitle, 1, 2, prefix+"photons"+suffix, prefix+"photons"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create1DHisto(tabTitle, 1, 3, prefix+"protons"+suffix, prefix+"protons"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+
+		myCanvas.create2DHisto(tabTitle, 2, 1, prefix+"photons vs electrons"+suffix, prefix+"photons vs electrons"+suffix, "Number of electrons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create2DHisto(tabTitle, 2, 2, prefix+"protons vs electrons"+suffix, prefix+"protons vs electrons"+suffix,"Number of electrons","Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create2DHisto(tabTitle, 2, 3, prefix+"photons vs protons"+suffix, prefix+"photons vs protons"+suffix,"Number of protons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		
+		suffix = PlotTools.createSuffix("with elec", plotExtraLegend);
+		myCanvas.create1DHisto(tabTitle, 1, 4, prefix+"photons"+suffix, prefix+"photons"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create1DHisto(tabTitle, 1, 5, prefix+"protons"+suffix, prefix+"protons"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		
+		myCanvas.create2DHisto(tabTitle, 2, 4, prefix+"photons vs protons"+suffix, prefix+"photons vs protons"+suffix,"Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		
+		
+		suffix = PlotTools.createSuffix("rand trig", plotExtraLegend);
+		myCanvas.create1DHisto(tabTitle, 3, 1, prefix+"electrons"+suffix, prefix+"electrons"+suffix,"Number of electrons",  nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create1DHisto(tabTitle, 3, 2, prefix+"photons"+suffix, prefix+"photons"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create1DHisto(tabTitle, 3, 3, prefix+"protons"+suffix, prefix+"protons"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+
+		myCanvas.create2DHisto(tabTitle, 4, 1, prefix+"photons vs electrons"+suffix, prefix+"photons vs electrons"+suffix, "Number of electrons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create2DHisto(tabTitle, 4, 2, prefix+"protons vs electrons"+suffix, prefix+"protons vs electrons"+suffix,"Number of electrons","Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create2DHisto(tabTitle, 4, 3, prefix+"photons vs protons"+suffix, prefix+"photons vs protons"+suffix,"Number of protons","Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		suffix = PlotTools.createSuffix("with elec", "rand trig", plotExtraLegend);
+		myCanvas.create1DHisto(tabTitle, 3, 4, prefix+"photons"+suffix, prefix+"photons"+suffix, "Number of photons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		myCanvas.create1DHisto(tabTitle, 3, 5, prefix+"protons"+suffix, prefix+"protons"+suffix, "Number of protons", nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		
+		myCanvas.create2DHisto(tabTitle, 4, 4, prefix+"photons vs protons"+suffix, prefix+"photons vs protons"+suffix,"Number of protons","Number of electrons", nbParticlesBin, nbParticlesMin, nbParticlesMax, nbParticlesBin, nbParticlesMin, nbParticlesMax);
+		
+		for (int i=1; i<=particleTabNumberOfRows; i++){
+			for (int j=1; j<=particleTabNumberOfColumns; j++){
+				if (i==1||i==3){
+				myCanvas.setLogY(tabTitle, i, j, true);
+				}else{
+					myCanvas.setLogZ(tabTitle, i, j, true);
+				}
 			}
-			for (int j=3; j<=4; j++){
-				myCanvas.setLogZ(tabNbParticles, j, i, true);
+			
+		}
+	}
+
+	public void fillNumberOfParticlesPlots(Event processedEvent, String plotExtraLegend){
+		
+		/* ===== NUMBER OF PARTICLES ===== */
+		String plotFamilyName = "Nb";
+		String prefix = plotFamilyName + ": ";
+		String suffix = PlotTools.createSuffix( plotExtraLegend);
+		this.myCanvas.fill1DHisto(prefix+"electrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons());
+		this.myCanvas.fill1DHisto(prefix+"photons"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
+		this.myCanvas.fill1DHisto(prefix+"protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
+		this.myCanvas.fill2DHisto(prefix+"photons vs electrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+		this.myCanvas.fill2DHisto(prefix+"protons vs electrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
+		this.myCanvas.fill2DHisto(prefix+"photons vs protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+		if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
+			suffix = PlotTools.createSuffix("with elec", plotExtraLegend);
+			this.myCanvas.fill1DHisto(prefix+"photons"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
+			this.myCanvas.fill1DHisto(prefix+"protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
+			this.myCanvas.fill2DHisto(prefix+"photons vs protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+		}
+		
+		if (processedEvent.getTrigger_bit(31)){
+			suffix = PlotTools.createSuffix("rand trig", plotExtraLegend);
+			this.myCanvas.fill1DHisto(prefix+"electrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons());
+			this.myCanvas.fill1DHisto(prefix+"photons"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
+			this.myCanvas.fill1DHisto(prefix+"protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
+			this.myCanvas.fill2DHisto(prefix+"photons vs electrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+			this.myCanvas.fill2DHisto(prefix+"protons vs electrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
+			this.myCanvas.fill2DHisto(prefix+"photons vs protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
+			if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
+				suffix = PlotTools.createSuffix("with elec", "rand trig", plotExtraLegend);
+				this.myCanvas.fill1DHisto(prefix+"photons"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
+				this.myCanvas.fill1DHisto(prefix+"protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
+				this.myCanvas.fill2DHisto(prefix+"photons vs protons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
 			}
 		}
 	}
@@ -114,35 +169,6 @@ public class ParticlePlots {
 		}
 	}
 	
-	public void fillNumberOfParticlesPlots(Event processedEvent, String legend){
-		String suffix=legend;
-		/* ===== NUMBER OF PARTICLES ===== */
-		this.myCanvas.fill1DHisto("numberOfElectrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons());
-		this.myCanvas.fill1DHisto("numberOfPhotons"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
-		this.myCanvas.fill1DHisto("numberOfProtons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
-		this.myCanvas.fill2DHisto("numberOfPhotonsVSElectrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-		this.myCanvas.fill2DHisto("numberOfProtonsVSElectrons"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
-		this.myCanvas.fill2DHisto("numberOfPhotonsVSProtons"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-		if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
-			this.myCanvas.fill1DHisto("numberOfPhotonsWithElec"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
-			this.myCanvas.fill1DHisto("numberOfProtonsWithElec"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
-			this.myCanvas.fill2DHisto("numberOfPhotonsVSProtonsWithElec"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-		}
-		
-		if (processedEvent.getTrigger_bit(31)){
-			this.myCanvas.fill1DHisto("numberOfElectronsRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons());
-			this.myCanvas.fill1DHisto("numberOfPhotonsRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
-			this.myCanvas.fill1DHisto("numberOfProtonsRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
-			this.myCanvas.fill2DHisto("numberOfPhotonsVSElectronsRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-			this.myCanvas.fill2DHisto("numberOfProtonsVSElectronsRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfElectrons(), processedEvent.getParticleEvent().hasNumberOfProtons());
-			this.myCanvas.fill2DHisto("numberOfPhotonsVSProtonsRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-			if (processedEvent.getParticleEvent().hasNumberOfElectrons()>0){
-				this.myCanvas.fill1DHisto("numberOfPhotonsWithElecRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfPhotons());
-				this.myCanvas.fill1DHisto("numberOfProtonsWithElecRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons());
-				this.myCanvas.fill2DHisto("numberOfPhotonsVSProtonsWithElecRandomTrigger"+suffix, processedEvent.getParticleEvent().hasNumberOfProtons(), processedEvent.getParticleEvent().hasNumberOfPhotons());
-			}
-		}
-	}
 	
 	/**
 	 * Create plots after cuts

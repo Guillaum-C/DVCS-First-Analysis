@@ -16,20 +16,20 @@ public class PhysicsPlots {
 	
 	boolean debug =false;
 	
-	int mmEPGBin = 100;
+	int mmEPGBin = 300;
 	double mmEPGMin = -0.5;
 	double mmEPGMax = 0.5;
 	
-	int mmEPGTBin = 100;
+	int mmEPGTBin = 300;
 	double mmEPGTMin = -1;
 	double mmEPGTMax = 5;
 	
-	int mmEPGZBin = 100;
+	int mmEPGZBin = 300;
 	double mmEPGZMin = -5;
 	double mmEPGZMax = 10;
 	
 
-	int mmEPBin = 100;
+	int mmEPBin = 300;
 	double mmEPMin = -3;
 	double mmEPMax = 3;
 	
@@ -42,7 +42,7 @@ public class PhysicsPlots {
 //	double mmEPZMax = 10;
 	
 
-	int mmEGBin = 100;
+	int mmEGBin = 300;
 	double mmEGMin = -1;
 	double mmEGMax = 4;
 	
@@ -103,9 +103,9 @@ public class PhysicsPlots {
 	double helicityMin = -1;
 	double helicityMax = 2;
 	
-	int mGGBin = 100;
+	int mGGBin = 200;
 	double mGGMin = 0;
-	double mGGMax = 1;
+	double mGGMax = 0.4;
 	
 	/**
 	 * Create plots class

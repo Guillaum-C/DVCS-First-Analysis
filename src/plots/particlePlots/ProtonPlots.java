@@ -69,7 +69,7 @@ public class ProtonPlots {
 		this.myCanvas.addTab(particleTab, particleTabNumberOfRows, particleTabNumberOfColumns);
 		this.myCanvas.addTab(particleMoreTab, particleMoreTabNumberOfRows, particleMoreTabNumberOfColumns);
 
-		String prefix = particleName + " ";
+		String prefix = particleName + ": ";
 		String suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -91,7 +91,6 @@ public class ProtonPlots {
 		this.myCanvas.create2DHisto(particleTab, 3, 2, prefix + "P vs Vz" + suffix, prefix + "P vs Vz" + suffix,
 				" Z-Vertex (cm)", "Momentum (GeV)", vzCtrBin, vzCtrMin, vzCtrMax, pBin, pMin, pMax);
 
-		prefix = particleName + " ";
 		suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -116,7 +115,6 @@ public class ProtonPlots {
 				"Transverse vertex (cm)", vtCtrBin, vtCtrMin, vtCtrMax);
 
 		// In the central
-		prefix = particleName + " ";
 		suffix = " (in Central)";
 		if (!legend.equals("")) {
 			suffix = " (in Central, " + legend + ")";
@@ -141,7 +139,6 @@ public class ProtonPlots {
 				"Transverse vertex (cm)", vtCtrBin, vtCtrMin, vtCtrMax);
 
 		// In the forward
-		prefix = particleName + " ";
 		suffix = " (in Forward)";
 		if (!legend.equals("")) {
 			suffix = " (in Forward, " + legend + ")";
@@ -182,7 +179,7 @@ public class ProtonPlots {
 	 */
 	public void fillDefaultHistograms(Particle particle, String tabName, String legend) {
 
-		String prefix = particleName + " ";
+		String prefix = particleName + ": ";
 		String suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -194,7 +191,6 @@ public class ProtonPlots {
 		this.myCanvas.fill2DHisto(prefix + "#phi vs Vz" + suffix, particle.getVz(), particle.getPhiDeg());
 		this.myCanvas.fill2DHisto(prefix + "P vs Vz" + suffix, particle.getVz(), particle.getP());
 
-		prefix = particleName + " ";
 		suffix = "";
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
@@ -211,7 +207,6 @@ public class ProtonPlots {
 				Math.sqrt(Math.pow(particle.getVx(), 2) + Math.pow(particle.getVy(), 2)));
 		
 		if (particle.hasCentralTrack()>0){
-			prefix = particleName + " ";
 			suffix = " (in Central)";
 			if (!legend.equals("")) {
 				suffix = " (in Central, " + legend + ")";
@@ -229,7 +224,6 @@ public class ProtonPlots {
 		}
 		
 		if (!(particle.hasCentralTrack()>0)){
-			prefix = particleName + " ";
 			suffix = " (in Forward)";
 			if (!legend.equals("")) {
 				suffix = " (in Forward, " + legend + ")";
