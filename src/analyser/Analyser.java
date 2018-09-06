@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
+import org.clas12.analysisTools.constants.BeamConstants;
 import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.particles.Electron;
 import org.clas12.analysisTools.event.particles.LorentzVector;
@@ -63,7 +63,7 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(runNumber, true, false);
+		Canvas myCanvas = new Canvas(runNumber, true, true);
 		createPlots(myCanvas, true);
 		physicsPlots = new PhysicsPlots(myCanvas, beamEnergy);
 		kinematicalPlots = new KinematicalPlots(myCanvas);
@@ -140,24 +140,24 @@ public class Analyser {
 		/* ===== OUPUT FILE ===== */
 //		createOutputFile(outPutFile);
 		
-		int lineNumber=0;
-		try
-		(
-		   FileReader       input = new FileReader(outPutFile);
-		   LineNumberReader count = new LineNumberReader(input);
-		)
-		{
-		   while (count.skip(Long.MAX_VALUE) > 0)
-		   {
-		      // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
-		   }
-
-		   lineNumber = count.getLineNumber() + 1 - 1;                                    // +1 because line index starts at 0 / -1 because last line is empty
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("linenumber: "+lineNumber);
+//		int lineNumber=0;
+//		try
+//		(
+//		   FileReader       input = new FileReader(outPutFile);
+//		   LineNumberReader count = new LineNumberReader(input);
+//		)
+//		{
+//		   while (count.skip(Long.MAX_VALUE) > 0)
+//		   {
+//		      // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
+//		   }
+//
+//		   lineNumber = count.getLineNumber() + 1 - 1;                                    // +1 because line index starts at 0 / -1 because last line is empty
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		System.out.println("linenumber: "+lineNumber);
 
 		/* ===== INITIAL STATE ===== */
 		LorentzVector protonI = new LorentzVector();
@@ -170,50 +170,147 @@ public class Analyser {
 
 		LorentzVector stateI = protonI.sum(electronI);
 		System.out.println("Initial state: " + stateI.toString());
+		
+		boolean hasBeam = true; //true if Faraday cup has high counts for the current 30ms, false else (means beam trip)
 
+		int goodRandomEvents=0;
+		int goodRandomEventsWithDVCSPhoton=0;
+		
 		/* Loop on events */
 		int eventIterator = 0;
 		while (eventIterator < maxEvents && hipoReader.hasNextEvent()) {
 			eventIterator++;
-
+			
+//			System.out.println("Event: " + eventIterator);
 			if (eventIterator % 10000 == 0) {
-				System.out.println("Event: " + eventIterator);
+				System.out.println("Event: " + eventIterator + "/"+hipoReader.getHipoFile().getSize()+"  (File:"+(hipoReader.getCurrentFile()+1)+"/"+hipoReader.getFileList().size()+")");
 			}
-
+			
 			DataEvent dataEvent = hipoReader.getNextEvent();
 
 			Event processedEvent = new Event();
 			processedEvent.readBanks(dataEvent);
-
-			/* ======= FIX PROTON SELECTION FROM CENTRAL ====== */
-			// TODO To be removed later
-			ArrayList<Particle> particlesToBeRemoved = new ArrayList<>();
-			ArrayList<Particle> particlesToBeAdded = new ArrayList<>();
-			for (Particle particle : processedEvent.getParticleEvent().getParticles()) {
-				if (!(particle instanceof Proton) && (particle.getCharge() == 1) && (particle.hasCentralTrack() > 0)) {
-					Particle newProton = new Proton(particle);
-					particlesToBeRemoved.add(particle);
-					particlesToBeAdded.add(newProton);
-				}
-			}
-			for (Particle particle : particlesToBeRemoved) {
-				processedEvent.getParticleEvent().removeParticle(particle);
-			}
-			for (Particle newProton : particlesToBeAdded) {
-				processedEvent.getParticleEvent().addParticle(newProton);
-			}
+			
+//			System.out.println("Event: " + eventIterator);
+//			dataEvent.show();
+			
+			/* ===== FIX PROTON SELECTION FROM CENTRAL ===== */
+//			// TODO To be removed later
+//			ArrayList<Particle> particlesToBeRemoved = new ArrayList<>();
+//			ArrayList<Particle> particlesToBeAdded = new ArrayList<>();
+//			for (Particle particle : processedEvent.getParticleEvent().getParticles()) {
+//				if (!(particle instanceof Proton) && (particle.getCharge() == 1) && (particle.hasCentralTrack() > 0)) {
+//					Particle newProton = new Proton(particle);
+//					particlesToBeRemoved.add(particle);
+//					particlesToBeAdded.add(newProton);
+//				}
+//			}
+//			for (Particle particle : particlesToBeRemoved) {
+//				processedEvent.getParticleEvent().removeParticle(particle);
+//			}
+//			for (Particle newProton : particlesToBeAdded) {
+//				processedEvent.getParticleEvent().addParticle(newProton);
+//			}
 			// END of new proton pid
 
+//			/* Test */
+//			DataEvent dataFollowingEvent = null;
+//			if (eventIterator==5){
+//				dataFollowingEvent=hipoReader.getRelativeEvent(0);
+//				System.out.println("Relative 0:");
+//				dataFollowingEvent.show();
+//				dataFollowingEvent=hipoReader.getRelativeEvent(1);
+//				System.out.println("Relative 1:");
+//				dataFollowingEvent.show();
+//				dataFollowingEvent=hipoReader.getRelativeEvent(2);
+//				System.out.println("Relative 2:");
+//				dataFollowingEvent.show();
+//				dataFollowingEvent=hipoReader.getRelativeEvent(3);
+//				System.out.println("Relative 3:");
+//				dataFollowingEvent.show();
+//				dataFollowingEvent=hipoReader.getRelativeEvent(4);
+//				System.out.println("Relative 4:");
+//				dataFollowingEvent.show();
+//				dataFollowingEvent=hipoReader.getRelativeEvent(5);
+//				System.out.println("Relative 5:");
+//				dataFollowingEvent.show();
+//			}
+			
+			/* ===== RANDOM TRIGGER ===== */
 			if (processedEvent.getTrigger_bit(31)) {
 				fillDetectorsPlotsRandom(processedEvent);
-
-				PhotonCut photonCutDVCS = new PhotonCut();
-				Event afterPhotonCuts =
-				photonCutDVCS.CutDVCS(processedEvent);
-
-				fillOutputPhotonFile(outPutFile, afterPhotonCuts);
+				if (hasBeam){
+					goodRandomEvents++;
+					PhotonCut photonCutDVCS = new PhotonCut();
+					Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
+					fillOutputPhotonFile(outPutFile, afterPhotonCuts);
+					if (afterPhotonCuts.getParticleEvent().hasNumberOfPhotons()>0){
+						goodRandomEventsWithDVCSPhoton=goodRandomEventsWithDVCSPhoton+afterPhotonCuts.getParticleEvent().hasNumberOfPhotons();
+						
+						String text = "Event: " + eventIterator + "  Ratio random: "+ ((double)goodRandomEventsWithDVCSPhoton/(double)goodRandomEvents) + "  ("+ goodRandomEventsWithDVCSPhoton+ "/"+goodRandomEvents+")";
+						try {
+							Files.write(Paths.get("./normalisation.txt"), text.getBytes());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						System.out.println("Event: " + eventIterator);
+						System.out.println("Ratio random: "+ ((double)goodRandomEventsWithDVCSPhoton/(double)goodRandomEvents) + "  ("+ goodRandomEventsWithDVCSPhoton+ "/"+goodRandomEvents+")");
+						
+					}
+				}
 			}
+			
+			/* ===== Faraday cup state ===== */
+			if (dataEvent.hasBank("RAW::scaler") == true) {
+				/*Reset beam value */
+				hasBeam = false; //reset value
+				
+				//dataEvent.getBank("RAW::scaler").show();
+				
+				/* Plot FCvalue */
+				for (int bankEntry = 0; bankEntry < dataEvent.getBank("RAW::scaler").rows(); bankEntry ++){
+					
+					int crate = dataEvent.getBank("RAW::scaler").getByte("crate", bankEntry);
+					int slot = dataEvent.getBank("RAW::scaler").getByte("slot", bankEntry);
+					int channel = dataEvent.getBank("RAW::scaler").getShort("channel", bankEntry);
+					if (crate == 64 && slot == 64 && channel == 0){
+						int fCupGated = dataEvent.getBank("RAW::scaler").getInt("value", bankEntry);
+						myCanvas.fill1DHisto("FaradayCupValue", fCupGated);
+//						System.out.println("fCup gated: "+fCupGated);
+					}
+				}
+				
+				/*Look for next event with raw scaler bank, and set the hasBeam value for the next events*/
+				int count=1;
+				DataEvent dataFollowingEvent=hipoReader.getRelativeEvent(count);
+				while ( !(dataFollowingEvent==null) && count<1000 && !(dataFollowingEvent.hasBank("RAW::scaler")) ){
+					count++;
+					dataFollowingEvent = hipoReader.getRelativeEvent(count);
+				}
+				if (dataFollowingEvent!=null && dataFollowingEvent.hasBank("RAW::scaler")){
+					DataBank bankParticle = dataEvent.getBank("RAW::scaler");
+					for (int bankEntry = 0; bankEntry < bankParticle.rows(); bankEntry ++){
+						int crate = bankParticle.getByte("crate", bankEntry);
+						int slot = bankParticle.getByte("slot", bankEntry);
+						int channel = bankParticle.getShort("channel", bankEntry);
+						if (crate == 64 && slot == 64 && channel == 0){ //gated TRG faraday cup (see https://logbooks.jlab.org/entry/3554327)
+							int fCupGated = bankParticle.getInt("value", bankEntry);
+							int fCupThreshold = 20000;
+							if (fCupGated<= fCupThreshold){
+								hasBeam = false;
+							}else{
+								hasBeam = true;
+							}
+						}
+					}
+				}else{
+					hasBeam = false;
+				}
+			}
+			
 
+			/* ===== PLOTS ===== */
 			fillRawParticlesPlots(processedEvent.getParticleEvent());
 			fillNumberParticlesPlots(processedEvent, "");
 			fillRawDetectorPlots(processedEvent);
@@ -228,7 +325,7 @@ public class Analyser {
 			Event afterElectronCuts = electronCutDVCS.CutDVCS(processedEvent);
 
 			PhotonCut photonCutDVCS = new PhotonCut();
-			Event afterPhotonCuts = photonCutDVCS.CutDVCSRemovePi0(afterElectronCuts);
+			Event afterPhotonCuts = photonCutDVCS.CutDVCS6GeV(afterElectronCuts);
 
 			ProtonCut protonCutDVCS = new ProtonCut();
 			Event afterProtonCuts = protonCutDVCS.CutDVCS(afterPhotonCuts);
@@ -242,7 +339,7 @@ public class Analyser {
 			fillDetectorsPlotsCut(afterSelectionCuts);
 
 			DVCSCut dvcsCut = new DVCSCut();
-			Event afterDVCSCuts = dvcsCut.Cut(processedEvent, electronI);
+			Event afterDVCSCuts = dvcsCut.Cut6GeV(processedEvent, electronI);
 
 			fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut kinematic", "after kinematic cuts");
 
@@ -251,8 +348,8 @@ public class Analyser {
 
 				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
 					
-					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
-//					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
+//					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
+					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
 
 						LorentzVector finalStateEPG = new LorentzVector();
 						finalStateEPG.add(electronF.getFourMomentum(), protonF.getFourMomentum(),
@@ -375,7 +472,7 @@ public class Analyser {
 					}
 				}
 			}
-			if (eventIterator % 1000000 == 0) {
+			if (eventIterator % 100000 == 0 || eventIterator == maxEvents-1) {
 				System.out.println("Saving plots");
 				myCanvas.saveAll("allPlots2_" + eventIterator + ".hipo", false);
 				System.out.println("ASYMETRY DVCS Bin,asymetry");
@@ -1115,6 +1212,15 @@ public class Analyser {
 		path = "/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/";
 		runNumber = "";
 
+		ArrayList<String> fileSkimmedInbending4078 = new ArrayList<>();
+		fileSkimmedInbending4078.add(
+				"/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4078_8.hipo");
+		
+		ArrayList<String> fileSkimmedInbending4013 = new ArrayList<>();
+		fileSkimmedInbending4013.add(
+				"/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4013_8.hipo");
+		
+		
 		ArrayList<String> fileOld = new ArrayList<>();
 		fileOld.add(
 				"/Users/gchristi/Donnees/JLab_Beam/EngineeringRun_Part2_January/Run3432_10GeV_50nA_T-1_S-1_NegInbending_5b3.3/out_clas_003432.evio.2200.hipo");
@@ -1125,7 +1231,7 @@ public class Analyser {
 		// Example : java -jar Analyser_Cut10GeV.jar
 		// /volatile/clas12/data/rg-a/current/ 003222 10 100000
 		if (args.length > 0 && args[0] != null && args[1] != null && args[2] != null) {
-			if (args[3] != null) {
+			if (args.length == 4 ) {
 				path = (String) args[0];
 				System.out.println("Path: " + path);
 				runNumber = (String) args[1];
@@ -1161,7 +1267,7 @@ public class Analyser {
 
 		} else {
 //			hipoReader = new HipoReader(path, runNumber);
-			hipoReader = new HipoReader(fileListInbending);
+			hipoReader = new HipoReader(fileSkimmedInbending4078);
 		}
 		return hipoReader;
 	}
@@ -1170,7 +1276,9 @@ public class Analyser {
 
 		Analyser.createParticlesPlots(myCanvas);
 		Analyser.createRawDetectorsPlots(myCanvas);
-
+		
+		myCanvas.addTab("FaradayCup", 1, 1);
+		myCanvas.create1DHisto("FaradayCup", 1, 1, "FaradayCupValue", "FaradayCupValue", "FaradayCupValue", 200, 0, 100000);
 		// Analyser.createParticlePlots(myCanvas, "electron");
 		// Analyser.createParticlePlots(myCanvas, "electronNoFT");
 		// Analyser.createParticlePlots(myCanvas, "proton");

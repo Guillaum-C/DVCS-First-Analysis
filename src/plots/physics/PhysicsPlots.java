@@ -16,20 +16,20 @@ public class PhysicsPlots {
 	
 	boolean debug =false;
 	
-	int mmEPGBin = 300;
+	int mmEPGBin = 100;
 	double mmEPGMin = -0.5;
 	double mmEPGMax = 0.5;
 	
-	int mmEPGTBin = 300;
+	int mmEPGTBin = 100;
 	double mmEPGTMin = -1;
 	double mmEPGTMax = 5;
 	
-	int mmEPGZBin = 300;
+	int mmEPGZBin = 100;
 	double mmEPGZMin = -5;
 	double mmEPGZMax = 10;
 	
 
-	int mmEPBin = 300;
+	int mmEPBin = 100;
 	double mmEPMin = -3;
 	double mmEPMax = 3;
 	
@@ -42,7 +42,7 @@ public class PhysicsPlots {
 //	double mmEPZMax = 10;
 	
 
-	int mmEGBin = 300;
+	int mmEGBin = 100;
 	double mmEGMin = -1;
 	double mmEGMax = 4;
 	
@@ -376,8 +376,10 @@ public class PhysicsPlots {
 			this.myCanvas.fill1DHisto(prefixTitle+"#phi_trento for events with helicity +"+suffix, phiDeg, 1);
 		} else if (helicity == -1){
 			this.myCanvas.fill1DHisto(prefixTitle+"#phi_trento for events with helicity -"+suffix, phiDeg, 1);
+		} else if (helicity == 0){
+			//ignore this
 		} else {
-			throw new IllegalArgumentException("Helicity has to be +1 or -1");
+			throw new IllegalArgumentException("Helicity has to be +1 or -1 (or 0)");
 		}
 		int phiBin = this.myCanvas.get1DHisto(prefixTitle+"Asymetry"+suffix).getxAxis().getBin(phiDeg);
 		double nPlus = this.myCanvas.get1DHisto(prefixTitle+"#phi_trento for events with helicity +"+suffix).getBinContent(phiBin);
