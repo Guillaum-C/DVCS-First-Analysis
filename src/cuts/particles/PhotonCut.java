@@ -1,9 +1,13 @@
 package cuts.particles;
 
+import java.util.ArrayList;
+
 import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.particles.Particle;
 import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Photon;
+
+import physics.ComputePhysicsParameters;
 
 public class PhotonCut extends ParticleCut{
 
@@ -46,8 +50,9 @@ public class PhotonCut extends ParticleCut{
 	}
 	
 	public Event CutPi0(Event oldEvent) {
-		this.setEnergyMinCut(1);
-		return this.Cut(oldEvent);
+		this.setEnergyMinCut(0.2);
+		Event cutEvent = this.Cut(oldEvent);
+		return cutEvent;
 	}
 	
 	

@@ -1,7 +1,12 @@
 package plots.particlePlots;
 
+import java.util.ArrayList;
+
+import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.particles.Electron;
 import org.clas12.analysisTools.event.particles.Particle;
+import org.clas12.analysisTools.event.particles.ParticleEvent;
+import org.clas12.analysisTools.event.particles.Photon;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.plots.Canvas;
 import org.jlab.groot.data.H2F;
@@ -96,7 +101,8 @@ public class PositiveNegativeChargesPlots {
 		 * @param legend to fill plots created with a legend
 		 */
 		public void fillDefaultHistograms(Particle particle,String tabName, String legend) {
-
+			
+			
 			String prefix = particleName + " ";
 			String suffix = "";
 			if (!legend.equals("")) {
@@ -131,4 +137,11 @@ public class PositiveNegativeChargesPlots {
 			fillDefaultHistograms(particle,particleName,"");
 		}
 
+		public void fillPosNegChargesPlotsRaw(Event processedEvent){
+
+			for (Particle particle : processedEvent.getParticleEvent().getParticles()) {
+				this.fillDefaultHistograms(particle);
+			}
+		}
+		
 }

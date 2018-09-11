@@ -14,15 +14,10 @@ public class DVCSCut {
 
 	public Event Cut(Event oldEvent, LorentzVector electronI) {
 		Event newEvent = new Event(oldEvent);
-		ParticleEvent newParticleEvent = new ParticleEvent();
-		
 		Event cutEvent = null;
 		
-		ParticleNumberCut particleNumberCut = new ParticleNumberCut();
-		cutEvent = particleNumberCut.cutDVCS(oldEvent);
-		
 		ElectronCut electronCutDVCS = new ElectronCut();
-		cutEvent = electronCutDVCS.CutDVCS(cutEvent);
+		cutEvent = electronCutDVCS.CutDVCS(oldEvent);
 		
 		PhotonCut photonCutDVCS = new PhotonCut();
 		cutEvent = photonCutDVCS.CutDVCS(cutEvent);
@@ -34,15 +29,19 @@ public class DVCSCut {
 		cutEvent = cvtCutDVCS.CutDefaultAnalysis(cutEvent);
 		
 		if (cutEvent.getParticleEvent().hasNumberOfElectrons()==0){
-			newEvent.setParticleEvent(newParticleEvent);
+			newEvent.setParticleEvent(new ParticleEvent());
 			return newEvent;
 		}
+		
+		ParticleNumberCut particleNumberCut = new ParticleNumberCut();
+		cutEvent = particleNumberCut.cutDVCS(cutEvent);
 		
 		KinematicCut kinematicCutQ2 = new KinematicCut();
 		cutEvent = kinematicCutQ2.CutQ2(cutEvent, electronI);
 		
 		KinematicCut kinematicCutW2 = new KinematicCut();
 		cutEvent = kinematicCutW2.CutW2(cutEvent, electronI);
+
 		
 		newEvent = cutEvent;
 

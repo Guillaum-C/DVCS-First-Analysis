@@ -143,26 +143,26 @@ public class ParticlePlots {
 	 * Fill raw plots
 	 * @param processedEvent event to extract particles from
 	 */
-	public void fillParticlesPlotsRaw(ParticleEvent processedEvent) {
+	public void fillParticlesPlotsRaw(Event processedEvent) {
 		
-		if (processedEvent.hasNumberOfElectrons() > 0) {
-			ArrayList<Electron> electrons = processedEvent.getElectrons();
+		if (processedEvent.getParticleEvent().hasNumberOfElectrons() > 0) {
+			ArrayList<Electron> electrons = processedEvent.getParticleEvent().getElectrons();
 			for (Particle electron : electrons) {
 				this.electronPlots.fillDefaultHistograms(electron);
 			}
 		}
 
 		/* ===== PROTON ===== */
-		if (processedEvent.hasNumberOfProtons() > 0) {
-			ArrayList<Proton> protons = processedEvent.getProtons();
+		if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
+			ArrayList<Proton> protons = processedEvent.getParticleEvent().getProtons();
 			for (Particle proton : protons) {
 				this.protonPlots.fillDefaultHistograms(proton);
 			}
 		}
 //
 		/* ===== PHOTON ===== */
-		if (processedEvent.hasNumberOfPhotons() > 0) {
-			ArrayList<Photon> photons = processedEvent.getPhotons();
+		if (processedEvent.getParticleEvent().hasNumberOfPhotons() > 0) {
+			ArrayList<Photon> photons = processedEvent.getParticleEvent().getPhotons();
 			for (Particle photon : photons) {
 				this.photonPlots.fillDefaultHistograms(photon);
 			}

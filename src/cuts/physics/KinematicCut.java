@@ -192,6 +192,8 @@ public class KinematicCut {
 			if ( isInCuts(electron, electronI) ){
 				newParticleEvent=oldParticleEvent;
 			}
+		} else if (oldParticleEvent.hasNumberOfElectrons() > 1){
+			throw new IllegalArgumentException("Wrong number of electrons");
 		}
 		return newParticleEvent;
 	}
@@ -217,4 +219,5 @@ public class KinematicCut {
 		this.setW2MinCut(4);
 		return this.Cut(event, electronI);
 	}
+	
 }

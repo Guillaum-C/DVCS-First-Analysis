@@ -17,14 +17,15 @@ public class DetectorPlots {
 	public DetectorPlots(Canvas canvas, double electronEnergy){
 		this.myCanvas=canvas;
 		this.electronEnergy=electronEnergy;
+		
+	}
+	
+	public void createDetectorsPlotsRaw() {
 		this.cvtPlots = new CVTPlots(myCanvas);
 		this.dcPlots = new DCPlots(myCanvas);
 		this.caloPlots = new CalorimeterPlots(myCanvas, "Calo");
 		this.ftofPlots = new FTOFPlots(myCanvas, "FTOF");
 		this.htccPlots = new HTCCPlots(myCanvas, "HTCC");
-	}
-	
-	public void createDetectorsPlotsRaw() {
 		this.cvtPlots.createDefaultHistograms(electronEnergy);
 		this.dcPlots.createDefaultHistograms(electronEnergy);
 	}

@@ -13,23 +13,24 @@ import physics.ComputePhysicsParameters;
 public class PhysicsPlots {
 	
 	Canvas myCanvas;
+	double electronEnergy;
 	
 	boolean debug =false;
 	
 	int mmEPGBin = 100;
-	double mmEPGMin = -0.5;
-	double mmEPGMax = 0.5;
+	double mmEPGMin = -0.2;
+	double mmEPGMax = 0.2;
 	
-	int mmEPGTBin = 100;
+	int mmEPGTBin = 300;
 	double mmEPGTMin = -1;
 	double mmEPGTMax = 5;
 	
-	int mmEPGZBin = 100;
+	int mmEPGZBin = 300;
 	double mmEPGZMin = -5;
 	double mmEPGZMax = 10;
 	
 
-	int mmEPBin = 100;
+	int mmEPBin = 300;
 	double mmEPMin = -3;
 	double mmEPMax = 3;
 	
@@ -42,7 +43,7 @@ public class PhysicsPlots {
 //	double mmEPZMax = 10;
 	
 
-	int mmEGBin = 100;
+	int mmEGBin = 300;
 	double mmEGMin = -1;
 	double mmEGMax = 4;
 	
@@ -95,7 +96,7 @@ public class PhysicsPlots {
 	double deltaConeProtonMin = 0;
 	double deltaConeProtonMax = 60;
 	
-	int phiBin = 10;
+	int phiBin = 20;
 	double phiMin = 0;
 	double phiMax = 360;
 	
@@ -115,6 +116,7 @@ public class PhysicsPlots {
 	public PhysicsPlots(Canvas canvas, double electronEnergy){
 		super();
 		this.myCanvas = canvas;
+		this.electronEnergy = electronEnergy;
 	}
 
 	/**
@@ -142,6 +144,7 @@ public class PhysicsPlots {
 		if (!legend.equals("")) {
 			suffix = " (" + legend + ")";
 		}
+		
 		this.myCanvas.create1DHisto(processTab, 1, 1, prefix + "MM(ep->ep#gammaX)^2" + suffix,
 				prefix + "MM(ep->ep#gammaX)^2" + suffix, "MM(ep->ep#gammaX)^2", mmEPGBin, mmEPGMin, mmEPGMax);
 		this.myCanvas.create1DHisto(processTab, 1, 2, prefix + "MM(ep->epX)^2 when #gamma" + suffix,
@@ -389,17 +392,17 @@ public class PhysicsPlots {
 
 	public void createDefaultPi0Histo(double electronEnergy, String tabName, String legend) {
 		String processTab = tabName;
-//		String processTabMore = tabName+" more";
+		String processTabMore = tabName+" more";
 		
 		String processName = "Pi0";
 		
 		int tabNumberOfRows = 3;
 		int tabNumberOfColumns = 2;
-//		int tabNumberOfRowsMore = 4;
-//		int tabNumberOfColumnsMore =3;
+		int tabNumberOfRowsMore = 5;
+		int tabNumberOfColumnsMore =4;
 
 		this.myCanvas.addTab(processTab, tabNumberOfRows, tabNumberOfColumns);
-//		this.myCanvas.addTab(processTabMore, tabNumberOfRowsMore, tabNumberOfColumnsMore);
+		this.myCanvas.addTab(processTabMore, tabNumberOfRowsMore, tabNumberOfColumnsMore);
 
 		String prefixTitle = "";
 		String prefix = processName + " ";
@@ -419,9 +422,74 @@ public class PhysicsPlots {
 		this.myCanvas.create1DHisto(processTab, 2, 2, prefixTitle + "M(#gamma#gamma)" + suffix,
 				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
 		suffix = "";
-		this.myCanvas.create1DHisto(processTab, 3, 2, prefix + "M(#gamma#gamma) theta" + suffix,
+		this.myCanvas.create1DHisto(processTab, 3, 1, prefix + "M(#gamma#gamma) theta" + suffix,
 				prefix + "M(#gamma#gamma) theta" + suffix, "M(#gamma#gamma)", 100, 0, 50);
+		this.myCanvas.create1DHisto(processTab, 3, 2, prefix + "Energy of photon (with highest energy)" + suffix,
+				prefix + "Energy of photon (with highest energy)" + suffix, "Energy (GeV)", 100, 0, 10);
 		
+		suffix = "";
+		this.myCanvas.create1DHisto(processTabMore, 1, 1, prefixTitle + "MM(epgg)" + suffix,
+				prefix + "MM(epgg)" + suffix, "MM(epgg)", mmEPGBin, mmEPGMin, mmEPGMax);
+		this.myCanvas.create1DHisto(processTabMore, 1, 2, prefixTitle + "MM(epg1)" + suffix,
+				prefix + "MM(epg1)" + suffix, "MM(epg1)", mmEPBin, mmEPMin, mmEPMax);
+		this.myCanvas.create1DHisto(processTabMore, 1, 3, prefixTitle + "MM(epg2)" + suffix,
+				prefix + "MM(epg2)" + suffix, "MM(epg2)", mmEPBin, mmEPMin, mmEPMax);
+		this.myCanvas.create1DHisto(processTabMore, 1, 4, prefixTitle + "MM(ep)" + suffix,
+				prefix + "MM(ep)" + suffix, "MM(ep)", 100, -5, 5);
+//		suffix = " (in Fwd and FT " + legend + ")";
+//		this.myCanvas.create1DHisto(processTabMore, 2, 1, prefixTitle + "M(#gamma#gamma)" + suffix,
+//				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+//		suffix = " (in Fwd and FT " + legend + ")";
+//		this.myCanvas.create1DHisto(processTabMore, 2, 2, prefixTitle + "M(#gamma#gamma)" + suffix,
+//				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+//		suffix = " (in Fwd " + legend + ")";
+//		this.myCanvas.create1DHisto(processTabMore, 2, 3, prefixTitle + "M(#gamma#gamma)" + suffix,
+//				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+//		suffix = " (in FT " + legend + ")";
+//		this.myCanvas.create1DHisto(processTabMore, 2, 4, prefixTitle + "M(#gamma#gamma)" + suffix,
+//				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		
+		suffix = "after epgg cut";
+		this.myCanvas.create1DHisto(processTabMore, 2, 1, prefixTitle + "MM(epgg)" + suffix,
+				prefix + "MM(epgg)" + suffix, "MM(epgg)", mmEPGBin, mmEPGMin, mmEPGMax);
+		this.myCanvas.create1DHisto(processTabMore, 2, 2, prefixTitle + "MM(epg1)" + suffix,
+				prefix + "MM(epg1)" + suffix, "MM(epg1)", mmEPBin, mmEPMin, mmEPMax);
+		this.myCanvas.create1DHisto(processTabMore, 2, 3, prefixTitle + "MM(epg2)" + suffix,
+				prefix + "MM(epg2)" + suffix, "MM(epg2)", mmEPBin, mmEPMin, mmEPMax);
+		this.myCanvas.create1DHisto(processTabMore, 2, 4, prefixTitle + "MM(ep)" + suffix,
+				prefix + "MM(ep)" + suffix, "MM(ep)", 100, -5, 5);
+		this.myCanvas.create1DHisto(processTabMore, 3, 1, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " after epgg cut (in Fwd and FT " + legend + ")";
+		this.myCanvas.create1DHisto(processTabMore, 3, 2, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " after epgg cut (in Fwd " + legend + ")";
+		this.myCanvas.create1DHisto(processTabMore, 3, 3, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " after epgg cut (in FT " + legend + ")";
+		this.myCanvas.create1DHisto(processTabMore, 3, 4, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		
+		suffix = "after M(gg) cut";
+		this.myCanvas.create1DHisto(processTabMore, 4, 1, prefixTitle + "MM(epgg)" + suffix,
+				prefix + "MM(epgg)" + suffix, "MM(epgg)", mmEPGBin, mmEPGMin, mmEPGMax);
+		this.myCanvas.create1DHisto(processTabMore, 4, 2, prefixTitle + "MM(epg1)" + suffix,
+				prefix + "MM(epg1)" + suffix, "MM(epg1)", mmEPBin, mmEPMin, mmEPMax);
+		this.myCanvas.create1DHisto(processTabMore, 4, 3, prefixTitle + "MM(epg2)" + suffix,
+				prefix + "MM(epg2)" + suffix, "MM(epg2)", mmEPBin, mmEPMin, mmEPMax);
+		this.myCanvas.create1DHisto(processTabMore, 4, 4, prefixTitle + "MM(ep)" + suffix,
+				prefix + "MM(ep)" + suffix, "MM(ep)", 100, -5, 5);
+		this.myCanvas.create1DHisto(processTabMore, 5, 1, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " after M(gg) cut (in Fwd and FT " + legend + ")";
+		this.myCanvas.create1DHisto(processTabMore, 5, 2, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " after M(gg) cut (in Fwd " + legend + ")";
+		this.myCanvas.create1DHisto(processTabMore, 5, 3, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
+		suffix = " after M(gg) cut (in FT " + legend + ")";
+		this.myCanvas.create1DHisto(processTabMore, 5, 4, prefixTitle + "M(#gamma#gamma)" + suffix,
+				prefix + "M(#gamma#gamma)" + suffix, "M(#gamma#gamma)", mGGBin, mGGMin, mGGMax);
 	}
 	
 	public void fillDefaultPi0Histo(Photon photon1, Photon photon2, String tabName, String legend){
@@ -452,6 +520,105 @@ public class PhysicsPlots {
 		suffix = "";
 		this.myCanvas.fill1DHisto(prefix + "M(#gamma#gamma) theta" + suffix,photon1.getThetaDeg());
 		this.myCanvas.fill1DHisto(prefix + "M(#gamma#gamma) theta" + suffix,photon2.getThetaDeg());
+		
+	}
+	
+	public boolean fillDefaultPi0ExclusiveHisto(Electron electronF, Proton protonF, Photon photon1, Photon photon2, String tabName, String legend){
+		String prefixTitle = "";
+		String suffix = "";
+		if (!legend.equals("")) {
+			suffix = " (" + legend + ")";
+		}
+		
+		LorentzVector protonI = new LorentzVector();
+		protonI.setPxPyPzM(0, 0, 0, Proton.mass);
+		LorentzVector electronI = new LorentzVector();
+		electronI.setPxPyPzM(0, 0, electronEnergy, Electron.mass);
+		LorentzVector stateI = protonI.sum(electronI);
+		
+		LorentzVector finalStateEPGG = new LorentzVector();
+		finalStateEPGG.add(electronF.getFourMomentum(), protonF.getFourMomentum(), photon1.getFourMomentum(), photon2.getFourMomentum());
+		double missingMass2EPGG = stateI.substract(finalStateEPGG).mass2();
+		
+		LorentzVector finalStateEPG1whenP = new LorentzVector();
+		finalStateEPG1whenP.add(electronF.getFourMomentum(), protonF.getFourMomentum(), photon1.getFourMomentum());
+		double missingMass2EPG1whenP = stateI.substract(finalStateEPG1whenP).mass2();
+		
+		LorentzVector finalStateEPG2whenP = new LorentzVector();
+		finalStateEPG2whenP.add(electronF.getFourMomentum(), protonF.getFourMomentum(), photon2.getFourMomentum());
+		double missingMass2EPG2whenP = stateI.substract(finalStateEPG2whenP).mass2();
+
+		LorentzVector finalStateEPwhenG = new LorentzVector();
+		finalStateEPwhenG.add(electronF.getFourMomentum(), protonF.getFourMomentum());
+		double missingMass2EPwhenG = stateI.substract(finalStateEPwhenG).mass2();
+		
+		double invMass = ComputePhysicsParameters.computePi0InvariantMass(photon1, photon2);
+		
+		double highestEnergy = Math.max(photon1.getEnergy(), photon2.getEnergy());
+		if (highestEnergy < 2){
+			return false;
+		}
+		
+		suffix = "";
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epgg)" + suffix, missingMass2EPGG);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epg1)" + suffix, missingMass2EPG1whenP);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epg2)" + suffix, missingMass2EPG2whenP);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(ep)" + suffix, missingMass2EPwhenG);
+		
+		if(Math.abs(missingMass2EPGG)>0.1 || Math.abs(missingMass2EPG1whenP)>0.4 || Math.abs(missingMass2EPG2whenP)>0.4){
+			return false;
+		}
+		
+		suffix = "after epgg cut";
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epgg)" + suffix, missingMass2EPGG);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epg1)" + suffix, missingMass2EPG1whenP);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epg2)" + suffix, missingMass2EPG2whenP);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(ep)" + suffix, missingMass2EPwhenG);
+		this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		if ((photon1.getThetaDeg()>5 && photon2.getThetaDeg()<5) || (photon1.getThetaDeg()<5 && photon2.getThetaDeg()>5)){
+			suffix = " after epgg cut (in Fwd and FT " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		}
+		if (photon1.getThetaDeg()>5 && photon2.getThetaDeg()>5){
+			suffix = " after epgg cut (in Fwd " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		}
+		if (photon1.getThetaDeg()<5 && photon2.getThetaDeg()<5){
+			suffix = " after epgg cut (in FT " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		}
+		
+		if(!(0.115<invMass&&invMass<0.155)){
+			return false;
+		}
+		
+		suffix = "after M(gg) cut";
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epgg)" + suffix, missingMass2EPGG);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epg1)" + suffix, missingMass2EPG1whenP);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(epg2)" + suffix, missingMass2EPG2whenP);
+		this.myCanvas.fill1DHisto(prefixTitle + "MM(ep)" + suffix, missingMass2EPwhenG);
+		this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		if ((photon1.getThetaDeg()>5 && photon2.getThetaDeg()<5) || (photon1.getThetaDeg()<5 && photon2.getThetaDeg()>5)){
+			suffix = " after M(gg) cut (in Fwd and FT " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		}
+		if (photon1.getThetaDeg()>5 && photon2.getThetaDeg()>5){
+			suffix = " after M(gg) cut (in Fwd " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		}
+		if (photon1.getThetaDeg()<5 && photon2.getThetaDeg()<5){
+			suffix = " after M(gg) cut (in FT " + legend + ")";
+			this.myCanvas.fill1DHisto(prefixTitle + "M(#gamma#gamma)" + suffix,invMass);
+		}
+		
+		String processName = "Pi0";
+		String prefix = processName + " ";
+		suffix = "";
+		
+		this.myCanvas.fill1DHisto(prefix + "Energy of photon (with highest energy)" + suffix, highestEnergy);
+		
+		
+		return true;
 		
 	}
 

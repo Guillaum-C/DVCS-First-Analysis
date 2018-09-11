@@ -163,5 +163,13 @@ public class ParticleNumberCut {
 		return this.cut(oldEvent);
 	}
 	
+	public Event cutPi0(Event oldEvent){
+		this.setElectronNbMinCut(1);
+		this.setElectronNbMaxCut(1);
+		this.setPhotonNbMinCut(2);
+		this.setProtonNbMinCut(1);
+		return this.cut(oldEvent);
+	}
+	
 	
 }

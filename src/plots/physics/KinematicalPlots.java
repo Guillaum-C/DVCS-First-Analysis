@@ -13,6 +13,7 @@ import physics.ComputePhysicsParameters;
 public class KinematicalPlots {
 
 	public Canvas myCanvas;
+	double electronEnergy;
 	public String particleName = "Kinematic";
 
 	int xBBin = 100;
@@ -35,9 +36,10 @@ public class KinematicalPlots {
 	 * Create an electron plots class
 	 * @param canvas canvas to use
 	 */
-	public KinematicalPlots(Canvas canvas) {
+	public KinematicalPlots(Canvas canvas, double electronEnergy) {
 		super();
 		this.myCanvas = canvas;
+		this.electronEnergy = electronEnergy;
 	}
 	
 	/**
@@ -46,9 +48,9 @@ public class KinematicalPlots {
 	 * @param tabName name of the tab to create (a "more" tab will be also create)
 	 * @param legend fill this to add a legend in parenthesis at the end of the plots title
 	 */
-	public void createDefaultHistograms(double electronEnergy, String tabName, String legend) {
+	public void createDefaultHistograms(String tabName, String legend) {
 		
-		q2Max = electronEnergy;
+		q2Max = this.electronEnergy;
 		
 		String particleTab = tabName;
 //		String particleMoreTab = particleTab + " more";
@@ -107,8 +109,8 @@ public class KinematicalPlots {
 	 * Create default plots (a particle tab and a more tab with theta/phi/momentum/vertex default plots). This tab is titled by the name of the particle so only one tab can be created using this method.
 	 * @param electronEnergy beam energy (for plot scale)
 	 */
-	public void createDefaultHistograms(double electronEnergy) {
-		createDefaultHistograms(electronEnergy, particleName, "");
+	public void createDefaultHistograms() {
+		createDefaultHistograms(particleName, "");
 	}
 	
 	/**
@@ -117,7 +119,7 @@ public class KinematicalPlots {
 	 * @param tabName name of the tab to fill
 	 * @param legend to fill plots created with a legend
 	 */
-	public void fillDefaultHistograms(Electron electron, Proton proton, Photon photon, double beamEnergy, String tabName, String legend) {
+	public void fillDefaultHistograms(Electron electron, Proton proton, Photon photon, String tabName, String legend) {
 
 		String prefix = particleName + " ";
 		String suffix = "";
@@ -126,7 +128,7 @@ public class KinematicalPlots {
 		}
 		
 		LorentzVector electronI = new LorentzVector();
-		electronI.setPxPyPzM(0, 0, beamEnergy, Electron.mass);
+		electronI.setPxPyPzM(0, 0, this.electronEnergy, Electron.mass);
 		
 		double q2 = ComputePhysicsParameters.computeQ2(electronI, electron);
 		double xB = ComputePhysicsParameters.computeXB(electronI, electron);
@@ -154,6 +156,6 @@ public class KinematicalPlots {
 	 * @param particle particle to use to fill the plots
 	 */
 	public void fillDefaultHistograms(Electron electron, Proton proton, Photon photon, double beamEnergy) {
-		fillDefaultHistograms(electron, proton, photon, beamEnergy, particleName, "");
+		fillDefaultHistograms(electron, proton, photon, particleName, "");
 	}
 }
