@@ -1,8 +1,6 @@
 package cuts.particles;
 
-import org.clas12.analysisTools.event.Event;
 import org.clas12.analysisTools.event.particles.Particle;
-import org.clas12.analysisTools.event.particles.ParticleEvent;
 
 public class ParticleCut {
 

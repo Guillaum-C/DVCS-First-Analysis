@@ -17,33 +17,46 @@ public class DetectorPlots {
 	public DetectorPlots(Canvas canvas, double electronEnergy){
 		this.myCanvas=canvas;
 		this.electronEnergy=electronEnergy;
-		this.cvtPlots = new CVTPlots(myCanvas);
-		this.dcPlots = new DCPlots(myCanvas, "DC");
-		this.caloPlots = new CalorimeterPlots(myCanvas, "Calo");
-		this.ftofPlots = new FTOFPlots(myCanvas, "FTOF");
-		this.htccPlots = new HTCCPlots(myCanvas, "HTCC");
+		
 	}
 	
 	public void createDetectorsPlotsRaw() {
+		this.cvtPlots = new CVTPlots(myCanvas);
+		this.dcPlots = new DCPlots(myCanvas);
+		this.caloPlots = new CalorimeterPlots(myCanvas, "Calo");
+		this.ftofPlots = new FTOFPlots(myCanvas, "FTOF");
+		this.htccPlots = new HTCCPlots(myCanvas, "HTCC");
 		this.cvtPlots.createDefaultHistograms(electronEnergy);
+		this.dcPlots.createDefaultHistograms(electronEnergy);
 	}
 	
 	public void fillDetectorsPlotsRaw(Event processedEvent){
 		
 		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent());
 		
-		this.dcPlots.fillHistograms(processedEvent);
+		this.dcPlots.fillDefaultHistograms(processedEvent.getForwardEvent().getForwardTrackerEvent());
 		this.caloPlots.fillHistograms(processedEvent);
 		this.ftofPlots.fillHistograms(processedEvent);
 		this.htccPlots.fillHistograms(processedEvent);
-
 	}
 	
 	public void createDetectorsPlotsAfterCuts(){
 		this.cvtPlots.createDefaultHistograms(electronEnergy, "CVT cut", "after cut");
+		this.dcPlots.createDefaultHistograms(electronEnergy, "DC cut", "after cut");
 	}
 	
 	public void fillDetectorsPlotsAfterCuts(Event processedEvent){
 		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent(), "CVT cut", "after cut");
+		this.dcPlots.fillDefaultHistograms(processedEvent.getForwardEvent().getForwardTrackerEvent(), "DC cut", "after cut");
+	}
+
+	public void createDetectorsPlotsRandomTrigger(){
+		this.cvtPlots.createDefaultHistograms(electronEnergy, "CVT random", "rand trig");
+		this.dcPlots.createDefaultHistograms(electronEnergy, "DC random", "rand trig");
+	}
+	
+	public void fillDetectorsPlotsRandomTrigger(Event processedEvent){
+		this.cvtPlots.fillDefaultHistograms(processedEvent.getCentralEvent().getCvtEvent(), "CVT random", "rand trig");
+		this.dcPlots.fillDefaultHistograms(processedEvent.getForwardEvent().getForwardTrackerEvent(), "DC random", "rand trig");
 	}
 }
