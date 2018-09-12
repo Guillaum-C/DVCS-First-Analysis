@@ -81,6 +81,7 @@ public class Analyser {
 	static String outPutFile = "outputPhotons_10.txt";
 	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889")
+	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
 	public static void main(String[] args) {
 
@@ -88,31 +89,31 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args, dataSet);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(dataSet, true, true);
+		Canvas myCanvas = new Canvas(dataSet, true, false);
 		createPlots(myCanvas, true);
 
 		/* ===== OUPUT FILE ===== */
 		// createOutputFile(outPutFile);
 
 		/* ===== RDM PHOTON INPUT ===== */
-		 int lineNumber=0;
-		 try
-		 (
-		 FileReader input = new FileReader(outPutFile);
-		 LineNumberReader count = new LineNumberReader(input);
-		 )
-		 {
-		 while (count.skip(Long.MAX_VALUE) > 0)
-		 {
-		 // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
-		 }
-		
-		 lineNumber = count.getLineNumber() + 1 - 1; // +1 because line index starts at 0 / -1 because last line is empty
-		 } catch (IOException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
-		 }
-		 System.out.println("Number of lines: "+lineNumber);
+//		 int lineNumber=0;
+//		 try
+//		 (
+//		 FileReader input = new FileReader(outPutFile);
+//		 LineNumberReader count = new LineNumberReader(input);
+//		 )
+//		 {
+//		 while (count.skip(Long.MAX_VALUE) > 0)
+//		 {
+//		 // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
+//		 }
+//		
+//		 lineNumber = count.getLineNumber() + 1 - 1; // +1 because line index starts at 0 / -1 because last line is empty
+//		 } catch (IOException e) {
+//		 // TODO Auto-generated catch block
+//		 e.printStackTrace();
+//		 }
+//		 System.out.println("Number of lines: "+lineNumber);
 
 		/* ===== INITIAL STATE ===== */
 		LorentzVector protonI = new LorentzVector();
@@ -286,7 +287,7 @@ public class Analyser {
 
 			// /* ===== RAW PLOTS ===== */
 			// detectorPlots.fillDetectorsPlotsRaw(processedEvent);
-			// positNegChargesPlots.fillPosNegChargesPlotsRaw(processedEvent);
+			positNegChargesPlots.fillPosNegChargesPlotsRaw(processedEvent);
 			// particlePlots.fillParticlesPlotsRaw(processedEvent);
 			// particlePlots.fillNumberOfParticlesPlots(processedEvent, "");
 
@@ -357,8 +358,8 @@ public class Analyser {
 
 			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
 				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
-					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
-//					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
+//					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
+					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
 
 						/* ===== COMPUTE KINEMATICAL PARAMETERS ===== */
 						double t = ComputePhysicsParameters.computeT(protonF);
@@ -386,7 +387,7 @@ public class Analyser {
 						double missingMass2EGwhenP = stateI.substract(finalStateEGwhenP).mass2();
 
 						/* ===== EXCLUSIVITY CUTS ===== */
-						if (Math.abs(missingMass2EPG) < 0.1) {
+						if (-0.06<missingMass2EPG && missingMass2EPG<0.04) {
 							/* ===== EXCLUSIVITY PLOTS 1 ===== */
 //							 fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),"cut DVCS ex1","after DVCS epg cuts");
 //							 fillNumberParticlesPlots(afterDVCSCuts, "after DVCS epg cuts");
@@ -498,35 +499,43 @@ public class Analyser {
 				System.out.println("Saving plots");
 				myCanvas.saveAll("allPlots2_" + eventIterator + ".hipo", false);
 
+				System.out.println("Helic+ DVCS: Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("#phi_trento for events with helicity + (after photon cone cuts)").getBinContent(i));
+				}
+				System.out.println("Helic- DVCS: Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("#phi_trento for events with helicity - (after photon cone cuts)").getBinContent(i));
+				}
 				System.out.println("ASYMETRY DVCS: Bin,asymetry");
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < 20; i++) {
 					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("Asymetry").getBinContent(i));
 				}
 				System.out.println("ASYMETRY DVCS (after DVCS epg cuts): Bin,asymetry");
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < 20; i++) {
 					System.out.println(
 							"Bin " + i + "," + myCanvas.get1DHisto("Asymetry (after DVCS epg cuts)").getBinContent(i));
 				}
 				System.out.println("ASYMETRY DVCS (after photon cone cuts): Bin,asymetry");
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < 20; i++) {
 					System.out.println("Bin " + i + ","
 							+ myCanvas.get1DHisto("Asymetry (after photon cone cuts)").getBinContent(i));
 				}
 				
 				System.out.println("MM DVCS (just Pi0): Bin,mm");
-				for (int i = 0; i < 100; i++) {
+				for (int i = 0; i < 300; i++) {
 					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after DVCS epg cuts)").getBinContent(i)+ ",");
 				}
 				System.out.println("MM DVCS (just Pi0): Bin,mm");
-				for (int i = 0; i < 100; i++) {
+				for (int i = 0; i < 300; i++) {
 					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after photon cone cuts)").getBinContent(i)+ ",");
 				}
 				System.out.println("MM DVCS (just Pi0): Bin,mm");
-				for (int i = 0; i < 100; i++) {
+				for (int i = 0; i < 300; i++) {
 					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after pi0 cuts)").getBinContent(i)+ ",");
 				}
 				System.out.println("MM DVCS (just Pi0): Bin,mm");
-				for (int i = 0; i < 100; i++) {
+				for (int i = 0; i < 300; i++) {
 					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (just pi0)").getBinContent(i)+ ",");
 				}
 			}
@@ -589,6 +598,7 @@ public class Analyser {
 		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4018_8.hipo");
 		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4020_8.hipo");
 		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4021_8.hipo");
+		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4078_8.hipo");
 
 		/* ===== SIMU DVCS 10.6 GeV ===== */
 		ArrayList<String> fileSimu = new ArrayList<>();
@@ -695,7 +705,7 @@ public class Analyser {
 		// detectorPlots.createDetectorsPlotsAfterCuts();
 		// detectorPlots.createDetectorsPlotsRandomTrigger();
 		//
-		// positNegChargesPlots.createDefaultHistograms(beamEnergy);
+		 positNegChargesPlots.createDefaultHistograms(beamEnergy);
 		//
 		// particlePlots.createParticlesPlotsRaw();
 		// particlePlots.createNumberParticlesPlots("", "");

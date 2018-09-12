@@ -17,9 +17,9 @@ public class PhysicsPlots {
 	
 	boolean debug =false;
 	
-	int mmEPGBin = 100;
-	double mmEPGMin = -0.2;
-	double mmEPGMax = 0.2;
+	int mmEPGBin = 300;
+	double mmEPGMin = -0.15;
+	double mmEPGMax = 0.15;
 	
 	int mmEPGTBin = 300;
 	double mmEPGTMin = -1;
@@ -31,8 +31,8 @@ public class PhysicsPlots {
 	
 
 	int mmEPBin = 300;
-	double mmEPMin = -3;
-	double mmEPMax = 3;
+	double mmEPMin = -1.5;
+	double mmEPMax = 1.5;
 	
 //	int mmEPTBin = 100;
 //	double mmEPTMin = -1;
@@ -88,9 +88,9 @@ public class PhysicsPlots {
 	double deltaThetaProtonMin = -50;
 	double deltaThetaProtonMax = 50;
 	
-	int deltaConeBin = 100;
+	int deltaConeBin = 300;
 	double deltaConeMin = 0;
-	double deltaConeMax = 20;
+	double deltaConeMax = 10;
 	
 	int deltaConeProtonBin = 100;
 	double deltaConeProtonMin = 0;
@@ -353,7 +353,6 @@ public class PhysicsPlots {
 //		this.myCanvas.create2DHisto(tab, 1, 1, prefix + "Q^2 vs xB" + suffix,
 //				prefix + "Q^2 vs xB" + suffix, "xB", "Q^2 (GeV^2)", xBBin, xBMin, xBMax, q2Bin,
 //				q2Min, q2Max);
-		
 		
 		myCanvas.create1DHisto(tab, 1, 1, prefixTitle+"Asymetry"+suffix, prefix+"Asymetry"+suffix, "#phi_trento (°)", phiBin, phiMin, phiMax);
 		myCanvas.create1DHisto(tab, 1, 2, prefixTitle+"Helicity"+suffix, prefix+"Helicity"+suffix, "Helicity", helicityBin, helicityMin, helicityMax);
