@@ -79,7 +79,7 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputPhotons_10.txt";
-	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
+	static String dataSet = "Simu"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
@@ -409,7 +409,6 @@ public class Analyser {
 						// 180/Math.PI*Math.acos(protonExpected.vect().dot(protonF.getFourMomentum().vect())
 						// / (protonExpected.vect().mag() *
 						// protonF.getFourMomentum().vect().mag()));
-
 						if (angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
@@ -421,7 +420,40 @@ public class Analyser {
 									"after photon cone cuts");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2",
 									"after photon cone cuts");
-						} else {
+						}
+						
+						if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(1)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s1",
+									"after photon cone cuts s1");
+//							fillNumberParticlesPlots(afterDVCSCuts, "after photon cone cuts");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s1",
+									"after photon cone cuts s1");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s1",
+									"after photon cone cuts s1");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s1",
+									"after photon cone cuts s1");
+						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(2)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s2",
+									"after photon cone cuts s2");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s2",
+									"after photon cone cuts s2");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s2",
+									"after photon cone cuts s2");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s2",
+									"after photon cone cuts s2");
+						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(3)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s3",
+									"after photon cone cuts s3");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s3",
+									"after photon cone cuts s3");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s3",
+									"after photon cone cuts s3");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s3",
+									"after photon cone cuts s3");
+						}else {
 							continue;
 						}
 
@@ -728,6 +760,32 @@ public class Analyser {
 		kinematicPlots.createDefaultHistograms("Kinematic ex2", "after photon cone cuts");
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after photon cone cuts");
 		physicsPlots.createAsymetryHisto("Asym DVCS ex2", "after photon cone cuts");
+		
+		
+		
+		
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s1", "after photon cone cuts s1");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s1", "after photon cone cuts s1");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s1", "after photon cone cuts s1");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s1", "after photon cone cuts s1");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s2", "after photon cone cuts s2");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s2", "after photon cone cuts s2");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s2", "after photon cone cuts s2");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s2", "after photon cone cuts s2");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s3", "after photon cone cuts s3");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s3", "after photon cone cuts s3");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s3", "after photon cone cuts s3");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s3", "after photon cone cuts s3");
+		
+		
+		
+		
 		
 		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex3", "after pi0 cuts");
 //		particlePlots.createNumberParticlesPlots("Nb particles ex3", "after pi0 cuts");
