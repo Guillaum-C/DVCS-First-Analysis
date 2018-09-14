@@ -79,7 +79,7 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputProtons.txt";
-	static String dataSet = "SimuPi0"; // Can be "Inbending" "Outbending"
+	static String dataSet = "Simu"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889", "SimuPi0")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
@@ -290,10 +290,10 @@ public class Analyser {
 //			}
 
 			// /* ===== RAW PLOTS ===== */
-			// detectorPlots.fillDetectorsPlotsRaw(processedEvent);
-//			positNegChargesPlots.fillPosNegChargesPlotsRaw(processedEvent);
-			// particlePlots.fillParticlesPlotsRaw(processedEvent);
-			// particlePlots.fillNumberOfParticlesPlots(processedEvent, "");
+			detectorPlots.fillDetectorsPlotsRaw(processedEvent);
+			positNegChargesPlots.fillPosNegChargesPlotsRaw(processedEvent);
+			particlePlots.fillParticlesPlotsRaw(processedEvent);
+			particlePlots.fillNumberOfParticlesPlots(processedEvent, "");
 
 			/* ===== PI0 ===== */
 
@@ -347,18 +347,17 @@ public class Analyser {
 			// Event afterSelectionCuts = afterKinematicCuts;
 			//
 			// /* ===== SELECTION + KINEMATIC PLOTS ===== */
-			// fillDetectorsPlotsCut(afterSelectionCuts);
-			// fillParticlesPlotsCut(afterSelectionCuts.getParticleEvent(), "cut
-			// selection", "after selection cuts");
+//			 fillDetectorsPlotsCut(afterSelectionCuts);
+//			 fillParticlesPlotsCut(afterSelectionCuts.getParticleEvent(), "cut selection", "after selection cuts");
 
 //			/* ===== SELECTION + KINEMATIC CUTS ===== */
 			DVCSCut dvcsCut = new DVCSCut();
 			Event afterDVCSCuts = dvcsCut.Cut(processedEvent, electronI);
 //
 //			/* ===== SELECTION + KINEMATIC PLOTS ===== */
-//			particlePlots.fillParticlesPlotsAfterCuts(afterDVCSCuts.getParticleEvent(), "cut selection",
-//					"after selection cuts");
-//			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
+			particlePlots.fillParticlesPlotsAfterCuts(afterDVCSCuts.getParticleEvent(), "cut selection",
+					"after selection cuts");
+			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
 //
 			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
 				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
@@ -606,31 +605,31 @@ public class Analyser {
 
 		/* ===== SIMU DVCS 10.6 GeV ===== */
 		ArrayList<String> fileSimu = new ArrayList<>();
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen1.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen2.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen3.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen4.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen5.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen6.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen7.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen8.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen9.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen10.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen11.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen12.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen13.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen14.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen15.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen16.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen17.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen18.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen19.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen20.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen21.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen22.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen23.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen24.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen25.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen1.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen2.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen3.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen4.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen5.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen6.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen7.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen8.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen9.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen10.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen11.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen12.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen13.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen14.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen15.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen16.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen17.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen18.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen19.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen20.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen21.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen22.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen23.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen24.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen25.dat.evio.hipo");
 		path = "/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/";
 		runNumber = "";
 		
@@ -710,14 +709,14 @@ public class Analyser {
 		physicsPlots = new PhysicsPlots(myCanvas, beamEnergy);
 
 		/* ===== RAW PLOTS ===== */
-		// detectorPlots.createDetectorsPlotsRaw();
-		// detectorPlots.createDetectorsPlotsAfterCuts();
-		// detectorPlots.createDetectorsPlotsRandomTrigger();
-		//
-//		 positNegChargesPlots.createDefaultHistograms(beamEnergy);
-		//
-		// particlePlots.createParticlesPlotsRaw();
-		// particlePlots.createNumberParticlesPlots("", "");
+		 detectorPlots.createDetectorsPlotsRaw();
+		 detectorPlots.createDetectorsPlotsAfterCuts();
+		 detectorPlots.createDetectorsPlotsRandomTrigger();
+		
+		 positNegChargesPlots.createDefaultHistograms(beamEnergy);
+		
+		 particlePlots.createParticlesPlotsRaw();
+		 particlePlots.createNumberParticlesPlots("", "");
 
 		/* ===== AFTER CUTS ===== */
 		particlePlots.createParticlesPlotsAfterCuts("cut selection", "after selection cuts");
