@@ -79,8 +79,8 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputProtons.txt";
-	static String dataSet = "Old4013"; // Can be "Inbending" "Outbending"
-											// "Simu" (ou "Old4013", "Old3889")
+	static String dataSet = "SimuPi0"; // Can be "Inbending" "Outbending"
+											// "Simu" (ou "Old4013", "Old3889", "SimuPi0")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
 	public static void main(String[] args) {
@@ -93,7 +93,7 @@ public class Analyser {
 		createPlots(myCanvas, true);
 
 		/* ===== OUPUT FILE ===== */
-		createOutputFile(outPutFile);
+//		createOutputFile(outPutFile);
 
 		/* ===== RDM PHOTON INPUT ===== */
 //		 int lineNumber=0;
@@ -198,96 +198,96 @@ public class Analyser {
 			// }
 
 			// /* ===== RANDOM TRIGGER ===== */
-			if (processedEvent.getTrigger_bit(31)) {
-//				fillDetectorsPlotsRandom(processedEvent);
-				if (hasBeam) {
-					goodRandomEvents++;
-//					PhotonCut photonCutDVCS = new PhotonCut();
-					ProtonCut protonCutDVCS = new ProtonCut();
-//					Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
-					Event afterProtonCuts = protonCutDVCS.CutDVCS(processedEvent);
-					if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
-						System.out.println("Proton found");
-					}
-					fillOutputProtonFile(outPutFile, afterProtonCuts);
-//					if (afterProtonCuts.getParticleEvent().hasNumberOfPhotons() > 0) {
-					if (afterProtonCuts.getParticleEvent().hasNumberOfProtons() > 0) {
-						goodRandomEventsWithDVCSProton = goodRandomEventsWithDVCSProton
-								+ 1;
-
-						String text = "Event: " + eventIterator + " Ratio random: "
-								+ ((double) goodRandomEventsWithDVCSProton / (double) goodRandomEvents) + " ("
-								+ goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")";
-						try {
-							Files.write(Paths.get("./normalisation.txt"), text.getBytes());
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						System.out.println("Event: " + eventIterator);
-						System.out.println(
-								"Ratio random: " + ((double) goodRandomEventsWithDVCSProton / (double) goodRandomEvents)
-										+ " (" + goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")");
-
-					}
-				}
-			}
-
-			/* ===== Faraday cup state ===== */
-			if (dataEvent.hasBank("RAW::scaler") == true) {
-				/* Reset beam value */
-				hasBeam = false; // reset value
-
-				// dataEvent.getBank("RAW::scaler").show();
-
-				/* Plot FCvalue */
-				for (int bankEntry = 0; bankEntry < dataEvent.getBank("RAW::scaler").rows(); bankEntry++) {
-
-					int crate = dataEvent.getBank("RAW::scaler").getByte("crate", bankEntry);
-					int slot = dataEvent.getBank("RAW::scaler").getByte("slot", bankEntry);
-					int channel = dataEvent.getBank("RAW::scaler").getShort("channel", bankEntry);
-					if (crate == 64 && slot == 64 && channel == 0) {
-						int fCupGated = dataEvent.getBank("RAW::scaler").getInt("value", bankEntry);
-//						myCanvas.fill1DHisto("FaradayCupValue", fCupGated);
-						// System.out.println("fCup gated: "+fCupGated);
-					}
-				}
-
-				/*
-				 * Look for next event with raw scaler bank, and set the hasBeam
-				 * value for the next events
-				 */
-				int count = 1;
-				DataEvent dataFollowingEvent = hipoReader.getRelativeEvent(count);
-				while (!(dataFollowingEvent == null) && count < 1000 && !(dataFollowingEvent.hasBank("RAW::scaler"))) {
-					count++;
-					dataFollowingEvent = hipoReader.getRelativeEvent(count);
-				}
-				if (dataFollowingEvent != null && dataFollowingEvent.hasBank("RAW::scaler")) {
-					DataBank bankParticle = dataEvent.getBank("RAW::scaler");
-					for (int bankEntry = 0; bankEntry < bankParticle.rows(); bankEntry++) {
-						int crate = bankParticle.getByte("crate", bankEntry);
-						int slot = bankParticle.getByte("slot", bankEntry);
-						int channel = bankParticle.getShort("channel", bankEntry);
-						if (crate == 64 && slot == 64 && channel == 0) { // gated
-																			// TRG
-																			// faraday
-																			// cup
-																			// (see
-																			// https://logbooks.jlab.org/entry/3554327)
-							int fCupGated = bankParticle.getInt("value", bankEntry);
-							int fCupThreshold = 20000;
-							if (fCupGated <= fCupThreshold) {
-								hasBeam = false;
-							} else {
-								hasBeam = true;
-							}
-						}
-					}
-				} else {
-					hasBeam = false;
-				}
-			}
+//			if (processedEvent.getTrigger_bit(31)) {
+////				fillDetectorsPlotsRandom(processedEvent);
+//				if (hasBeam) {
+//					goodRandomEvents++;
+////					PhotonCut photonCutDVCS = new PhotonCut();
+//					ProtonCut protonCutDVCS = new ProtonCut();
+////					Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
+//					Event afterProtonCuts = protonCutDVCS.CutDVCS(processedEvent);
+//					if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
+//						System.out.println("Proton found");
+//					}
+//					fillOutputProtonFile(outPutFile, afterProtonCuts);
+////					if (afterProtonCuts.getParticleEvent().hasNumberOfPhotons() > 0) {
+//					if (afterProtonCuts.getParticleEvent().hasNumberOfProtons() > 0) {
+//						goodRandomEventsWithDVCSProton = goodRandomEventsWithDVCSProton
+//								+ 1;
+//
+//						String text = "Event: " + eventIterator + " Ratio random: "
+//								+ ((double) goodRandomEventsWithDVCSProton / (double) goodRandomEvents) + " ("
+//								+ goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")";
+//						try {
+//							Files.write(Paths.get("./normalisation.txt"), text.getBytes());
+//						} catch (IOException e) {
+//							e.printStackTrace();
+//						}
+//
+//						System.out.println("Event: " + eventIterator);
+//						System.out.println(
+//								"Ratio random: " + ((double) goodRandomEventsWithDVCSProton / (double) goodRandomEvents)
+//										+ " (" + goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")");
+//
+//					}
+//				}
+//			}
+//
+//			/* ===== Faraday cup state ===== */
+//			if (dataEvent.hasBank("RAW::scaler") == true) {
+//				/* Reset beam value */
+//				hasBeam = false; // reset value
+//
+//				// dataEvent.getBank("RAW::scaler").show();
+//
+//				/* Plot FCvalue */
+//				for (int bankEntry = 0; bankEntry < dataEvent.getBank("RAW::scaler").rows(); bankEntry++) {
+//
+//					int crate = dataEvent.getBank("RAW::scaler").getByte("crate", bankEntry);
+//					int slot = dataEvent.getBank("RAW::scaler").getByte("slot", bankEntry);
+//					int channel = dataEvent.getBank("RAW::scaler").getShort("channel", bankEntry);
+//					if (crate == 64 && slot == 64 && channel == 0) {
+//						int fCupGated = dataEvent.getBank("RAW::scaler").getInt("value", bankEntry);
+////						myCanvas.fill1DHisto("FaradayCupValue", fCupGated);
+//						// System.out.println("fCup gated: "+fCupGated);
+//					}
+//				}
+//
+//				/*
+//				 * Look for next event with raw scaler bank, and set the hasBeam
+//				 * value for the next events
+//				 */
+//				int count = 1;
+//				DataEvent dataFollowingEvent = hipoReader.getRelativeEvent(count);
+//				while (!(dataFollowingEvent == null) && count < 1000 && !(dataFollowingEvent.hasBank("RAW::scaler"))) {
+//					count++;
+//					dataFollowingEvent = hipoReader.getRelativeEvent(count);
+//				}
+//				if (dataFollowingEvent != null && dataFollowingEvent.hasBank("RAW::scaler")) {
+//					DataBank bankParticle = dataEvent.getBank("RAW::scaler");
+//					for (int bankEntry = 0; bankEntry < bankParticle.rows(); bankEntry++) {
+//						int crate = bankParticle.getByte("crate", bankEntry);
+//						int slot = bankParticle.getByte("slot", bankEntry);
+//						int channel = bankParticle.getShort("channel", bankEntry);
+//						if (crate == 64 && slot == 64 && channel == 0) { // gated
+//																			// TRG
+//																			// faraday
+//																			// cup
+//																			// (see
+//																			// https://logbooks.jlab.org/entry/3554327)
+//							int fCupGated = bankParticle.getInt("value", bankEntry);
+//							int fCupThreshold = 20000;
+//							if (fCupGated <= fCupThreshold) {
+//								hasBeam = false;
+//							} else {
+//								hasBeam = true;
+//							}
+//						}
+//					}
+//				} else {
+//					hasBeam = false;
+//				}
+//			}
 
 			// /* ===== RAW PLOTS ===== */
 			// detectorPlots.fillDetectorsPlotsRaw(processedEvent);
@@ -298,27 +298,27 @@ public class Analyser {
 			/* ===== PI0 ===== */
 
 			/* ===== SELECTION + KINEMATIC CUTS ===== */
-//			Pi0Cut pi0Cut = new Pi0Cut();
-//			Event afterPi0Cuts = pi0Cut.Cut(processedEvent, electronI);
-//
-//			boolean isPi0 = false;
-//
-//			ArrayList<Photon> photons = afterPi0Cuts.getParticleEvent().getPhotons();
-//			for (Electron electronF : afterPi0Cuts.getParticleEvent().getElectrons()) {
-//				for (Proton protonF : afterPi0Cuts.getParticleEvent().getProtons()) {
-//					for (int photon1Iterator = 0; photon1Iterator < photons.size(); photon1Iterator++) {
-//						Photon photon1 = photons.get(photon1Iterator);
-//						for (int photon2Iterator = photon1Iterator + 1; photon2Iterator < photons
-//								.size(); photon2Iterator++) {
-//							Photon photon2 = photons.get(photon2Iterator);
-//							physicsPlots.fillDefaultPi0Histo(photon1, photon2, "Pi0", "");
-//							isPi0 = physicsPlots.fillDefaultPi0ExclusiveHisto(electronF, protonF, photon1, photon2,
-//									"Pi0", "");
-//
-//						}
-//					}
-//				}
-//			}
+			Pi0Cut pi0Cut = new Pi0Cut();
+			Event afterPi0Cuts = pi0Cut.Cut(processedEvent, electronI);
+
+			boolean isPi0 = false;
+
+			ArrayList<Photon> photons = afterPi0Cuts.getParticleEvent().getPhotons();
+			for (Electron electronF : afterPi0Cuts.getParticleEvent().getElectrons()) {
+				for (Proton protonF : afterPi0Cuts.getParticleEvent().getProtons()) {
+					for (int photon1Iterator = 0; photon1Iterator < photons.size(); photon1Iterator++) {
+						Photon photon1 = photons.get(photon1Iterator);
+						for (int photon2Iterator = photon1Iterator + 1; photon2Iterator < photons
+								.size(); photon2Iterator++) {
+							Photon photon2 = photons.get(photon2Iterator);
+							physicsPlots.fillDefaultPi0Histo(photon1, photon2, "Pi0", "");
+							isPi0 = physicsPlots.fillDefaultPi0ExclusiveHisto(electronF, protonF, photon1, photon2,
+									"Pi0", "");
+
+						}
+					}
+				}
+			}
 
 			// /* ===== SELECTION + KINEMATIC CUTS ===== */
 			// ElectronCut electronCutDVCS = new ElectronCut();
@@ -352,197 +352,197 @@ public class Analyser {
 			// selection", "after selection cuts");
 
 //			/* ===== SELECTION + KINEMATIC CUTS ===== */
-//			DVCSCut dvcsCut = new DVCSCut();
-//			Event afterDVCSCuts = dvcsCut.Cut(processedEvent, electronI);
+			DVCSCut dvcsCut = new DVCSCut();
+			Event afterDVCSCuts = dvcsCut.Cut(processedEvent, electronI);
 //
 //			/* ===== SELECTION + KINEMATIC PLOTS ===== */
 //			particlePlots.fillParticlesPlotsAfterCuts(afterDVCSCuts.getParticleEvent(), "cut selection",
 //					"after selection cuts");
 //			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
 //
-//			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
-//				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
-////					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
-//					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
-//
-//						/* ===== COMPUTE KINEMATICAL PARAMETERS ===== */
-//						double t = ComputePhysicsParameters.computeT(protonF);
-//						double phiDeg = ComputePhysicsParameters.computePhiDeg(electronI, electronF, photonF);
-//
-//						/* ===== SELECTION + KINEMATIC PLOTS ===== */
-//						kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "Kinematic after selection",
-//								"");
-//						physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy,
-//								"DVCS after selection", "");
-//						physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym after selection", "");
-//
-//						/* ===== MISSING MASSES ===== */
-//						LorentzVector finalStateEPG = new LorentzVector();
-//						finalStateEPG.add(electronF.getFourMomentum(), protonF.getFourMomentum(),
-//								photonF.getFourMomentum());
-//						double missingMass2EPG = stateI.substract(finalStateEPG).mass2();
-//
-//						LorentzVector finalStateEPwhenG = new LorentzVector();
-//						finalStateEPwhenG.add(electronF.getFourMomentum(), protonF.getFourMomentum());
-//						double missingMass2EPwhenG = stateI.substract(finalStateEPwhenG).mass2();
-//
-//						LorentzVector finalStateEGwhenP = new LorentzVector();
-//						finalStateEGwhenP.add(electronF.getFourMomentum(), photonF.getFourMomentum());
-//						double missingMass2EGwhenP = stateI.substract(finalStateEGwhenP).mass2();
-//
-//						/* ===== EXCLUSIVITY CUTS ===== */
-//						if (-0.06<missingMass2EPG && missingMass2EPG<0.04) {
-//							/* ===== EXCLUSIVITY PLOTS 1 ===== */
-////							 fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),"cut DVCS ex1","after DVCS epg cuts");
-////							 fillNumberParticlesPlots(afterDVCSCuts, "after DVCS epg cuts");
-////							 kinematicPlots.fillDefaultHistograms(electronF,protonF, photonF, "Kinematic ex1","after DVCS epg cuts");
-//							 physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex1","after DVCS epg cuts");
-//							 physicsPlots.fillAsymetryHisto(phiDeg,afterDVCSCuts.getHelicity(), "Asym DVCS ex1","after DVCS epg cuts");
-//
-//						} else {
-//							continue;
-//						}
-//
-//						LorentzVector photonExpected = stateI.substract(finalStateEPwhenG);
-//						double angle2Photon = 180 / Math.PI
-//								* Math.acos(photonExpected.vect().dot(photonF.getFourMomentum().vect())
-//										/ (photonExpected.vect().mag() * photonF.getFourMomentum().vect().mag()));
-//						// LorentzVector protonExpected =
-//						// stateI.substract(finalStateEGwhenP);
-//						// double angle2Proton =
-//						// 180/Math.PI*Math.acos(protonExpected.vect().dot(protonF.getFourMomentum().vect())
-//						// / (protonExpected.vect().mag() *
-//						// protonF.getFourMomentum().vect().mag()));
-//
-//						if (angle2Photon < 3) {
-//							/* ===== EXCLUSIVITY PLOTS 2 ===== */
-//							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
-//									"after photon cone cuts");
-////							fillNumberParticlesPlots(afterDVCSCuts, "after photon cone cuts");
-//							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2",
-//									"after photon cone cuts");
-//							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2",
-//									"after photon cone cuts");
-//							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2",
-//									"after photon cone cuts");
-//						} else {
-//							continue;
-//						}
-//
-//						if (!isPi0) {
-//							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex3",
-//									"after pi0 cuts");
-//							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex3", "after pi0 cuts");
-//							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex3",
-//									"after pi0 cuts");
-//							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex3",
-//									"after pi0 cuts");
-//						} else {
-//							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex4",
-//									"just pi0");
-//							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex4", "just pi0");
-//							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex4",
-//									"just pi0");
-//							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex4",
-//									"just pi0");
-//						}
-//
-//						// double transverseMissingMass = Math.sqrt(
-//						// Math.pow(finalStateEGwhenP.px(),2) +
-//						// Math.pow(finalStateEGwhenP.py(),2) );
-//						// if (Math.abs(transverseMissingMass) < 0.8){
-//						// if (photonF.getEnergy()>2){
-//						// fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),
-//						// "cut DVCS ex3",
-//						// "after DVCS perpMM cuts");
-//						// physicsPlots.fillDefaultHistogramsDVCS(electronF,
-//						// protonF, photonF, beamEnergy, "DVCS ex3",
-//						// "after DVCS perpMM cuts");
-//						// fillNumberParticlesPlots(afterDVCSCuts, "after DVCS
-//						// perpMM cuts");
-//						// }
-//						// }else{
-//						// continue;
-//						// }
-//
-//						// if (missingMass2EGwhenP < 1 && missingMass2EGwhenP >
-//						// 0.7){
-//						//// if (photonF.getEnergy()>2){
-//						// fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),
-//						// "cut DVCS ex2",
-//						// "after MissingMEG cuts");
-//						// physicsPlots.fillDefaultHistogramsDVCS(electronF,
-//						// protonF, photonF, beamEnergy, "DVCS ex2",
-//						// "after MissingMEG cuts");
-//						// kinematicalPlots.fillDefaultHistograms(electronF,
-//						// protonF, photonF, beamEnergy, "DVCS ex2",
-//						// "after MissingMEG cuts");
-//						// fillNumberParticlesPlots(afterDVCSCuts, "after
-//						// MissingMEG cuts");
-//						//// }
-//						// }else{
-//						// continue;
-//						// }
-//
-//						// if (photonF.getEnergy()>2 &&
-//						// afterDVCSCuts.getParticleEvent().hasNumberOfPhotons()==1){
-//						// fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),
-//						// "cut DVCS ex5",
-//						// "after DVCS 1phot cuts");
-//						// physicsPlots.fillDefaultHistogramsDVCS(electronF,
-//						// protonF, photonF, beamEnergy, "DVCS ex5",
-//						// "after DVCS 1phot cuts");
-//						// fillNumberParticlesPlots(afterDVCSCuts, "after DVCS
-//						// 1phot cuts");
-//						// }
-//
-//					}
-//				}
-//			}
-//			if (eventIterator % 1000000 == 0 || eventIterator == maxEvents - 1) {
-//				System.out.println("Saving plots");
-//				myCanvas.saveAll("allPlots2_" + eventIterator + ".hipo", false);
-//
-//				System.out.println("Helic+ DVCS: Bin,asymetry");
-//				for (int i = 0; i < 20; i++) {
-//					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("#phi_trento for events with helicity + (after photon cone cuts)").getBinContent(i));
-//				}
-//				System.out.println("Helic- DVCS: Bin,asymetry");
-//				for (int i = 0; i < 20; i++) {
-//					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("#phi_trento for events with helicity - (after photon cone cuts)").getBinContent(i));
-//				}
-//				System.out.println("ASYMETRY DVCS: Bin,asymetry");
-//				for (int i = 0; i < 20; i++) {
-//					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("Asymetry").getBinContent(i));
-//				}
-//				System.out.println("ASYMETRY DVCS (after DVCS epg cuts): Bin,asymetry");
-//				for (int i = 0; i < 20; i++) {
-//					System.out.println(
-//							"Bin " + i + "," + myCanvas.get1DHisto("Asymetry (after DVCS epg cuts)").getBinContent(i));
-//				}
-//				System.out.println("ASYMETRY DVCS (after photon cone cuts): Bin,asymetry");
-//				for (int i = 0; i < 20; i++) {
-//					System.out.println("Bin " + i + ","
-//							+ myCanvas.get1DHisto("Asymetry (after photon cone cuts)").getBinContent(i));
-//				}
-//				
-//				System.out.println("MM DVCS (just Pi0): Bin,mm");
-//				for (int i = 0; i < 300; i++) {
-//					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after DVCS epg cuts)").getBinContent(i)+ ",");
-//				}
-//				System.out.println("MM DVCS (just Pi0): Bin,mm");
-//				for (int i = 0; i < 300; i++) {
-//					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after photon cone cuts)").getBinContent(i)+ ",");
-//				}
-//				System.out.println("MM DVCS (just Pi0): Bin,mm");
-//				for (int i = 0; i < 300; i++) {
-//					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after pi0 cuts)").getBinContent(i)+ ",");
-//				}
-//				System.out.println("MM DVCS (just Pi0): Bin,mm");
-//				for (int i = 0; i < 300; i++) {
-//					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (just pi0)").getBinContent(i)+ ",");
-//				}
-//			}
+			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
+				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
+//					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
+					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
+
+						/* ===== COMPUTE KINEMATICAL PARAMETERS ===== */
+						double t = ComputePhysicsParameters.computeT(protonF);
+						double phiDeg = ComputePhysicsParameters.computePhiDeg(electronI, electronF, photonF);
+
+						/* ===== SELECTION + KINEMATIC PLOTS ===== */
+						kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "Kinematic after selection",
+								"");
+						physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy,
+								"DVCS after selection", "");
+						physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym after selection", "");
+
+						/* ===== MISSING MASSES ===== */
+						LorentzVector finalStateEPG = new LorentzVector();
+						finalStateEPG.add(electronF.getFourMomentum(), protonF.getFourMomentum(),
+								photonF.getFourMomentum());
+						double missingMass2EPG = stateI.substract(finalStateEPG).mass2();
+
+						LorentzVector finalStateEPwhenG = new LorentzVector();
+						finalStateEPwhenG.add(electronF.getFourMomentum(), protonF.getFourMomentum());
+						double missingMass2EPwhenG = stateI.substract(finalStateEPwhenG).mass2();
+
+						LorentzVector finalStateEGwhenP = new LorentzVector();
+						finalStateEGwhenP.add(electronF.getFourMomentum(), photonF.getFourMomentum());
+						double missingMass2EGwhenP = stateI.substract(finalStateEGwhenP).mass2();
+
+						/* ===== EXCLUSIVITY CUTS ===== */
+						if (-0.06<missingMass2EPG && missingMass2EPG<0.04) {
+							/* ===== EXCLUSIVITY PLOTS 1 ===== */
+//							 fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),"cut DVCS ex1","after DVCS epg cuts");
+//							 fillNumberParticlesPlots(afterDVCSCuts, "after DVCS epg cuts");
+//							 kinematicPlots.fillDefaultHistograms(electronF,protonF, photonF, "Kinematic ex1","after DVCS epg cuts");
+							 physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex1","after DVCS epg cuts");
+							 physicsPlots.fillAsymetryHisto(phiDeg,afterDVCSCuts.getHelicity(), "Asym DVCS ex1","after DVCS epg cuts");
+
+						} else {
+							continue;
+						}
+
+						LorentzVector photonExpected = stateI.substract(finalStateEPwhenG);
+						double angle2Photon = 180 / Math.PI
+								* Math.acos(photonExpected.vect().dot(photonF.getFourMomentum().vect())
+										/ (photonExpected.vect().mag() * photonF.getFourMomentum().vect().mag()));
+						// LorentzVector protonExpected =
+						// stateI.substract(finalStateEGwhenP);
+						// double angle2Proton =
+						// 180/Math.PI*Math.acos(protonExpected.vect().dot(protonF.getFourMomentum().vect())
+						// / (protonExpected.vect().mag() *
+						// protonF.getFourMomentum().vect().mag()));
+
+						if (angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
+									"after photon cone cuts");
+//							fillNumberParticlesPlots(afterDVCSCuts, "after photon cone cuts");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2",
+									"after photon cone cuts");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2",
+									"after photon cone cuts");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2",
+									"after photon cone cuts");
+						} else {
+							continue;
+						}
+
+						if (!isPi0) {
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex3",
+									"after pi0 cuts");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex3", "after pi0 cuts");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex3",
+									"after pi0 cuts");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex3",
+									"after pi0 cuts");
+						} else {
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex4",
+									"just pi0");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex4", "just pi0");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex4",
+									"just pi0");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex4",
+									"just pi0");
+						}
+
+						// double transverseMissingMass = Math.sqrt(
+						// Math.pow(finalStateEGwhenP.px(),2) +
+						// Math.pow(finalStateEGwhenP.py(),2) );
+						// if (Math.abs(transverseMissingMass) < 0.8){
+						// if (photonF.getEnergy()>2){
+						// fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),
+						// "cut DVCS ex3",
+						// "after DVCS perpMM cuts");
+						// physicsPlots.fillDefaultHistogramsDVCS(electronF,
+						// protonF, photonF, beamEnergy, "DVCS ex3",
+						// "after DVCS perpMM cuts");
+						// fillNumberParticlesPlots(afterDVCSCuts, "after DVCS
+						// perpMM cuts");
+						// }
+						// }else{
+						// continue;
+						// }
+
+						// if (missingMass2EGwhenP < 1 && missingMass2EGwhenP >
+						// 0.7){
+						//// if (photonF.getEnergy()>2){
+						// fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),
+						// "cut DVCS ex2",
+						// "after MissingMEG cuts");
+						// physicsPlots.fillDefaultHistogramsDVCS(electronF,
+						// protonF, photonF, beamEnergy, "DVCS ex2",
+						// "after MissingMEG cuts");
+						// kinematicalPlots.fillDefaultHistograms(electronF,
+						// protonF, photonF, beamEnergy, "DVCS ex2",
+						// "after MissingMEG cuts");
+						// fillNumberParticlesPlots(afterDVCSCuts, "after
+						// MissingMEG cuts");
+						//// }
+						// }else{
+						// continue;
+						// }
+
+						// if (photonF.getEnergy()>2 &&
+						// afterDVCSCuts.getParticleEvent().hasNumberOfPhotons()==1){
+						// fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(),
+						// "cut DVCS ex5",
+						// "after DVCS 1phot cuts");
+						// physicsPlots.fillDefaultHistogramsDVCS(electronF,
+						// protonF, photonF, beamEnergy, "DVCS ex5",
+						// "after DVCS 1phot cuts");
+						// fillNumberParticlesPlots(afterDVCSCuts, "after DVCS
+						// 1phot cuts");
+						// }
+
+					}
+				}
+			}
+			if (eventIterator % 1000000 == 0 || eventIterator == maxEvents - 1) {
+				System.out.println("Saving plots");
+				myCanvas.saveAll("allPlots2_" + eventIterator + ".hipo", false);
+
+				System.out.println("Helic+ DVCS: Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("#phi_trento for events with helicity + (after photon cone cuts)").getBinContent(i));
+				}
+				System.out.println("Helic- DVCS: Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("#phi_trento for events with helicity - (after photon cone cuts)").getBinContent(i));
+				}
+				System.out.println("ASYMETRY DVCS: Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println("Bin " + i + "," + myCanvas.get1DHisto("Asymetry").getBinContent(i));
+				}
+				System.out.println("ASYMETRY DVCS (after DVCS epg cuts): Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println(
+							"Bin " + i + "," + myCanvas.get1DHisto("Asymetry (after DVCS epg cuts)").getBinContent(i));
+				}
+				System.out.println("ASYMETRY DVCS (after photon cone cuts): Bin,asymetry");
+				for (int i = 0; i < 20; i++) {
+					System.out.println("Bin " + i + ","
+							+ myCanvas.get1DHisto("Asymetry (after photon cone cuts)").getBinContent(i));
+				}
+				
+				System.out.println("MM DVCS (just Pi0): Bin,mm");
+				for (int i = 0; i < 300; i++) {
+					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after DVCS epg cuts)").getBinContent(i)+ ",");
+				}
+				System.out.println("MM DVCS (just Pi0): Bin,mm");
+				for (int i = 0; i < 300; i++) {
+					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after photon cone cuts)").getBinContent(i)+ ",");
+				}
+				System.out.println("MM DVCS (just Pi0): Bin,mm");
+				for (int i = 0; i < 300; i++) {
+					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (after pi0 cuts)").getBinContent(i)+ ",");
+				}
+				System.out.println("MM DVCS (just Pi0): Bin,mm");
+				for (int i = 0; i < 300; i++) {
+					System.out.println(myCanvas.get1DHisto("DVCS MM(ep->ep#gammaX)^2 (just pi0)").getBinContent(i)+ ",");
+				}
+			}
 
 		}
 	}
@@ -633,6 +633,9 @@ public class Analyser {
 		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen25.dat.evio.hipo");
 		path = "/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/";
 		runNumber = "";
+		
+		ArrayList<String> fileSimuPi0 = new ArrayList<>();
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Valery_2018-09/out_deco_S-100_T-100_v1.hipo");
 
 		HipoReader hipoReader = null;
 
@@ -683,11 +686,13 @@ public class Analyser {
 				// hipoReader = new HipoReader(fileSkimmedOutbending);
 			} else if (dataSet.equals("Simu")) {
 				hipoReader = new HipoReader(fileSimu);
+			} else if (dataSet.equals("SimuPi0")){
+				hipoReader = new HipoReader(fileSimuPi0);
 			} else if (dataSet.equals("Old4013")) {
 				hipoReader = new HipoReader(fileOldInbending);
 			} else if (dataSet.equals("Old3889")) {
 				hipoReader = new HipoReader(fileOldOutbending);
-			} else {
+			}  else {
 				hipoReader = new HipoReader(fileSimu);
 			}
 
@@ -698,11 +703,11 @@ public class Analyser {
 	public static void createPlots(Canvas myCanvas, boolean displayHistos) {
 
 		/* ===== INITIALIZATION ===== */
-//		detectorPlots = new DetectorPlots(myCanvas, beamEnergy);
-//		positNegChargesPlots = new PositiveNegativeChargesPlots(myCanvas);
-//		particlePlots = new ParticlePlots(myCanvas, beamEnergy);
-//		kinematicPlots = new KinematicalPlots(myCanvas, beamEnergy);
-//		physicsPlots = new PhysicsPlots(myCanvas, beamEnergy);
+		detectorPlots = new DetectorPlots(myCanvas, beamEnergy);
+		positNegChargesPlots = new PositiveNegativeChargesPlots(myCanvas);
+		particlePlots = new ParticlePlots(myCanvas, beamEnergy);
+		kinematicPlots = new KinematicalPlots(myCanvas, beamEnergy);
+		physicsPlots = new PhysicsPlots(myCanvas, beamEnergy);
 
 		/* ===== RAW PLOTS ===== */
 		// detectorPlots.createDetectorsPlotsRaw();
@@ -715,37 +720,37 @@ public class Analyser {
 		// particlePlots.createNumberParticlesPlots("", "");
 
 		/* ===== AFTER CUTS ===== */
-//		particlePlots.createParticlesPlotsAfterCuts("cut selection", "after selection cuts");
-//		particlePlots.createNumberParticlesPlots("Nb particles after selection", "after selection");
-//		kinematicPlots.createDefaultHistograms("Kinematic after selection", "");
-//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS after selection", "");
-//		physicsPlots.createAsymetryHisto("Asym after selection", "");
+		particlePlots.createParticlesPlotsAfterCuts("cut selection", "after selection cuts");
+		particlePlots.createNumberParticlesPlots("Nb particles after selection", "after selection");
+		kinematicPlots.createDefaultHistograms("Kinematic after selection", "");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS after selection", "");
+		physicsPlots.createAsymetryHisto("Asym after selection", "");
 
-//		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex1", "after DVCS epg cuts");
-//		particlePlots.createNumberParticlesPlots("ex1", "after DVCS epg cuts");
-//		kinematicPlots.createDefaultHistograms("Kinematic ex1", "after DVCS epg cuts");
-//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex1", "after DVCS epg cuts");
-//		physicsPlots.createAsymetryHisto("Asym DVCS ex1", "after DVCS epg cuts");
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex1", "after DVCS epg cuts");
+		particlePlots.createNumberParticlesPlots("ex1", "after DVCS epg cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex1", "after DVCS epg cuts");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex1", "after DVCS epg cuts");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex1", "after DVCS epg cuts");
 
-//		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2", "after photon cone cuts");
-//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
-//		kinematicPlots.createDefaultHistograms("Kinematic ex2", "after photon cone cuts");
-//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after photon cone cuts");
-//		physicsPlots.createAsymetryHisto("Asym DVCS ex2", "after photon cone cuts");
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2", "after photon cone cuts");
+		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2", "after photon cone cuts");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after photon cone cuts");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2", "after photon cone cuts");
 		
-//		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex3", "after pi0 cuts");
-//		particlePlots.createNumberParticlesPlots("Nb particles ex3", "after pi0 cuts");
-//		kinematicPlots.createDefaultHistograms("Kinematic ex3", "after pi0 cuts");
-//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex3", "after pi0 cuts");
-//		physicsPlots.createAsymetryHisto("Asym DVCS ex3", "after pi0 cuts");
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex3", "after pi0 cuts");
+		particlePlots.createNumberParticlesPlots("Nb particles ex3", "after pi0 cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex3", "after pi0 cuts");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex3", "after pi0 cuts");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex3", "after pi0 cuts");
 		
-//		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex4", "just pi0");
-//		particlePlots.createNumberParticlesPlots("Nb particles ex4", "just pi0");
-//		kinematicPlots.createDefaultHistograms("Kinematic ex4", "just pi0");
-//		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex4", "just pi0");
-//		physicsPlots.createAsymetryHisto("Asym DVCS ex4", "just pi0");
-//
-//		physicsPlots.createDefaultPi0Histo(beamEnergy, "Pi0", "");
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex4", "just pi0");
+		particlePlots.createNumberParticlesPlots("Nb particles ex4", "just pi0");
+		kinematicPlots.createDefaultHistograms("Kinematic ex4", "just pi0");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex4", "just pi0");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex4", "just pi0");
+
+		physicsPlots.createDefaultPi0Histo(beamEnergy, "Pi0", "");
 
 		// createParticlesPlotsCuts(myCanvas, "cut DVCS ex3", "after DVCS perpMM
 		// cuts");
