@@ -230,6 +230,8 @@ public class Analyser {
 										+ " (" + goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")");
 
 					}
+				}else{
+					System.out.println("No Beam");
 				}
 			}
 
@@ -830,9 +832,9 @@ public class Analyser {
 				BufferedWriter bw = new BufferedWriter(fw);
 				PrintWriter out = new PrintWriter(bw)) {
 
-			if (event.getParticleEvent().hasNumberOfPhotons() > 0) {
-				for (Photon photon : event.getParticleEvent().getPhotons()) {
-					out.print(photon.getPx() + " " + photon.getPy() + " " + photon.getPz() + " /// ");
+			if (event.getParticleEvent().hasNumberOfProtons() > 0) {
+				for (Proton proton : event.getParticleEvent().getProtons()) {
+					out.print(proton.getPx() + " " + proton.getPy() + " " + proton.getPz() + " /// ");
 				}
 				out.println();
 			}
