@@ -422,7 +422,7 @@ public class Analyser {
 									"after photon cone cuts");
 						}
 						
-						if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(1)==true && angle2Photon < 3) {
+						if (photonF.getThetaDeg()>5 && afterDVCSCuts.getTrigger_bit(1)==true && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s1",
 									"after photon cone cuts s1");
@@ -433,7 +433,7 @@ public class Analyser {
 									"after photon cone cuts s1");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s1",
 									"after photon cone cuts s1");
-						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(2)==true && angle2Photon < 3) {
+						} else if (photonF.getThetaDeg()>5 && afterDVCSCuts.getTrigger_bit(2)==true && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s2",
 									"after photon cone cuts s2");
@@ -443,7 +443,7 @@ public class Analyser {
 									"after photon cone cuts s2");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s2",
 									"after photon cone cuts s2");
-						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(3)==true && angle2Photon < 3) {
+						} else if (photonF.getThetaDeg()>5 && afterDVCSCuts.getTrigger_bit(3)==true && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s3",
 									"after photon cone cuts s3");
@@ -453,7 +453,7 @@ public class Analyser {
 									"after photon cone cuts s3");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s3",
 									"after photon cone cuts s3");
-						}else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(4)==true && angle2Photon < 3) {
+						}else if (photonF.getThetaDeg()>5 && afterDVCSCuts.getTrigger_bit(4)==true && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s4",
 									"after photon cone cuts s4");
@@ -464,7 +464,7 @@ public class Analyser {
 									"after photon cone cuts s4");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s4",
 									"after photon cone cuts s4");
-						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(5)==true && angle2Photon < 3) {
+						} else if (photonF.getThetaDeg()>5 && afterDVCSCuts.getTrigger_bit(5)==true && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s5",
 									"after photon cone cuts s5");
@@ -474,7 +474,7 @@ public class Analyser {
 									"after photon cone cuts s5");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s5",
 									"after photon cone cuts s5");
-						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(6)==true && angle2Photon < 3) {
+						} else if (photonF.getThetaDeg()>5 && afterDVCSCuts.getTrigger_bit(6)==true && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s6",
 									"after photon cone cuts s6");
