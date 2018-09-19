@@ -79,7 +79,7 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputProtons.txt";
-	static String dataSet = "Simu"; // Can be "Inbending" "Outbending"
+	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889", "SimuPi0")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
@@ -634,7 +634,17 @@ public class Analyser {
 		runNumber = "";
 		
 		ArrayList<String> fileSimuPi0 = new ArrayList<>();
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Valery_2018-09/out_deco_S-100_T-100_v1.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_1.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_2.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_3.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_4.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_5.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_6.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_7.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_8.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_9.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_10.hipo");
+		
 
 		HipoReader hipoReader = null;
 
