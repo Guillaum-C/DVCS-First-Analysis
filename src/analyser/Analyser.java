@@ -79,7 +79,7 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputPhotons_10.txt";
-	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
+	static String dataSet = "Outbending"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
@@ -660,7 +660,19 @@ public class Analyser {
 		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4020_8.hipo");
 		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4021_8.hipo");
 		fileSkimmedInbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/Skimmed/4078_8.hipo");
-
+		
+		ArrayList<String> fileSkimmedOutbending = new ArrayList<>();
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3933.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3934.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3936.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3938.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3939.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3940.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3941.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3943.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3944.hipo");
+		fileSkimmedOutbending.add("/Users/gchristi/Donnees/JLab_Beam/RG-A/SkimmedOutbending/skim8_3945.hipo");
+		
 		/* ===== SIMU DVCS 10.6 GeV ===== */
 		ArrayList<String> fileSimu = new ArrayList<>();
 		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen1.dat.evio.hipo");
@@ -737,7 +749,7 @@ public class Analyser {
 			if (dataSet.equals("Inbending")) {
 				hipoReader = new HipoReader(fileSkimmedInbending);
 			} else if (dataSet.equals("Outbending")) {
-				// hipoReader = new HipoReader(fileSkimmedOutbending);
+				hipoReader = new HipoReader(fileSkimmedOutbending);
 			} else if (dataSet.equals("Simu")) {
 				hipoReader = new HipoReader(fileSimu);
 			} else if (dataSet.equals("Old4013")) {
