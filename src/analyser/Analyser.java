@@ -89,7 +89,7 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args, dataSet);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(dataSet, true, false);
+		Canvas myCanvas = new Canvas(dataSet, true, true);
 		createPlots(myCanvas, true);
 
 		/* ===== OUPUT FILE ===== */
@@ -409,7 +409,7 @@ public class Analyser {
 						// 180/Math.PI*Math.acos(protonExpected.vect().dot(protonF.getFourMomentum().vect())
 						// / (protonExpected.vect().mag() *
 						// protonF.getFourMomentum().vect().mag()));
-						if (angle2Photon < 3) {
+						if (photonF.getThetaDeg()<5 && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
 									"after photon cone cuts");
@@ -486,7 +486,7 @@ public class Analyser {
 									"after photon cone cuts s6");
 						}
 
-						if (!isPi0) {
+						if (angle2Photon < 3 && !isPi0) {
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex3",
 									"after pi0 cuts");
 							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex3", "after pi0 cuts");
