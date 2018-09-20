@@ -78,9 +78,9 @@ public class Analyser {
 	static KinematicalPlots kinematicPlots;
 	static PhysicsPlots physicsPlots;
 
-	static String outPutFile = "outputProtons.txt";
+	static String outPutFile = "outputPhotons_10.txt";
 	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
-											// "Simu" (ou "Old4013", "Old3889", "SimuPi0")
+											// "Simu" (ou "Old4013", "Old3889")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
 	public static void main(String[] args) {
@@ -89,11 +89,11 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args, dataSet);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(dataSet, true, false);
+		Canvas myCanvas = new Canvas(dataSet, true, true);
 		createPlots(myCanvas, true);
 
 		/* ===== OUPUT FILE ===== */
-//		createOutputFile(outPutFile);
+		// createOutputFile(outPutFile);
 
 		/* ===== RDM PHOTON INPUT ===== */
 //		 int lineNumber=0;
@@ -131,7 +131,7 @@ public class Analyser {
 								// current 30ms, false else (means beam trip)
 
 		int goodRandomEvents = 0;
-		int goodRandomEventsWithDVCSProton = 0;
+		int goodRandomEventsWithDVCSPhoton = 0;
 
 		/* Loop on events */
 		int eventIterator = 0;
@@ -198,102 +198,98 @@ public class Analyser {
 			// }
 
 			// /* ===== RANDOM TRIGGER ===== */
-//			if (processedEvent.getTrigger_bit(31)) {
-////				fillDetectorsPlotsRandom(processedEvent);
-//				if (hasBeam) {
-//					goodRandomEvents++;
-////					PhotonCut photonCutDVCS = new PhotonCut();
-//					ProtonCut protonCutDVCS = new ProtonCut();
-////					Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
-//					Event afterProtonCuts = protonCutDVCS.CutDVCS(processedEvent);
-//					if (processedEvent.getParticleEvent().hasNumberOfProtons() > 0) {
-//						System.out.println("Proton found");
-//					}
-//					fillOutputProtonFile(outPutFile, afterProtonCuts);
-////					if (afterProtonCuts.getParticleEvent().hasNumberOfPhotons() > 0) {
-//					if (afterProtonCuts.getParticleEvent().hasNumberOfProtons() > 0) {
-//						goodRandomEventsWithDVCSProton = goodRandomEventsWithDVCSProton
-//								+ 1;
-//
-//						String text = "Event: " + eventIterator + " Ratio random: "
-//								+ ((double) goodRandomEventsWithDVCSProton / (double) goodRandomEvents) + " ("
-//								+ goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")";
-//						try {
-//							Files.write(Paths.get("./normalisation.txt"), text.getBytes());
-//						} catch (IOException e) {
-//							e.printStackTrace();
-//						}
-//
-//						System.out.println("Event: " + eventIterator);
-//						System.out.println(
-//								"Ratio random: " + ((double) goodRandomEventsWithDVCSProton / (double) goodRandomEvents)
-//										+ " (" + goodRandomEventsWithDVCSProton + "/" + goodRandomEvents + ")");
-//
-//					}
-//				}
-//			}
-//
-//			/* ===== Faraday cup state ===== */
-//			if (dataEvent.hasBank("RAW::scaler") == true) {
-//				/* Reset beam value */
-//				hasBeam = false; // reset value
-//
-//				// dataEvent.getBank("RAW::scaler").show();
-//
-//				/* Plot FCvalue */
-//				for (int bankEntry = 0; bankEntry < dataEvent.getBank("RAW::scaler").rows(); bankEntry++) {
-//
-//					int crate = dataEvent.getBank("RAW::scaler").getByte("crate", bankEntry);
-//					int slot = dataEvent.getBank("RAW::scaler").getByte("slot", bankEntry);
-//					int channel = dataEvent.getBank("RAW::scaler").getShort("channel", bankEntry);
-//					if (crate == 64 && slot == 64 && channel == 0) {
-//						int fCupGated = dataEvent.getBank("RAW::scaler").getInt("value", bankEntry);
-////						myCanvas.fill1DHisto("FaradayCupValue", fCupGated);
-//						// System.out.println("fCup gated: "+fCupGated);
-//					}
-//				}
-//
-//				/*
-//				 * Look for next event with raw scaler bank, and set the hasBeam
-//				 * value for the next events
-//				 */
-//				int count = 1;
-//				DataEvent dataFollowingEvent = hipoReader.getRelativeEvent(count);
-//				while (!(dataFollowingEvent == null) && count < 1000 && !(dataFollowingEvent.hasBank("RAW::scaler"))) {
-//					count++;
-//					dataFollowingEvent = hipoReader.getRelativeEvent(count);
-//				}
-//				if (dataFollowingEvent != null && dataFollowingEvent.hasBank("RAW::scaler")) {
-//					DataBank bankParticle = dataEvent.getBank("RAW::scaler");
-//					for (int bankEntry = 0; bankEntry < bankParticle.rows(); bankEntry++) {
-//						int crate = bankParticle.getByte("crate", bankEntry);
-//						int slot = bankParticle.getByte("slot", bankEntry);
-//						int channel = bankParticle.getShort("channel", bankEntry);
-//						if (crate == 64 && slot == 64 && channel == 0) { // gated
-//																			// TRG
-//																			// faraday
-//																			// cup
-//																			// (see
-//																			// https://logbooks.jlab.org/entry/3554327)
-//							int fCupGated = bankParticle.getInt("value", bankEntry);
-//							int fCupThreshold = 20000;
-//							if (fCupGated <= fCupThreshold) {
-//								hasBeam = false;
-//							} else {
-//								hasBeam = true;
-//							}
-//						}
-//					}
-//				} else {
-//					hasBeam = false;
-//				}
-//			}
+			// if (processedEvent.getTrigger_bit(31)) {
+			// fillDetectorsPlotsRandom(processedEvent);
+			// if (hasBeam){
+			// goodRandomEvents++;
+			// PhotonCut photonCutDVCS = new PhotonCut();
+			// Event afterPhotonCuts = photonCutDVCS.CutDVCS(processedEvent);
+			// fillOutputPhotonFile(outPutFile, afterPhotonCuts);
+			// if (afterPhotonCuts.getParticleEvent().hasNumberOfPhotons()>0){
+			// goodRandomEventsWithDVCSPhoton=goodRandomEventsWithDVCSPhoton+afterPhotonCuts.getParticleEvent().hasNumberOfPhotons();
+			//
+			// String text = "Event: " + eventIterator + " Ratio random: "+
+			// ((double)goodRandomEventsWithDVCSPhoton/(double)goodRandomEvents)
+			// + " ("+ goodRandomEventsWithDVCSPhoton+ "/"+goodRandomEvents+")";
+			// try {
+			// Files.write(Paths.get("./normalisation.txt"), text.getBytes());
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// }
+			//
+			// System.out.println("Event: " + eventIterator);
+			// System.out.println("Ratio random: "+
+			// ((double)goodRandomEventsWithDVCSPhoton/(double)goodRandomEvents)
+			// + " ("+ goodRandomEventsWithDVCSPhoton+
+			// "/"+goodRandomEvents+")");
+			//
+			// }
+			// }
+			// }
+			//
+			// /* ===== Faraday cup state ===== */
+			// if (dataEvent.hasBank("RAW::scaler") == true) {
+			// /*Reset beam value */
+			// hasBeam = false; //reset value
+			//
+			// //dataEvent.getBank("RAW::scaler").show();
+			//
+			// /* Plot FCvalue */
+			// for (int bankEntry = 0; bankEntry <
+			// dataEvent.getBank("RAW::scaler").rows(); bankEntry ++){
+			//
+			// int crate = dataEvent.getBank("RAW::scaler").getByte("crate",
+			// bankEntry);
+			// int slot = dataEvent.getBank("RAW::scaler").getByte("slot",
+			// bankEntry);
+			// int channel =
+			// dataEvent.getBank("RAW::scaler").getShort("channel", bankEntry);
+			// if (crate == 64 && slot == 64 && channel == 0){
+			// int fCupGated = dataEvent.getBank("RAW::scaler").getInt("value",
+			// bankEntry);
+			// myCanvas.fill1DHisto("FaradayCupValue", fCupGated);
+			//// System.out.println("fCup gated: "+fCupGated);
+			// }
+			// }
+			//
+			// /*Look for next event with raw scaler bank, and set the hasBeam
+			// value for the next events*/
+			// int count=1;
+			// DataEvent dataFollowingEvent=hipoReader.getRelativeEvent(count);
+			// while ( !(dataFollowingEvent==null) && count<1000 &&
+			// !(dataFollowingEvent.hasBank("RAW::scaler")) ){
+			// count++;
+			// dataFollowingEvent = hipoReader.getRelativeEvent(count);
+			// }
+			// if (dataFollowingEvent!=null &&
+			// dataFollowingEvent.hasBank("RAW::scaler")){
+			// DataBank bankParticle = dataEvent.getBank("RAW::scaler");
+			// for (int bankEntry = 0; bankEntry < bankParticle.rows();
+			// bankEntry ++){
+			// int crate = bankParticle.getByte("crate", bankEntry);
+			// int slot = bankParticle.getByte("slot", bankEntry);
+			// int channel = bankParticle.getShort("channel", bankEntry);
+			// if (crate == 64 && slot == 64 && channel == 0){ //gated TRG
+			// faraday cup (see https://logbooks.jlab.org/entry/3554327)
+			// int fCupGated = bankParticle.getInt("value", bankEntry);
+			// int fCupThreshold = 20000;
+			// if (fCupGated<= fCupThreshold){
+			// hasBeam = false;
+			// }else{
+			// hasBeam = true;
+			// }
+			// }
+			// }
+			// }else{
+			// hasBeam = false;
+			// }
+			// }
 
 			// /* ===== RAW PLOTS ===== */
-			detectorPlots.fillDetectorsPlotsRaw(processedEvent);
+			// detectorPlots.fillDetectorsPlotsRaw(processedEvent);
 			positNegChargesPlots.fillPosNegChargesPlotsRaw(processedEvent);
-			particlePlots.fillParticlesPlotsRaw(processedEvent);
-			particlePlots.fillNumberOfParticlesPlots(processedEvent, "");
+			// particlePlots.fillParticlesPlotsRaw(processedEvent);
+			// particlePlots.fillNumberOfParticlesPlots(processedEvent, "");
 
 			/* ===== PI0 ===== */
 
@@ -347,18 +343,19 @@ public class Analyser {
 			// Event afterSelectionCuts = afterKinematicCuts;
 			//
 			// /* ===== SELECTION + KINEMATIC PLOTS ===== */
-//			 fillDetectorsPlotsCut(afterSelectionCuts);
-//			 fillParticlesPlotsCut(afterSelectionCuts.getParticleEvent(), "cut selection", "after selection cuts");
+			// fillDetectorsPlotsCut(afterSelectionCuts);
+			// fillParticlesPlotsCut(afterSelectionCuts.getParticleEvent(), "cut
+			// selection", "after selection cuts");
 
-//			/* ===== SELECTION + KINEMATIC CUTS ===== */
+			/* ===== SELECTION + KINEMATIC CUTS ===== */
 			DVCSCut dvcsCut = new DVCSCut();
 			Event afterDVCSCuts = dvcsCut.Cut(processedEvent, electronI);
-//
-//			/* ===== SELECTION + KINEMATIC PLOTS ===== */
+
+			/* ===== SELECTION + KINEMATIC PLOTS ===== */
 			particlePlots.fillParticlesPlotsAfterCuts(afterDVCSCuts.getParticleEvent(), "cut selection",
 					"after selection cuts");
 			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
-//
+
 			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
 				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
 //					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
@@ -412,8 +409,7 @@ public class Analyser {
 						// 180/Math.PI*Math.acos(protonExpected.vect().dot(protonF.getFourMomentum().vect())
 						// / (protonExpected.vect().mag() *
 						// protonF.getFourMomentum().vect().mag()));
-
-						if (angle2Photon < 3) {
+						if (photonF.getThetaDeg()<5 && angle2Photon < 3) {
 							/* ===== EXCLUSIVITY PLOTS 2 ===== */
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2",
 									"after photon cone cuts");
@@ -424,11 +420,73 @@ public class Analyser {
 									"after photon cone cuts");
 							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2",
 									"after photon cone cuts");
-						} else {
-							continue;
+						}
+						
+						if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(1)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s1",
+									"after photon cone cuts s1");
+//							fillNumberParticlesPlots(afterDVCSCuts, "after photon cone cuts");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s1",
+									"after photon cone cuts s1");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s1",
+									"after photon cone cuts s1");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s1",
+									"after photon cone cuts s1");
+						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(2)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s2",
+									"after photon cone cuts s2");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s2",
+									"after photon cone cuts s2");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s2",
+									"after photon cone cuts s2");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s2",
+									"after photon cone cuts s2");
+						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(3)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s3",
+									"after photon cone cuts s3");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s3",
+									"after photon cone cuts s3");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s3",
+									"after photon cone cuts s3");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s3",
+									"after photon cone cuts s3");
+						}else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(4)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s4",
+									"after photon cone cuts s4");
+//							fillNumberParticlesPlots(afterDVCSCuts, "after photon cone cuts");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s4",
+									"after photon cone cuts s4");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s4",
+									"after photon cone cuts s4");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s4",
+									"after photon cone cuts s4");
+						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(5)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s5",
+									"after photon cone cuts s5");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s5",
+									"after photon cone cuts s5");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s5",
+									"after photon cone cuts s5");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s5",
+									"after photon cone cuts s5");
+						} else if (photonF.getThetaDeg()<5 && afterDVCSCuts.getTrigger_bit(6)==true && angle2Photon < 3) {
+							/* ===== EXCLUSIVITY PLOTS 2 ===== */
+							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex2 s6",
+									"after photon cone cuts s6");
+							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex2 s6",
+									"after photon cone cuts s6");
+							physicsPlots.fillDefaultHistogramsDVCS(electronF, protonF, photonF, beamEnergy, "DVCS ex2 s6",
+									"after photon cone cuts s6");
+							physicsPlots.fillAsymetryHisto(phiDeg, afterDVCSCuts.getHelicity(), "Asym DVCS ex2 s6",
+									"after photon cone cuts s6");
 						}
 
-						if (!isPi0) {
+						if (angle2Photon < 3 && !isPi0) {
 							fillParticlesPlotsCut(afterDVCSCuts.getParticleEvent(), "cut DVCS ex3",
 									"after pi0 cuts");
 							kinematicPlots.fillDefaultHistograms(electronF, protonF, photonF, "DVCS ex3", "after pi0 cuts");
@@ -605,46 +663,33 @@ public class Analyser {
 
 		/* ===== SIMU DVCS 10.6 GeV ===== */
 		ArrayList<String> fileSimu = new ArrayList<>();
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen1.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen2.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen3.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen4.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen5.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen6.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen7.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen8.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen9.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen10.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen11.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen12.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen13.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen14.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen15.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen16.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen17.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen18.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen19.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen20.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen21.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen22.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen23.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen24.dat.evio.hipo");
-		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/May_GemC-4a23_Coatjava-5a33/out_dvcsgen25.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen1.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen2.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen3.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen4.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen5.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen6.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen7.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen8.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen9.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen10.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen11.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen12.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen13.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen14.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen15.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen16.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen17.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen18.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen19.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen20.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen21.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen22.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen23.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen24.dat.evio.hipo");
+		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen25.dat.evio.hipo");
 		path = "/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/";
 		runNumber = "";
-		
-		ArrayList<String> fileSimuPi0 = new ArrayList<>();
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_1.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_2.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_3.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_4.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_5.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_6.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_7.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_8.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_9.hipo");
-		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_10.hipo");
-		
 
 		HipoReader hipoReader = null;
 
@@ -695,13 +740,11 @@ public class Analyser {
 				// hipoReader = new HipoReader(fileSkimmedOutbending);
 			} else if (dataSet.equals("Simu")) {
 				hipoReader = new HipoReader(fileSimu);
-			} else if (dataSet.equals("SimuPi0")){
-				hipoReader = new HipoReader(fileSimuPi0);
 			} else if (dataSet.equals("Old4013")) {
 				hipoReader = new HipoReader(fileOldInbending);
 			} else if (dataSet.equals("Old3889")) {
 				hipoReader = new HipoReader(fileOldOutbending);
-			}  else {
+			} else {
 				hipoReader = new HipoReader(fileSimu);
 			}
 
@@ -719,14 +762,14 @@ public class Analyser {
 		physicsPlots = new PhysicsPlots(myCanvas, beamEnergy);
 
 		/* ===== RAW PLOTS ===== */
-		 detectorPlots.createDetectorsPlotsRaw();
-		 detectorPlots.createDetectorsPlotsAfterCuts();
-		 detectorPlots.createDetectorsPlotsRandomTrigger();
-		
+		// detectorPlots.createDetectorsPlotsRaw();
+		// detectorPlots.createDetectorsPlotsAfterCuts();
+		// detectorPlots.createDetectorsPlotsRandomTrigger();
+		//
 		 positNegChargesPlots.createDefaultHistograms(beamEnergy);
-		
-		 particlePlots.createParticlesPlotsRaw();
-		 particlePlots.createNumberParticlesPlots("", "");
+		//
+		// particlePlots.createParticlesPlotsRaw();
+		// particlePlots.createNumberParticlesPlots("", "");
 
 		/* ===== AFTER CUTS ===== */
 		particlePlots.createParticlesPlotsAfterCuts("cut selection", "after selection cuts");
@@ -735,26 +778,70 @@ public class Analyser {
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS after selection", "");
 		physicsPlots.createAsymetryHisto("Asym after selection", "");
 
-		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex1", "after DVCS epg cuts");
-		particlePlots.createNumberParticlesPlots("ex1", "after DVCS epg cuts");
-		kinematicPlots.createDefaultHistograms("Kinematic ex1", "after DVCS epg cuts");
+//		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex1", "after DVCS epg cuts");
+//		particlePlots.createNumberParticlesPlots("ex1", "after DVCS epg cuts");
+//		kinematicPlots.createDefaultHistograms("Kinematic ex1", "after DVCS epg cuts");
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex1", "after DVCS epg cuts");
 		physicsPlots.createAsymetryHisto("Asym DVCS ex1", "after DVCS epg cuts");
 
 		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2", "after photon cone cuts");
-		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
 		kinematicPlots.createDefaultHistograms("Kinematic ex2", "after photon cone cuts");
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2", "after photon cone cuts");
 		physicsPlots.createAsymetryHisto("Asym DVCS ex2", "after photon cone cuts");
 		
+		
+		
+		
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s1", "after photon cone cuts s1");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s1", "after photon cone cuts s1");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s1", "after photon cone cuts s1");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s1", "after photon cone cuts s1");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s2", "after photon cone cuts s2");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s2", "after photon cone cuts s2");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s2", "after photon cone cuts s2");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s2", "after photon cone cuts s2");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s3", "after photon cone cuts s3");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s3", "after photon cone cuts s3");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s3", "after photon cone cuts s3");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s3", "after photon cone cuts s3");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s4", "after photon cone cuts s4");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s4", "after photon cone cuts s4");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s4", "after photon cone cuts s4");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s4", "after photon cone cuts s4");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s5", "after photon cone cuts s5");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s5", "after photon cone cuts s5");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s5", "after photon cone cuts s5");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s5", "after photon cone cuts s5");
+		
+		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex2 s6", "after photon cone cuts s6");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex2", "after photon cone cuts");
+		kinematicPlots.createDefaultHistograms("Kinematic ex2 s6", "after photon cone cuts s6");
+		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex2 s6", "after photon cone cuts s6");
+		physicsPlots.createAsymetryHisto("Asym DVCS ex2 s6", "after photon cone cuts s6");
+		
+		
+		
+		
+		
 		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex3", "after pi0 cuts");
-		particlePlots.createNumberParticlesPlots("Nb particles ex3", "after pi0 cuts");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex3", "after pi0 cuts");
 		kinematicPlots.createDefaultHistograms("Kinematic ex3", "after pi0 cuts");
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex3", "after pi0 cuts");
 		physicsPlots.createAsymetryHisto("Asym DVCS ex3", "after pi0 cuts");
 		
 		particlePlots.createParticlesPlotsAfterCuts("cut DVCS ex4", "just pi0");
-		particlePlots.createNumberParticlesPlots("Nb particles ex4", "just pi0");
+//		particlePlots.createNumberParticlesPlots("Nb particles ex4", "just pi0");
 		kinematicPlots.createDefaultHistograms("Kinematic ex4", "just pi0");
 		physicsPlots.createDefaultHistogramsDVCS(beamEnergy, "DVCS ex4", "just pi0");
 		physicsPlots.createAsymetryHisto("Asym DVCS ex4", "just pi0");
@@ -838,7 +925,7 @@ public class Analyser {
 		}
 	}
 
-	public static void fillOutputProtonFile(String fileName, Event event) {
+	public static void fillOutputPhotonFile(String fileName, Event event) {
 
 		try (FileWriter fw = new FileWriter(fileName, true);
 				BufferedWriter bw = new BufferedWriter(fw);
