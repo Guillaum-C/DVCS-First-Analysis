@@ -78,7 +78,7 @@ public class Analyser {
 	static KinematicalPlots kinematicPlots;
 	static PhysicsPlots physicsPlots;
 
-	static String outPutFile = "outputProtons.txt";
+	static String outPutFile = "outputPhotons.txt";
 	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889", "SimuPi0")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
@@ -352,7 +352,7 @@ public class Analyser {
 
 //			/* ===== SELECTION + KINEMATIC CUTS ===== */
 			DVCSCut dvcsCut = new DVCSCut();
-			Event afterDVCSCuts = dvcsCut.Cut(processedEvent, electronI);
+			Event afterDVCSCuts = dvcsCut.CutRandomPhoton(processedEvent, electronI);
 //
 //			/* ===== SELECTION + KINEMATIC PLOTS ===== */
 			particlePlots.fillParticlesPlotsAfterCuts(afterDVCSCuts.getParticleEvent(), "cut selection",
@@ -360,10 +360,10 @@ public class Analyser {
 			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
 //
 			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
-				for (Proton protonF : readProtonFileRandom(outPutFile,lineNumber).getProtons()){
-//				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
-//					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
-					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
+//				for (Proton protonF : readProtonFileRandom(outPutFile,lineNumber).getProtons()){
+				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
+					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
+//					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
 
 						/* ===== COMPUTE KINEMATICAL PARAMETERS ===== */
 						double t = ComputePhysicsParameters.computeT(protonF);

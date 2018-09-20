@@ -171,5 +171,10 @@ public class ParticleNumberCut {
 		return this.cut(oldEvent);
 	}
 	
-	
+	public Event cutRandomPhoton(Event oldEvent){
+		this.setElectronNbMinCut(1);
+		this.setElectronNbMaxCut(1);
+		this.setProtonNbMinCut(1);
+		return this.cut(oldEvent);
+	}
 }
