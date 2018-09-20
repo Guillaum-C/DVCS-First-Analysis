@@ -79,7 +79,7 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputPhotons_10.txt";
-	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
+	static String dataSet = "SimuPi0"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
@@ -690,6 +690,18 @@ public class Analyser {
 		fileSimu.add("/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/out_dvcsgen25.dat.evio.hipo");
 		path = "/Users/gchristi/Donnees/JLab_Simu/Simu_DVCS_Harut/";
 		runNumber = "";
+		
+		ArrayList<String> fileSimuPi0 = new ArrayList<>();
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_1.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_2.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_3.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_4.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_5.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_6.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_7.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_8.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_9.hipo");
+		fileSimuPi0.add("/Users/gchristi/Donnees/JLab_Simu/Simu_Pi0_Harut_4a24_562_2018-09/out_deco_S-100_T-100_v1_10.hipo");
 
 		HipoReader hipoReader = null;
 
@@ -740,6 +752,8 @@ public class Analyser {
 				// hipoReader = new HipoReader(fileSkimmedOutbending);
 			} else if (dataSet.equals("Simu")) {
 				hipoReader = new HipoReader(fileSimu);
+			} else if (dataSet.equals("SimuPi0")) {
+				hipoReader = new HipoReader(fileSimuPi0);
 			} else if (dataSet.equals("Old4013")) {
 				hipoReader = new HipoReader(fileOldInbending);
 			} else if (dataSet.equals("Old3889")) {
