@@ -89,7 +89,7 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args, dataSet);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(dataSet, true, false);
+		Canvas myCanvas = new Canvas(dataSet, true, true);
 		createPlots(myCanvas, true);
 
 		/* ===== OUPUT FILE ===== */
@@ -360,6 +360,7 @@ public class Analyser {
 			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
 //
 			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
+//				for (Proton protonF : readProtonFileRandom(outPutFile,lineNumber).getProtons()){
 				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
 //					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
 					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
@@ -885,6 +886,40 @@ public class Analyser {
 			// System.out.println("pY:"+Double.parseDouble(tokens[4*(nbPhotons-1)+1]));
 			// System.out.println("pZ:"+Double.parseDouble(tokens[4*(nbPhotons-1)+2]));
 			randomPhotonEvent.addParticle(newPhoton);
+		}
+		return randomPhotonEvent;
+	}
+	
+	public static ParticleEvent readProtonFileRandom(String fileName, int numberOfLines) {
+		Random generator = new Random();
+		int i = generator.nextInt(numberOfLines) + 1;
+		// System.out.println("random line: "+i);
+		String line = "";
+		try (Stream<String> lines = Files.lines(Paths.get(outPutFile))) {
+			line = lines.skip(i - 1).findFirst().get();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String[] tokens = line.split(" ");
+		// System.out.println();
+		// System.out.println("token size:"+tokens.length);
+
+		// for (String t : tokens)
+		// System.out.println(t);
+
+		ParticleEvent randomPhotonEvent = new ParticleEvent();
+		for (int nbProtons = 1; nbProtons <= tokens.length / 4; nbProtons++) {
+			Particle newProton = new Proton();
+			newProton.setMomentum(Double.parseDouble(tokens[4 * (nbProtons - 1)]),
+					Double.parseDouble(tokens[4 * (nbProtons - 1) + 1]),
+					Double.parseDouble(tokens[4 * (nbProtons - 1) + 2]));
+			
+			// System.out.println();
+			// System.out.println("Photon:"+nbPhotons);
+			// System.out.println("pX:"+Double.parseDouble(tokens[4*(nbPhotons-1)]));
+			// System.out.println("pY:"+Double.parseDouble(tokens[4*(nbPhotons-1)+1]));
+			// System.out.println("pZ:"+Double.parseDouble(tokens[4*(nbPhotons-1)+2]));
+			randomPhotonEvent.addParticle(newProton);
 		}
 		return randomPhotonEvent;
 	}
