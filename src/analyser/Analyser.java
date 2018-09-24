@@ -96,24 +96,24 @@ public class Analyser {
 //		createOutputFile(outPutFile);
 
 		/* ===== RDM PHOTON INPUT ===== */
-		 int lineNumber=0;
-		 try
-		 (
-		 FileReader input = new FileReader(outPutFile);
-		 LineNumberReader count = new LineNumberReader(input);
-		 )
-		 {
-		 while (count.skip(Long.MAX_VALUE) > 0)
-		 {
-		 // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
-		 }
-		
-		 lineNumber = count.getLineNumber() + 1 - 1; // +1 because line index starts at 0 / -1 because last line is empty
-		 } catch (IOException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
-		 }
-		 System.out.println("Number of lines: "+lineNumber);
+//		 int lineNumber=0;
+//		 try
+//		 (
+//		 FileReader input = new FileReader(outPutFile);
+//		 LineNumberReader count = new LineNumberReader(input);
+//		 )
+//		 {
+//		 while (count.skip(Long.MAX_VALUE) > 0)
+//		 {
+//		 // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
+//		 }
+//		
+//		 lineNumber = count.getLineNumber() + 1 - 1; // +1 because line index starts at 0 / -1 because last line is empty
+//		 } catch (IOException e) {
+//		 // TODO Auto-generated catch block
+//		 e.printStackTrace();
+//		 }
+//		 System.out.println("Number of lines: "+lineNumber);
 
 		/* ===== INITIAL STATE ===== */
 		LorentzVector protonI = new LorentzVector();
@@ -360,8 +360,8 @@ public class Analyser {
 			particlePlots.fillNumberOfParticlesPlots(afterDVCSCuts, "after selection");
 //
 			for (Electron electronF : afterDVCSCuts.getParticleEvent().getElectrons()) {
-				for (Proton protonF : readProtonFileRandom(outPutFile,lineNumber).getProtons()){
-//				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
+//				for (Proton protonF : readProtonFileRandom(outPutFile,lineNumber).getProtons()){
+				for (Proton protonF : afterDVCSCuts.getParticleEvent().getProtons()) {
 //					for (Photon photonF : readPhotonFileRandom(outPutFile,lineNumber).getPhotons()){
 					for (Photon photonF : afterDVCSCuts.getParticleEvent().getPhotons()) {
 
