@@ -37,6 +37,7 @@ import org.clas12.analysisTools.event.particles.LorentzVector;
 import org.clas12.analysisTools.event.particles.Particle;
 import org.clas12.analysisTools.event.particles.ParticleEvent;
 import org.clas12.analysisTools.event.particles.Photon;
+import org.clas12.analysisTools.event.particles.Pi0;
 import org.clas12.analysisTools.event.particles.PionPlus;
 import org.clas12.analysisTools.event.particles.Proton;
 import org.clas12.analysisTools.files.HipoReader;
@@ -56,6 +57,7 @@ import cuts.physics.DVCSCut;
 import cuts.physics.KinematicCut;
 import cuts.physics.Pi0Cut;
 import physics.ComputePhysicsParameters;
+import physics.Pi0Decay;
 import plots.PlotTools;
 import plots.detectorPlots.*;
 import plots.particlePlots.*;
@@ -310,7 +312,59 @@ public class Analyser {
 							physicsPlots.fillDefaultPi0Histo(photon1, photon2, "Pi0", "");
 							isPi0 = physicsPlots.fillDefaultPi0ExclusiveHisto(electronF, protonF, photon1, photon2,
 									"Pi0", "");
-
+							
+							
+							
+							
+							
+							if (isPi0){
+								
+								/* Pi0 in Lab Frame*/
+								LorentzVector pi0LabFrame = new LorentzVector();
+								pi0LabFrame.setPxPyPzM(photon1.getPx()+photon2.getPx(), photon1.getPy()+photon2.getPy(), photon1.getPz()+photon2.getPz(), Pi0.mass);
+								System.out.println("Pi0 Lab Frame P: "+ pi0LabFrame.toString()+" Mass: "+ pi0LabFrame.mass());
+								Vector3 boostVectorRestToLab=new Vector3(pi0LabFrame.boostVector().x(), pi0LabFrame.boostVector().y(), pi0LabFrame.boostVector().z());
+								Vector3 boostVectorLabToRest=new Vector3(-pi0LabFrame.boostVector().x(), -pi0LabFrame.boostVector().y(), -pi0LabFrame.boostVector().z());
+//								System.out.println("BoostVectorLabToRest:"+boostVectorLabToRest);
+//								System.out.println("BoostVectorRestToLab:"+boostVectorRestToLab);
+								
+								/*Pi0 in Rest Frame*/
+								LorentzVector pi0RestFrame = new LorentzVector();
+								pi0RestFrame.setPxPyPzM(0, 0, 0, Pi0.mass);
+//								System.out.println("Pi0 Rest Frame P: "+ pi0RestFrame.toString()+" Mass: "+ pi0RestFrame.mass());
+									/*CHECK*/
+//								LorentzVector pi0RestFrame2 = new LorentzVector(pi0LabFrame);
+//								pi0RestFrame2.boost(boostVectorLabToRest);
+//								System.out.println("Pi0 Rest Frame Check P: "+ pi0RestFrame2.toString()+" Mass: "+ pi0RestFrame2.mass());
+								
+								/*Generate Photons in Rest Frame*/
+								LorentzVector ph1RestFrame = Pi0Decay.getRandomPhotonFromPi0InCOM();
+								LorentzVector ph2RestFrame = pi0RestFrame.substract(ph1RestFrame);
+//								System.out.println("Ph1 Rest Frame P: "+ ph1RestFrame.toString()+" Mass: "+ ph1RestFrame.mass());
+//								System.out.println("Ph2 Rest Frame P: "+ ph2RestFrame.toString()+" Mass: "+ ph2RestFrame.mass());
+								
+								/*Boost Photons to Lab Frame*/
+								LorentzVector ph1LabFrame = new LorentzVector(ph1RestFrame);
+								LorentzVector ph2LabFrame = new LorentzVector(ph2RestFrame);
+								ph1LabFrame.boost(boostVectorRestToLab);
+								ph2LabFrame.boost(boostVectorRestToLab);
+//								System.out.println("Ph1 Lab Frame P: "+ ph1LabFrame.toString()+" Mass: "+ ph1LabFrame.mass());
+//								System.out.println("Ph2 Lab Frame P: "+ ph2LabFrame.toString()+" Mass: "+ ph2LabFrame.mass());
+									/*CHECK*/
+//								LorentzVector ph1RestFrame2 = new LorentzVector(ph1LabFrame);
+//								LorentzVector ph2RestFrame2 = new LorentzVector(ph2LabFrame);
+//								ph1RestFrame2.boost(boostVectorLabToRest);
+//								ph2RestFrame2.boost(boostVectorLabToRest);
+//								System.out.println("Ph1 Rest Frame Check P: "+ ph1RestFrame2.toString()+" Mass: "+ ph1RestFrame2.mass());
+//								System.out.println("Ph2 Rest Frame Check P: "+ ph2RestFrame2.toString()+" Mass: "+ ph2RestFrame2.mass());
+//								System.out.println("");
+							}
+							
+							
+							
+							
+							
+							
 						}
 					}
 				}
