@@ -79,7 +79,7 @@ public class Analyser {
 	static PhysicsPlots physicsPlots;
 
 	static String outPutFile = "outputPhotons_10.txt";
-	static String dataSet = "Simu"; // Can be "Inbending" "Outbending"
+	static String dataSet = "Inbending"; // Can be "Inbending" "Outbending"
 											// "Simu" (ou "Old4013", "Old3889")
 	static String outPutPlotsHipo = "BackgroundphotonSkimmedInbending8Files_";
 
@@ -89,7 +89,7 @@ public class Analyser {
 		HipoReader hipoReader = getRunningArguments(args, dataSet);
 
 		/* Plots */
-		Canvas myCanvas = new Canvas(dataSet, true, false);
+		Canvas myCanvas = new Canvas(dataSet, true, true);
 		createPlots(myCanvas, true);
 
 		/* ===== OUPUT FILE ===== */
